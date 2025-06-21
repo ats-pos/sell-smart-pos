@@ -10,8 +10,10 @@ import {
   AlertTriangle,
   Package,
   Receipt,
-  BarChart3
+  BarChart3,
+  UserCheck
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const todayStats = {
@@ -156,10 +158,12 @@ const Dashboard = () => {
               <Users className="h-6 w-6" />
               Add Customer
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col gap-2">
-              <BarChart3 className="h-6 w-6" />
-              View Reports
-            </Button>
+            <Link to="/sale-operator">
+              <Button variant="outline" className="h-20 w-full flex flex-col gap-2 border-green-200 hover:bg-green-50">
+                <UserCheck className="h-6 w-6 text-green-600" />
+                Sale Operator
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
