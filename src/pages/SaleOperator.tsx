@@ -8,6 +8,7 @@ import {
   LogOut
 } from "lucide-react";
 import BillingModule from "@/components/BillingModule";
+import { Link } from "react-router-dom";
 
 const SaleOperator = () => {
   return (
@@ -22,10 +23,16 @@ const SaleOperator = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">SPMPOS</h1>
-                <p className="text-xs text-gray-500">Sale Operator Panel</p>
+                <p className="text-xs text-gray-500">Sell Smart. Grow Fast.</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <Link to={'/admin'}>
+              <Badge variant="secondary" className="flex items-center gap-1">
+                <User className="h-3 w-3" />
+                Admin
+              </Badge>
+</Link>
               <Badge variant="secondary" className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 Sale Operator
