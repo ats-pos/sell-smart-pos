@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,30 +14,12 @@ import {
   Trash2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useApi, useApiMutation } from "@/hooks/useApi";
+import apiClient, { BarcodeData } from "@/lib/api";
 
 const BarcodeGenerator = () => {
   const { toast } = useToast();
-  const [barcodes, setBarcodes] = useState([
-    { 
-      id: 1, 
-      productName: "Wireless Headphones", 
-      sku: "WH001", 
-      price: 2999, 
-      barcode: "123456789012", 
-      barcodeType: "EAN-13",
-      brand: "TechBrand"
-    },
-    { 
-      id: 2, 
-      productName: "Phone Case", 
-      sku: "PC001", 
-      price: 599, 
-      barcode: "987654321098", 
-      barcodeType: "EAN-13",
-      brand: "CasePlus"
-    }
-  ]);
-
+  
   const [newBarcode, setNewBarcode] = useState({
     productName: "",
     sku: "",
@@ -48,7 +29,17 @@ const BarcodeGenerator = () => {
     brand: ""
   });
 
+  // API hooks
+  const { data: barcodes, loading: barcodesLoading, refetch: refetchBarcodes } = useApi(
+    () => apiClient.getBarcodes(),
+    []
+  );
+
+  const { mutate: createBarcodeMutation, loading: createLoading } = useApiMutation<BarcodeData>();
+  const { mutate: deleteBarcodeMutation } = useApiMutation<void>();
+
   const barcodeTypes = ["EAN-13", "EAN-8", "UPC-A", "Code 128", "Code 39"];
+  const barcodeList = barcodes || [];
 
   const generateBarcode = () => {
     // Generate a random barcode based on type
@@ -70,10 +61,9 @@ const BarcodeGenerator = () => {
     setNewBarcode({...newBarcode, barcode: generatedBarcode});
   };
 
-  const addBarcode = () => {
+  const addBarcode = async () => {
     if (newBarcode.productName && newBarcode.sku && newBarcode.price && newBarcode.barcode) {
-      const barcode = {
-        id: Date.now(),
+      const barcodeData: Omit<BarcodeData, 'id'> = {
         productName: newBarcode.productName,
         sku: newBarcode.sku,
         price: parseFloat(newBarcode.price),
@@ -82,24 +72,39 @@ const BarcodeGenerator = () => {
         brand: newBarcode.brand || "Generic"
       };
       
-      setBarcodes([...barcodes, barcode]);
-      setNewBarcode({
-        productName: "",
-        sku: "",
-        price: "",
-        barcode: "",
-        barcodeType: "EAN-13",
-        brand: ""
-      });
+      const result = await createBarcodeMutation(apiClient.createBarcode)(barcodeData);
       
+      if (result) {
+        setNewBarcode({
+          productName: "",
+          sku: "",
+          price: "",
+          barcode: "",
+          barcodeType: "EAN-13",
+          brand: ""
+        });
+        refetchBarcodes();
+        toast({
+          title: "Barcode Generated",
+          description: "New barcode created successfully."
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to create barcode. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } else {
       toast({
-        title: "Barcode Generated",
-        description: "New barcode created successfully."
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
       });
     }
   };
 
-  const printBarcode = (barcode: any) => {
+  const printBarcode = (barcode: BarcodeData) => {
     console.log("Printing barcode:", barcode);
     toast({
       title: "Barcode Printed",
@@ -108,19 +113,29 @@ const BarcodeGenerator = () => {
   };
 
   const printBatch = () => {
-    console.log("Batch printing barcodes:", barcodes);
+    console.log("Batch printing barcodes:", barcodeList);
     toast({
       title: "Batch Print Started",
-      description: `Printing ${barcodes.length} barcode labels.`
+      description: `Printing ${barcodeList.length} barcode labels.`
     });
   };
 
-  const deleteBarcode = (id: number) => {
-    setBarcodes(barcodes.filter(b => b.id !== id));
-    toast({
-      title: "Barcode Deleted",
-      description: "Barcode removed successfully."
-    });
+  const deleteBarcode = async (id: number) => {
+    const result = await deleteBarcodeMutation(apiClient.deleteBarcode)(id);
+    
+    if (result !== null) {
+      refetchBarcodes();
+      toast({
+        title: "Barcode Deleted",
+        description: "Barcode removed successfully."
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to delete barcode. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -133,9 +148,9 @@ const BarcodeGenerator = () => {
             <p className="text-sm text-gray-500">Generate and print product barcodes</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={printBatch}>
+            <Button variant="outline" onClick={printBatch} disabled={barcodeList.length === 0}>
               <Printer className="h-4 w-4 mr-2" />
-              Batch Print ({barcodes.length})
+              Batch Print ({barcodeList.length})
             </Button>
             <Dialog>
               <DialogTrigger asChild>
@@ -218,8 +233,12 @@ const BarcodeGenerator = () => {
                       </Button>
                     </div>
                   </div>
-                  <Button onClick={addBarcode} className="w-full">
-                    Create Barcode
+                  <Button 
+                    onClick={addBarcode} 
+                    className="w-full"
+                    disabled={createLoading}
+                  >
+                    {createLoading ? "Creating..." : "Create Barcode"}
                   </Button>
                 </div>
               </DialogContent>
@@ -231,51 +250,61 @@ const BarcodeGenerator = () => {
       {/* Barcode List */}
       <Card>
         <CardHeader>
-          <CardTitle>Generated Barcodes ({barcodes.length})</CardTitle>
+          <CardTitle>Generated Barcodes ({barcodeList.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {barcodes.map((barcode) => (
-              <div key={barcode.id} className="border rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="outline">{barcode.barcodeType}</Badge>
-                  <div className="flex items-center gap-1">
+          {barcodesLoading ? (
+            <div className="text-center py-8">Loading barcodes...</div>
+          ) : barcodeList.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">No barcodes generated yet</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {barcodeList.map((barcode) => (
+                <div key={barcode.id} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline">{barcode.barcodeType}</Badge>
+                    <div className="flex items-center gap-1">
+                      <Button size="sm" variant="outline">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="destructive" 
+                        onClick={() => deleteBarcode(barcode.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium">{barcode.productName}</h4>
+                    <p className="text-sm text-gray-500">{barcode.brand}</p>
+                    <p className="text-sm">SKU: {barcode.sku}</p>
+                    <p className="text-sm font-medium">₹{barcode.price}</p>
+                  </div>
+                  
+                  {/* Barcode visualization (placeholder) */}
+                  <div className="bg-gray-100 p-3 rounded text-center">
+                    <div className="bg-black text-white text-xs py-1 px-2 inline-block mb-2">
+                      BARCODE
+                    </div>
+                    <p className="font-mono text-xs">{barcode.barcode}</p>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button size="sm" className="flex-1" onClick={() => printBarcode(barcode)}>
+                      <Printer className="h-3 w-3 mr-1" />
+                      Print
+                    </Button>
                     <Button size="sm" variant="outline">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={() => deleteBarcode(barcode.id)}>
-                      <Trash2 className="h-3 w-3" />
+                      <Download className="h-3 w-3" />
                     </Button>
                   </div>
                 </div>
-                
-                <div>
-                  <h4 className="font-medium">{barcode.productName}</h4>
-                  <p className="text-sm text-gray-500">{barcode.brand}</p>
-                  <p className="text-sm">SKU: {barcode.sku}</p>
-                  <p className="text-sm font-medium">₹{barcode.price}</p>
-                </div>
-                
-                {/* Barcode visualization (placeholder) */}
-                <div className="bg-gray-100 p-3 rounded text-center">
-                  <div className="bg-black text-white text-xs py-1 px-2 inline-block mb-2">
-                    BARCODE
-                  </div>
-                  <p className="font-mono text-xs">{barcode.barcode}</p>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button size="sm" className="flex-1" onClick={() => printBarcode(barcode)}>
-                    <Printer className="h-3 w-3 mr-1" />
-                    Print
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    <Download className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

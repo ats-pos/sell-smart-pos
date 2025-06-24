@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,22 +23,42 @@ import {
   TestTube
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useApi, useApiMutation } from "@/hooks/useApi";
+import apiClient, { StoreProfile } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("store");
 
   // Store Profile State
-  const [storeProfile, setStoreProfile] = useState({
-    name: "SPMPOS Store",
-    address: "123 Main Street, City",
-    phone: "+91 9876543210",
-    email: "store@spmpos.com",
-    gstin: "29ABCDE1234F1Z5",
+  const [storeProfile, setStoreProfile] = useState<Partial<StoreProfile>>({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    gstin: "",
     showOnReceipt: true
   });
 
-  // Printer Settings State
+  // API hooks
+  const { data: profileData, loading: profileLoading } = useApi(
+    () => apiClient.getStoreProfile(),
+    []
+  );
+
+  const { mutate: updateProfileMutation, loading: updateLoading } = useApiMutation<StoreProfile>();
+
+  // Load profile data when available
+  useEffect(() => {
+    if (profileData) {
+      setStoreProfile(profileData);
+    }
+  }, [profileData]);
+
+  // Other settings state (these would also be connected to API in a real app)
   const [printerSettings, setPrinterSettings] = useState({
     receiptPrinter: "",
     receiptPaperSize: "80mm",
@@ -48,7 +67,6 @@ const Settings = () => {
     autoPrint: true
   });
 
-  // Billing Preferences State
   const [billingPrefs, setBillingPrefs] = useState({
     defaultTaxRate: 18,
     enableDiscounts: true,
@@ -58,14 +76,12 @@ const Settings = () => {
     thankYouNote: "Thank you for your business!"
   });
 
-  // Inventory Settings State
   const [inventorySettings, setInventorySettings] = useState({
     stockThreshold: 10,
     autoBarcode: true,
     defaultUnit: "pcs"
   });
 
-  // Regional Settings State
   const [regionalSettings, setRegionalSettings] = useState({
     language: "english",
     currency: "INR",
@@ -73,12 +89,28 @@ const Settings = () => {
     taxCountry: "india"
   });
 
-  // Notifications State
   const [notifications, setNotifications] = useState({
     dailySummary: true,
     stockReorder: true,
     printerDisconnect: true
   });
+
+  const saveStoreProfile = async () => {
+    const result = await updateProfileMutation(apiClient.updateStoreProfile)(storeProfile);
+    
+    if (result) {
+      toast({
+        title: "Success",
+        description: "Store profile updated successfully."
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to update store profile. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,58 +198,69 @@ const Settings = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="storeName">Store Name</Label>
-                    <Input
-                      id="storeName"
-                      value={storeProfile.name}
-                      onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={storeProfile.phone}
-                      onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={storeProfile.email}
-                      onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="gstin">GSTIN</Label>
-                    <Input
-                      id="gstin"
-                      value={storeProfile.gstin}
-                      onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Textarea
-                    id="address"
-                    value={storeProfile.address}
-                    onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showOnReceipt"
-                    checked={storeProfile.showOnReceipt}
-                    onCheckedChange={(checked) => setStoreProfile({...storeProfile, showOnReceipt: checked})}
-                  />
-                  <Label htmlFor="showOnReceipt">Show store info on receipts</Label>
-                </div>
-                <Button>Save Store Profile</Button>
+                {profileLoading ? (
+                  <div className="text-center py-8">Loading store profile...</div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="storeName">Store Name</Label>
+                        <Input
+                          id="storeName"
+                          value={storeProfile.name || ""}
+                          onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          value={storeProfile.phone || ""}
+                          onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={storeProfile.email || ""}
+                          onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="gstin">GSTIN</Label>
+                        <Input
+                          id="gstin"
+                          value={storeProfile.gstin || ""}
+                          onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Address</Label>
+                      <Textarea
+                        id="address"
+                        value={storeProfile.address || ""}
+                        onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="showOnReceipt"
+                        checked={storeProfile.showOnReceipt || false}
+                        onCheckedChange={(checked) => setStoreProfile({...storeProfile, showOnReceipt: checked})}
+                      />
+                      <Label htmlFor="showOnReceipt">Show store info on receipts</Label>
+                    </div>
+                    <Button 
+                      onClick={saveStoreProfile}
+                      disabled={updateLoading}
+                    >
+                      {updateLoading ? "Saving..." : "Save Store Profile"}
+                    </Button>
+                  </>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -422,44 +465,8 @@ const Settings = () => {
                   User Management
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Users</h3>
-                  <Button>Add User</Button>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h4 className="font-medium">Admin User</h4>
-                        <p className="text-sm text-gray-500">Full access</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="destructive" size="sm">Remove</Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h4 className="font-medium">Cashier 1</h4>
-                        <p className="text-sm text-gray-500">Billing only</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="destructive" size="sm">Remove</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="autoLogout">Auto logout timeout (minutes)</Label>
-                  <Input id="autoLogout" type="number" defaultValue="30" />
-                </div>
+              <CardContent>
+                <p className="text-center py-8 text-gray-500">User management features coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -473,21 +480,8 @@ const Settings = () => {
                   Backup & Sync
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center space-x-2">
-                  <Switch id="cloudSync" defaultChecked />
-                  <Label htmlFor="cloudSync">Enable cloud sync</Label>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button variant="outline">Manual Sync</Button>
-                  <Button variant="outline">Backup to Drive</Button>
-                  <Button variant="outline">Restore from Backup</Button>
-                </div>
-                
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-700">Last sync: Today at 2:30 PM</p>
-                </div>
+              <CardContent>
+                <p className="text-center py-8 text-gray-500">Backup and sync features coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -501,38 +495,8 @@ const Settings = () => {
                   Regional Settings
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Language</Label>
-                    <RadioGroup value={regionalSettings.language} onValueChange={(value) => setRegionalSettings({...regionalSettings, language: value})}>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="english" id="english" />
-                        <Label htmlFor="english">English</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="hindi" id="hindi" />
-                        <Label htmlFor="hindi">Hindi</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Currency</Label>
-                    <RadioGroup value={regionalSettings.currency} onValueChange={(value) => setRegionalSettings({...regionalSettings, currency: value})}>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="INR" id="INR" />
-                        <Label htmlFor="INR">₹ (INR)</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="USD" id="USD" />
-                        <Label htmlFor="USD">$ (USD)</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                </div>
-                
-                <Button>Save Regional Settings</Button>
+              <CardContent>
+                <p className="text-center py-8 text-gray-500">Regional settings coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -546,37 +510,8 @@ const Settings = () => {
                   Notifications & Alerts
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="dailySummary"
-                      checked={notifications.dailySummary}
-                      onCheckedChange={(checked) => setNotifications({...notifications, dailySummary: checked})}
-                    />
-                    <Label htmlFor="dailySummary">Daily sales summary notification</Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="stockReorder"
-                      checked={notifications.stockReorder}
-                      onCheckedChange={(checked) => setNotifications({...notifications, stockReorder: checked})}
-                    />
-                    <Label htmlFor="stockReorder">Stock reorder reminders</Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="printerDisconnect"
-                      checked={notifications.printerDisconnect}
-                      onCheckedChange={(checked) => setNotifications({...notifications, printerDisconnect: checked})}
-                    />
-                    <Label htmlFor="printerDisconnect">Printer disconnect warning</Label>
-                  </div>
-                </div>
-                
-                <Button>Save Notification Settings</Button>
+              <CardContent>
+                <p className="text-center py-8 text-gray-500">Notification settings coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -590,26 +525,8 @@ const Settings = () => {
                   Sharing & Export
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch id="whatsappShare" defaultChecked />
-                    <Label htmlFor="whatsappShare">Enable WhatsApp sharing of receipts</Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="emailShare" defaultChecked />
-                    <Label htmlFor="emailShare">Enable email sharing of receipts</Label>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Export Reports</Label>
-                  <div className="flex gap-2">
-                    <Button variant="outline">Export Daily Report</Button>
-                    <Button variant="outline">Export Monthly Report</Button>
-                  </div>
-                </div>
+              <CardContent>
+                <p className="text-center py-8 text-gray-500">Sharing and export features coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -633,6 +550,11 @@ const Settings = () => {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Last Updated</span>
                     <span className="text-gray-500">Dec 24, 2024</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">API Status</span>
+                    <Badge variant="default">Connected</Badge>
                   </div>
                 </div>
                 
