@@ -13,47 +13,54 @@ import {
   UserCheck
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useGraphQLQuery } from "@/hooks/useGraphQL";
-import { 
-  GET_DASHBOARD_STATS, 
-  GET_LOW_STOCK_ITEMS, 
-  GET_RECENT_TRANSACTIONS 
-} from "@/lib/graphql/queries";
-import { DashboardStats, Product, Sale } from "@/lib/graphql/types";
+import { useApi } from "@/hooks/useApi";
+import apiClient from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  const { data: dashboardStats, loading: statsLoading, error: statsError } = useGraphQLQuery<{
-    dashboardStats: DashboardStats;
-  }>(GET_DASHBOARD_STATS);
+  const { toast } = useToast();
+  
+  const { data: dashboardStats, loading: statsLoading, error: statsError } = useApi(
+    () => apiClient.getDashboardStats(),
+    []
+  );
 
-  const { data: lowStockData, loading: lowStockLoading } = useGraphQLQuery<{
-    lowStockItems: Product[];
-  }>(GET_LOW_STOCK_ITEMS);
+  const { data: lowStockItems, loading: lowStockLoading } = useApi(
+    () => apiClient.getLowStockItems(),
+    []
+  );
 
-  const { data: recentTransactionsData, loading: transactionsLoading } = useGraphQLQuery<{
-    recentTransactions: Sale[];
-  }>(GET_RECENT_TRANSACTIONS, {
-    variables: { limit: 5 }
-  });
+  const { data: recentTransactions, loading: transactionsLoading } = useApi(
+    () => apiClient.getRecentTransactions(),
+    []
+  );
 
-  // Fallback data for offline mode or errors
-  const todayStats = dashboardStats?.dashboardStats || {
+  if (statsError) {
+    toast({
+      title: "Error",
+      description: "Failed to load dashboard data. Using offline mode.",
+      variant: "destructive",
+    });
+  }
+
+  // Fallback data for offline mode
+  const todayStats = dashboardStats || {
     sales: 15420,
     transactions: 47,
     customers: 32,
     avgOrder: 328
   };
 
-  const lowStockProducts = lowStockData?.lowStockItems || [
-    { id: "1", name: "Wireless Headphones", stock: 3, minStock: 10, category: "Electronics", brand: "Sony" },
-    { id: "2", name: "Phone Case", stock: 1, minStock: 5, category: "Accessories", brand: "Generic" },
-    { id: "3", name: "Power Bank", stock: 2, minStock: 8, category: "Electronics", brand: "Anker" }
+  const lowStockProducts = lowStockItems || [
+    { id: 1, name: "Wireless Headphones", stock: 3, minStock: 10 },
+    { id: 2, name: "Phone Case", stock: 1, minStock: 5 },
+    { id: 3, name: "Power Bank", stock: 2, minStock: 8 }
   ];
 
-  const recentSales = recentTransactionsData?.recentTransactions || [
-    { id: "1", billNumber: "TXN001", total: 1250, customerName: "John Doe", createdAt: "2 min ago" },
-    { id: "2", billNumber: "TXN002", total: 890, customerName: "Sarah Smith", createdAt: "15 min ago" },
-    { id: "3", billNumber: "TXN003", total: 2340, customerName: "Mike Johnson", createdAt: "32 min ago" }
+  const recentSales = recentTransactions || [
+    { id: 1, billNumber: "TXN001", total: 1250, customerName: "John Doe", createdAt: "2 min ago" },
+    { id: 2, billNumber: "TXN002", total: 890, customerName: "Sarah Smith", createdAt: "15 min ago" },
+    { id: 3, billNumber: "TXN003", total: 2340, customerName: "Mike Johnson", createdAt: "32 min ago" }
   ];
 
   if (statsError) {
@@ -131,7 +138,7 @@ const Dashboard = () => {
               <div className="text-center py-4">Loading...</div>
             ) : (
               lowStockProducts.map((item, index) => (
-                <div key={item.id || index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
                   <div>
                     <p className="font-medium text-sm">{item.name}</p>
                     <p className="text-xs text-gray-500">Min stock: {item.minStock}</p>

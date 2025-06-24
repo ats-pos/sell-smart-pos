@@ -11,47 +11,41 @@ import {
   Users,
   Package
 } from "lucide-react";
-import { useGraphQLQuery } from "@/hooks/useGraphQL";
-import { 
-  GET_SALES_ANALYTICS, 
-  GET_TOP_PRODUCTS, 
-  GET_GST_SUMMARY 
-} from "@/lib/graphql/queries";
-import { SalesAnalytics, TopProduct, GSTSummary } from "@/lib/graphql/types";
+import { useApi } from "@/hooks/useApi";
+import apiClient from "@/lib/api";
 
 const ReportsModule = () => {
-  // GraphQL hooks for different report data
-  const { data: salesAnalyticsData, loading: salesLoading } = useGraphQLQuery<{
-    salesAnalytics: SalesAnalytics;
-  }>(GET_SALES_ANALYTICS, {
-    variables: { period: 'month' }
-  });
+  // API hooks for different report data
+  const { data: salesAnalytics, loading: salesLoading } = useApi(
+    () => apiClient.getSalesAnalytics('month'),
+    []
+  );
 
-  const { data: topProductsData, loading: productsLoading } = useGraphQLQuery<{
-    topProducts: TopProduct[];
-  }>(GET_TOP_PRODUCTS, {
-    variables: { limit: 10 }
-  });
+  const { data: topProducts, loading: productsLoading } = useApi(
+    () => apiClient.getTopProducts(10),
+    []
+  );
 
-  const { data: gstSummaryData, loading: gstLoading } = useGraphQLQuery<{
-    gstSummary: GSTSummary;
-  }>(GET_GST_SUMMARY);
+  const { data: gstSummary, loading: gstLoading } = useApi(
+    () => apiClient.getGSTSummary(),
+    []
+  );
 
   // Fallback data for offline mode
-  const salesData = salesAnalyticsData?.salesAnalytics || {
+  const salesData = salesAnalytics || {
     today: { sales: 15420, transactions: 47, customers: 32 },
     week: { sales: 89340, transactions: 234, customers: 156 },
     month: { sales: 342580, transactions: 1023, customers: 567 }
   };
 
-  const topProductsList = topProductsData?.topProducts || [
+  const topProductsList = topProducts || [
     { name: "Wireless Headphones", sold: 45, revenue: 134955 },
     { name: "Power Bank", sold: 38, revenue: 72162 },
     { name: "Phone Case", sold: 67, revenue: 40133 },
     { name: "Bluetooth Speaker", sold: 23, revenue: 80477 }
   ];
 
-  const gstData = gstSummaryData?.gstSummary || {
+  const gstData = gstSummary || {
     totalSales: 342580,
     cgst: 30832,
     sgst: 30832,
