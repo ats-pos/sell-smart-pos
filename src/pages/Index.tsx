@@ -15,8 +15,10 @@ import {
   TrendingUp,
   DollarSign,
   ShoppingBag,
-  Menu
+  Menu,
+  Settings
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Dashboard from "@/components/Dashboard";
 import BillingModule from "@/components/BillingModule";
 import InventoryModule from "@/components/InventoryModule";
@@ -25,6 +27,7 @@ import ReportsModule from "@/components/ReportsModule";
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -42,8 +45,17 @@ const Index = () => {
               </div>
             </div>
             
-            {/* Desktop New Sale Button */}
-            <div className="hidden sm:block">
+            {/* Desktop Actions */}
+            <div className="hidden sm:flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate('/settings')}
+                className="flex items-center gap-2"
+              >
+                <Settings className="h-4 w-4" />
+                Settings
+              </Button>
               <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
@@ -64,7 +76,18 @@ const Index = () => {
 
           {/* Mobile Menu Dropdown */}
           {showMobileMenu && (
-            <div className="sm:hidden border-t bg-white py-2">
+            <div className="sm:hidden border-t bg-white py-2 space-y-2">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center gap-2"
+                onClick={() => {
+                  navigate('/settings');
+                  setShowMobileMenu(false);
+                }}
+              >
+                <Settings className="h-4 w-4" />
+                Settings
+              </Button>
               <Button className="w-full bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
