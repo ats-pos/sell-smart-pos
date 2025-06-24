@@ -17,6 +17,9 @@ const config: CapacitorConfig = {
       androidScaleType: "CENTER_CROP",
       showSpinner: true,
       spinnerColor: "#ffffff"
+    },
+    StatusBar: {
+      style: 'DEFAULT'
     }
   }
 };
