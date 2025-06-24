@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,25 +13,54 @@ import {
   UserCheck
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useApi } from "@/hooks/useApi";
+import apiClient from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  const todayStats = {
+  const { toast } = useToast();
+  
+  const { data: dashboardStats, loading: statsLoading, error: statsError } = useApi(
+    () => apiClient.getDashboardStats(),
+    []
+  );
+
+  const { data: lowStockItems, loading: lowStockLoading } = useApi(
+    () => apiClient.getLowStockItems(),
+    []
+  );
+
+  const { data: recentTransactions, loading: transactionsLoading } = useApi(
+    () => apiClient.getRecentTransactions(),
+    []
+  );
+
+  if (statsError) {
+    toast({
+      title: "Error",
+      description: "Failed to load dashboard data. Using offline mode.",
+      variant: "destructive",
+    });
+  }
+
+  // Fallback data for offline mode
+  const todayStats = dashboardStats || {
     sales: 15420,
     transactions: 47,
     customers: 32,
     avgOrder: 328
   };
 
-  const lowStockItems = [
-    { name: "Wireless Headphones", stock: 3, minStock: 10 },
-    { name: "Phone Case", stock: 1, minStock: 5 },
-    { name: "Power Bank", stock: 2, minStock: 8 }
+  const lowStockProducts = lowStockItems || [
+    { id: 1, name: "Wireless Headphones", stock: 3, minStock: 10 },
+    { id: 2, name: "Phone Case", stock: 1, minStock: 5 },
+    { id: 3, name: "Power Bank", stock: 2, minStock: 8 }
   ];
 
-  const recentTransactions = [
-    { id: "TXN001", amount: 1250, customer: "John Doe", time: "2 min ago" },
-    { id: "TXN002", amount: 890, customer: "Sarah Smith", time: "15 min ago" },
-    { id: "TXN003", amount: 2340, customer: "Mike Johnson", time: "32 min ago" }
+  const recentSales = recentTransactions || [
+    { id: 1, billNumber: "TXN001", total: 1250, customerName: "John Doe", createdAt: "2 min ago" },
+    { id: 2, billNumber: "TXN002", total: 890, customerName: "Sarah Smith", createdAt: "15 min ago" },
+    { id: 3, billNumber: "TXN003", total: 2340, customerName: "Mike Johnson", createdAt: "32 min ago" }
   ];
 
   return (
@@ -45,7 +73,9 @@ const Dashboard = () => {
             <DollarSign className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{todayStats.sales.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              {statsLoading ? "Loading..." : `₹${todayStats.sales?.toLocaleString() || 0}`}
+            </div>
             <p className="text-xs text-blue-100">+20.1% from yesterday</p>
           </CardContent>
         </Card>
@@ -56,7 +86,9 @@ const Dashboard = () => {
             <Receipt className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{todayStats.transactions}</div>
+            <div className="text-2xl font-bold">
+              {statsLoading ? "Loading..." : (todayStats.transactions || 0)}
+            </div>
             <p className="text-xs text-green-100">+12% from yesterday</p>
           </CardContent>
         </Card>
@@ -67,7 +99,9 @@ const Dashboard = () => {
             <Users className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{todayStats.customers}</div>
+            <div className="text-2xl font-bold">
+              {statsLoading ? "Loading..." : (todayStats.customers || 0)}
+            </div>
             <p className="text-xs text-purple-100">+5 new customers</p>
           </CardContent>
         </Card>
@@ -78,7 +112,9 @@ const Dashboard = () => {
             <TrendingUp className="h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{todayStats.avgOrder}</div>
+            <div className="text-2xl font-bold">
+              {statsLoading ? "Loading..." : `₹${todayStats.avgOrder || 0}`}
+            </div>
             <p className="text-xs text-orange-100">+8.2% increase</p>
           </CardContent>
         </Card>
@@ -94,15 +130,19 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {lowStockItems.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-sm">{item.name}</p>
-                  <p className="text-xs text-gray-500">Min stock: {item.minStock}</p>
+            {lowStockLoading ? (
+              <div className="text-center py-4">Loading...</div>
+            ) : (
+              lowStockProducts.map((item, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">{item.name}</p>
+                    <p className="text-xs text-gray-500">Min stock: {item.minStock}</p>
+                  </div>
+                  <Badge variant="destructive">{item.stock} left</Badge>
                 </div>
-                <Badge variant="destructive">{item.stock} left</Badge>
-              </div>
-            ))}
+              ))
+            )}
             <Button variant="outline" className="w-full mt-3">
               <Package className="h-4 w-4 mr-2" />
               Manage Inventory
@@ -119,18 +159,22 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {recentTransactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-sm">{transaction.id}</p>
-                  <p className="text-xs text-gray-500">{transaction.customer}</p>
+            {transactionsLoading ? (
+              <div className="text-center py-4">Loading...</div>
+            ) : (
+              recentSales.map((transaction) => (
+                <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">{transaction.billNumber}</p>
+                    <p className="text-xs text-gray-500">{transaction.customerName}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-green-600">₹{transaction.total}</p>
+                    <p className="text-xs text-gray-500">{transaction.createdAt}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold text-green-600">₹{transaction.amount}</p>
-                  <p className="text-xs text-gray-500">{transaction.time}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
             <Button variant="outline" className="w-full mt-3">
               <Receipt className="h-4 w-4 mr-2" />
               View All Transactions

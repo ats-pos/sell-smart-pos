@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { 
   Search, 
   Plus, 
@@ -15,30 +13,27 @@ import {
   Trash2, 
   Calculator,
   CreditCard,
-  Smartphone,
-  Banknote,
   Printer,
   Share,
   Pause,
   Play,
   Percent,
   User,
-  FileText,
   Bluetooth,
   Wifi,
   WifiOff
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useApi, useApiMutation } from "@/hooks/useApi";
+import apiClient, { Product, Sale, SaleItem, Customer } from "@/lib/api";
 
 const BillingModule = () => {
   const { toast } = useToast();
-  const [cart, setCart] = useState([
-    { id: 1, name: "Wireless Headphones", price: 2999, quantity: 1, barcode: "123456789", discount: 0 },
-    { id: 2, name: "Phone Case", price: 599, quantity: 2, barcode: "987654321", discount: 10 }
-  ]);
-
+  
+  // State management
+  const [cart, setCart] = useState<SaleItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [customer, setCustomer] = useState({
+  const [customer, setCustomer] = useState<Partial<Customer>>({
     name: "",
     phone: "",
     email: "",
@@ -47,15 +42,31 @@ const BillingModule = () => {
   const [billDiscount, setBillDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [isOnline, setIsOnline] = useState(true);
-  const [holdBills, setHoldBills] = useState([]);
+  const [holdBills, setHoldBills] = useState<any[]>([]);
   const [currentBillNumber, setCurrentBillNumber] = useState("INV-2024-001");
 
-  const sampleProducts = [
-    { id: 3, name: "Power Bank 10000mAh", price: 1899, stock: 15, barcode: "111222333" },
-    { id: 4, name: "Bluetooth Speaker", price: 3499, stock: 8, barcode: "444555666" },
-    { id: 5, name: "USB Cable", price: 299, stock: 25, barcode: "777888999" },
-    { id: 6, name: "Wireless Mouse", price: 1299, stock: 12, barcode: "000111222" }
-  ];
+  // API hooks
+  const { data: products, loading: productsLoading } = useApi(
+    () => searchTerm ? apiClient.searchProducts(searchTerm) : apiClient.getProducts(),
+    [searchTerm]
+  );
+
+  const { mutate: createSaleMutation, loading: saleLoading } = useApiMutation<Sale>();
+  const { mutate: createCustomerMutation } = useApiMutation<Customer>();
+
+  // Check online status
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const updateQuantity = (id: number, change: number) => {
     setCart(cart.map(item => 
@@ -71,12 +82,21 @@ const BillingModule = () => {
     ));
   };
 
-  const addToCart = (product: any) => {
-    const existingItem = cart.find(item => item.id === product.id);
+  const addToCart = (product: Product) => {
+    const existingItem = cart.find(item => item.productId === product.id);
     if (existingItem) {
-      updateQuantity(product.id, 1);
+      updateQuantity(existingItem.id, 1);
     } else {
-      setCart([...cart, { ...product, quantity: 1, discount: 0 }]);
+      const newItem: SaleItem = {
+        id: Date.now(),
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity: 1,
+        discount: 0,
+        total: product.price
+      };
+      setCart([...cart, newItem]);
     }
   };
 
@@ -112,7 +132,7 @@ const BillingModule = () => {
     });
   };
 
-  const calculateItemTotal = (item: any) => {
+  const calculateItemTotal = (item: SaleItem) => {
     const itemTotal = item.price * item.quantity;
     return itemTotal - (itemTotal * item.discount / 100);
   };
@@ -124,20 +144,6 @@ const BillingModule = () => {
   const total = discountedSubtotal + gst;
 
   const printReceipt = () => {
-    const receiptData = {
-      billNumber: currentBillNumber,
-      date: new Date().toLocaleString(),
-      customer,
-      items: cart,
-      subtotal,
-      billDiscount: billDiscountAmount,
-      gst,
-      total,
-      paymentMethod
-    };
-
-    // Simulate printing
-    console.log("Printing receipt:", receiptData);
     toast({
       title: "Receipt Printed",
       description: `Receipt ${currentBillNumber} sent to thermal printer.`
@@ -151,7 +157,7 @@ const BillingModule = () => {
     });
   };
 
-  const completeSale = () => {
+  const completeSale = async () => {
     if (cart.length === 0) {
       toast({
         title: "Error",
@@ -170,27 +176,72 @@ const BillingModule = () => {
       return;
     }
 
-    // Simulate sale completion
-    printReceipt();
-    setCart([]);
-    setCustomer({ name: "", phone: "", email: "", gstin: "" });
-    setPaymentMethod("");
-    setBillDiscount(0);
-    
-    // Generate next bill number
-    const nextNum = parseInt(currentBillNumber.split('-')[2]) + 1;
-    setCurrentBillNumber(`INV-2024-${String(nextNum).padStart(3, '0')}`);
+    try {
+      // Create customer if provided
+      let customerId: number | undefined;
+      if (customer.name || customer.phone) {
+        const customerResult = await createCustomerMutation(apiClient.createCustomer)({
+          name: customer.name || "",
+          phone: customer.phone || "",
+          email: customer.email || "",
+          gstin: customer.gstin || ""
+        });
+        if (customerResult) {
+          customerId = customerResult.id;
+        }
+      }
 
-    toast({
-      title: "Sale Completed",
-      description: `Bill ${currentBillNumber} processed successfully.`
-    });
+      // Create sale
+      const saleData: Omit<Sale, 'id' | 'createdAt'> = {
+        billNumber: currentBillNumber,
+        customerId,
+        customerName: customer.name,
+        items: cart.map(item => ({
+          ...item,
+          total: calculateItemTotal(item)
+        })),
+        subtotal,
+        discount: billDiscountAmount,
+        gst,
+        total,
+        paymentMethod,
+        status: 'completed'
+      };
+
+      const result = await createSaleMutation(apiClient.createSale)(saleData);
+      
+      if (result) {
+        printReceipt();
+        setCart([]);
+        setCustomer({ name: "", phone: "", email: "", gstin: "" });
+        setPaymentMethod("");
+        setBillDiscount(0);
+        
+        // Generate next bill number
+        const nextNum = parseInt(currentBillNumber.split('-')[2]) + 1;
+        setCurrentBillNumber(`INV-2024-${String(nextNum).padStart(3, '0')}`);
+
+        toast({
+          title: "Sale Completed",
+          description: `Bill ${currentBillNumber} processed successfully.`
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to complete sale. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to complete sale. Please check your connection.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const filteredProducts = sampleProducts.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.barcode.includes(searchTerm)
-  );
+  const filteredProducts = products || [];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -268,22 +319,28 @@ const BillingModule = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                  onClick={() => addToCart(product)}
-                >
-                  <div>
-                    <p className="font-medium">{product.name}</p>
-                    <p className="text-sm text-gray-500">₹{product.price} • Stock: {product.stock}</p>
-                    <p className="text-xs text-gray-400 font-mono">{product.barcode}</p>
+              {productsLoading ? (
+                <div className="col-span-2 text-center py-8">Loading products...</div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="col-span-2 text-center py-8 text-gray-500">No products found</div>
+              ) : (
+                filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onClick={() => addToCart(product)}
+                  >
+                    <div>
+                      <p className="font-medium">{product.name}</p>
+                      <p className="text-sm text-gray-500">₹{product.price} • Stock: {product.stock}</p>
+                      <p className="text-xs text-gray-400 font-mono">{product.barcode}</p>
+                    </div>
+                    <Button size="sm" variant="outline">
+                      <Plus className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button size="sm" variant="outline">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
@@ -308,7 +365,7 @@ const BillingModule = () => {
                     <div key={item.id} className="border rounded p-3">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex-1">
-                          <p className="font-medium text-sm">{item.name}</p>
+                          <p className="font-medium text-sm">{item.productName}</p>
                           <p className="text-xs text-gray-500">₹{item.price} each</p>
                         </div>
                         <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
@@ -406,10 +463,10 @@ const BillingModule = () => {
                   <Button 
                     className="w-full bg-green-600 hover:bg-green-700" 
                     onClick={completeSale}
-                    disabled={cart.length === 0 || !paymentMethod}
+                    disabled={cart.length === 0 || !paymentMethod || saleLoading}
                   >
                     <CreditCard className="h-4 w-4 mr-2" />
-                    Complete Sale
+                    {saleLoading ? "Processing..." : "Complete Sale"}
                   </Button>
                   
                   <div className="flex gap-2">
@@ -439,22 +496,22 @@ const BillingModule = () => {
           <CardContent className="space-y-3">
             <Input 
               placeholder="Customer Name (Optional)" 
-              value={customer.name}
+              value={customer.name || ""}
               onChange={(e) => setCustomer({...customer, name: e.target.value})}
             />
             <Input 
               placeholder="Phone Number (Optional)" 
-              value={customer.phone}
+              value={customer.phone || ""}
               onChange={(e) => setCustomer({...customer, phone: e.target.value})}
             />
             <Input 
               placeholder="Email (Optional)" 
-              value={customer.email}
+              value={customer.email || ""}
               onChange={(e) => setCustomer({...customer, email: e.target.value})}
             />
             <Input 
               placeholder="GSTIN (Optional)" 
-              value={customer.gstin}
+              value={customer.gstin || ""}
               onChange={(e) => setCustomer({...customer, gstin: e.target.value})}
             />
           </CardContent>

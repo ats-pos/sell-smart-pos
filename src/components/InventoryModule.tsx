@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,56 +19,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BarcodeGenerator from "./BarcodeGenerator";
+import { useApi, useApiMutation } from "@/hooks/useApi";
+import apiClient, { Product } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const InventoryModule = () => {
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState([
-    { 
-      id: 1, 
-      name: "Wireless Headphones", 
-      barcode: "123456789", 
-      price: 2999, 
-      stock: 15,
-      minStock: 10, 
-      category: "Electronics",
-      brand: "TechBrand",
-      supplier: "Tech Supplies Co."
-    },
-    { 
-      id: 2, 
-      name: "Phone Case", 
-      barcode: "987654321", 
-      price: 599, 
-      stock: 3, 
-      minStock: 5, 
-      category: "Accessories",
-      brand: "CasePlus",
-      supplier: "Mobile Accessories Ltd."
-    },
-    { 
-      id: 3, 
-      name: "Power Bank 10000mAh", 
-      barcode: "111222333", 
-      price: 1899, 
-      stock: 25, 
-      minStock: 8, 
-      category: "Electronics",
-      brand: "PowerTech",
-      supplier: "Power Solutions Inc."
-    },
-    { 
-      id: 4, 
-      name: "Bluetooth Speaker", 
-      barcode: "444555666", 
-      price: 3499, 
-      stock: 2, 
-      minStock: 5, 
-      category: "Electronics",
-      brand: "SoundMax",
-      supplier: "Audio World"
-    }
-  ]);
-
   const [newProduct, setNewProduct] = useState({
     name: "",
     barcode: "",
@@ -81,13 +37,18 @@ const InventoryModule = () => {
     supplier: ""
   });
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.barcode.includes(searchTerm) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
+  // API hooks
+  const { data: products, loading: productsLoading, refetch: refetchProducts } = useApi(
+    () => searchTerm ? apiClient.searchProducts(searchTerm) : apiClient.getProducts(),
+    [searchTerm]
   );
 
-  const lowStockProducts = products.filter(product => product.stock <= product.minStock);
+  const { mutate: createProductMutation, loading: createLoading } = useApiMutation<Product>();
+  const { mutate: updateProductMutation } = useApiMutation<Product>();
+  const { mutate: deleteProductMutation } = useApiMutation<void>();
+
+  const productList = products || [];
+  const lowStockProducts = productList.filter(product => product.stock <= product.minStock);
 
   const getStockStatus = (stock: number, minStock: number) => {
     if (stock === 0) return { label: "Out of Stock", color: "destructive" };
@@ -95,10 +56,9 @@ const InventoryModule = () => {
     return { label: "In Stock", color: "default" };
   };
 
-  const addProduct = () => {
+  const addProduct = async () => {
     if (newProduct.name && newProduct.barcode && newProduct.price) {
-      const product = {
-        id: Date.now(),
+      const productData: Omit<Product, 'id'> = {
         name: newProduct.name,
         barcode: newProduct.barcode,
         price: parseInt(newProduct.price),
@@ -108,16 +68,55 @@ const InventoryModule = () => {
         brand: newProduct.brand || "Generic",
         supplier: newProduct.supplier || "Unknown"
       };
-      setProducts([...products, product]);
-      setNewProduct({
-        name: "",
-        barcode: "",
-        price: "",
-        stock: "",
-        minStock: "",
-        category: "",
-        brand: "",
-        supplier: ""
+
+      const result = await createProductMutation(apiClient.createProduct)(productData);
+      
+      if (result) {
+        setNewProduct({
+          name: "",
+          barcode: "",
+          price: "",
+          stock: "",
+          minStock: "",
+          category: "",
+          brand: "",
+          supplier: ""
+        });
+        refetchProducts();
+        toast({
+          title: "Product Added",
+          description: "Product has been added successfully."
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to add product. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } else {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const deleteProduct = async (id: number) => {
+    const result = await deleteProductMutation(apiClient.deleteProduct)(id);
+    
+    if (result !== null) {
+      refetchProducts();
+      toast({
+        title: "Product Deleted",
+        description: "Product has been deleted successfully."
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to delete product. Please try again.",
+        variant: "destructive"
       });
     }
   };
@@ -143,7 +142,7 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <Package className="h-8 w-8 text-blue-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">{products.length}</p>
+                  <p className="text-2xl font-bold">{productsLoading ? "..." : productList.length}</p>
                   <p className="text-sm text-gray-500">Total Products</p>
                 </div>
               </CardContent>
@@ -152,7 +151,7 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <AlertTriangle className="h-8 w-8 text-amber-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">{lowStockProducts.length}</p>
+                  <p className="text-2xl font-bold">{productsLoading ? "..." : lowStockProducts.length}</p>
                   <p className="text-sm text-gray-500">Low Stock Items</p>
                 </div>
               </CardContent>
@@ -161,7 +160,9 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <Package className="h-8 w-8 text-green-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">{products.reduce((sum, p) => sum + p.stock, 0)}</p>
+                  <p className="text-2xl font-bold">
+                    {productsLoading ? "..." : productList.reduce((sum, p) => sum + p.stock, 0)}
+                  </p>
                   <p className="text-sm text-gray-500">Total Stock</p>
                 </div>
               </CardContent>
@@ -170,7 +171,9 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <Package className="h-8 w-8 text-purple-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">₹{products.reduce((sum, p) => sum + (p.price * p.stock), 0).toLocaleString()}</p>
+                  <p className="text-2xl font-bold">
+                    ₹{productsLoading ? "..." : productList.reduce((sum, p) => sum + (p.price * p.stock), 0).toLocaleString()}
+                  </p>
                   <p className="text-sm text-gray-500">Stock Value</p>
                 </div>
               </CardContent>
@@ -298,8 +301,12 @@ const InventoryModule = () => {
                           />
                         </div>
                       </div>
-                      <Button onClick={addProduct} className="w-full">
-                        Add Product
+                      <Button 
+                        onClick={addProduct} 
+                        className="w-full"
+                        disabled={createLoading}
+                      >
+                        {createLoading ? "Adding..." : "Add Product"}
                       </Button>
                     </div>
                   </DialogContent>
@@ -311,63 +318,73 @@ const InventoryModule = () => {
           {/* Products Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Products ({filteredProducts.length})</CardTitle>
+              <CardTitle>Products ({productList.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-3">Product</th>
-                      <th className="text-left p-3">Barcode</th>
-                      <th className="text-left p-3">Price</th>
-                      <th className="text-left p-3">Stock</th>
-                      <th className="text-left p-3">Status</th>
-                      <th className="text-left p-3">Category</th>
-                      <th className="text-left p-3">Supplier</th>
-                      <th className="text-left p-3">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredProducts.map((product) => {
-                      const status = getStockStatus(product.stock, product.minStock);
-                      return (
-                        <tr key={product.id} className="border-b hover:bg-gray-50">
-                          <td className="p-3">
-                            <div>
-                              <p className="font-medium">{product.name}</p>
-                              <p className="text-sm text-gray-500">{product.brand}</p>
-                            </div>
-                          </td>
-                          <td className="p-3 text-sm font-mono">{product.barcode}</td>
-                          <td className="p-3 font-medium">₹{product.price}</td>
-                          <td className="p-3">
-                            <span className={`font-medium ${product.stock <= product.minStock ? 'text-red-600' : 'text-gray-900'}`}>
-                              {product.stock}
-                            </span>
-                            <span className="text-gray-500 text-sm"> / {product.minStock}</span>
-                          </td>
-                          <td className="p-3">
-                            <Badge variant={status.color as any}>{status.label}</Badge>
-                          </td>
-                          <td className="p-3 text-sm">{product.category}</td>
-                          <td className="p-3 text-sm">{product.supplier}</td>
-                          <td className="p-3">
-                            <div className="flex items-center gap-2">
-                              <Button size="sm" variant="outline">
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                              <Button size="sm" variant="destructive">
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              {productsLoading ? (
+                <div className="text-center py-8">Loading products...</div>
+              ) : productList.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">No products found</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-3">Product</th>
+                        <th className="text-left p-3">Barcode</th>
+                        <th className="text-left p-3">Price</th>
+                        <th className="text-left p-3">Stock</th>
+                        <th className="text-left p-3">Status</th>
+                        <th className="text-left p-3">Category</th>
+                        <th className="text-left p-3">Supplier</th>
+                        <th className="text-left p-3">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {productList.map((product) => {
+                        const status = getStockStatus(product.stock, product.minStock);
+                        return (
+                          <tr key={product.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3">
+                              <div>
+                                <p className="font-medium">{product.name}</p>
+                                <p className="text-sm text-gray-500">{product.brand}</p>
+                              </div>
+                            </td>
+                            <td className="p-3 text-sm font-mono">{product.barcode}</td>
+                            <td className="p-3 font-medium">₹{product.price}</td>
+                            <td className="p-3">
+                              <span className={`font-medium ${product.stock <= product.minStock ? 'text-red-600' : 'text-gray-900'}`}>
+                                {product.stock}
+                              </span>
+                              <span className="text-gray-500 text-sm"> / {product.minStock}</span>
+                            </td>
+                            <td className="p-3">
+                              <Badge variant={status.color as any}>{status.label}</Badge>
+                            </td>
+                            <td className="p-3 text-sm">{product.category}</td>
+                            <td className="p-3 text-sm">{product.supplier}</td>
+                            <td className="p-3">
+                              <div className="flex items-center gap-2">
+                                <Button size="sm" variant="outline">
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive"
+                                  onClick={() => deleteProduct(product.id)}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
