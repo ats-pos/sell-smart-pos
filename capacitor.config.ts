@@ -2,7 +2,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.1bdcda830743442bbbcc39a0cfd81125',
+  appId: 'com.indyzai.pos',
   appName: 'sell-smart-pos',
   webDir: 'dist',
   server: {
