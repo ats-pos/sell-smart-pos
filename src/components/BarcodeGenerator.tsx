@@ -14,13 +14,15 @@ import {
   Trash2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useApi, useApiMutation } from "@/hooks/useApi";
-import apiClient, { BarcodeData } from "@/lib/api";
+import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
+import { GET_BARCODES } from "@/lib/graphql/queries";
+import { CREATE_BARCODE, DELETE_BARCODE } from "@/lib/graphql/mutations";
+import { BarcodeData, BarcodeInput } from "@/lib/graphql/types";
 
 const BarcodeGenerator = () => {
   const { toast } = useToast();
   
-  const [newBarcode, setNewBarcode] = useState({
+  const [newBarcode, setNewBarcode] = useState<BarcodeInput>({
     productName: "",
     sku: "",
     price: 0,
@@ -29,17 +31,39 @@ const BarcodeGenerator = () => {
     brand: ""
   });
 
-  // API hooks
-  const { data: barcodes, loading: barcodesLoading, refetch: refetchBarcodes } = useApi(
-    () => apiClient.getBarcodes(),
-    []
-  );
+  // GraphQL hooks
+  const { data: barcodesData, loading: barcodesLoading, refetch: refetchBarcodes } = useGraphQLQuery<{
+    barcodes: BarcodeData[];
+  }>(GET_BARCODES, {
+    variables: { limit: 100 }
+  });
 
-  const { mutate: createBarcodeMutation, loading: createLoading } = useApiMutation<BarcodeData>();
-  const { mutate: deleteBarcodeMutation } = useApiMutation<void>();
+  const { mutate: createBarcode, loading: createLoading } = useGraphQLMutation<{
+    createBarcode: BarcodeData;
+  }, { input: BarcodeInput }>(CREATE_BARCODE, {
+    onCompleted: () => {
+      toast({
+        title: "Barcode Generated",
+        description: "New barcode created successfully."
+      });
+      refetchBarcodes();
+    }
+  });
+
+  const { mutate: deleteBarcode } = useGraphQLMutation<{
+    deleteBarcode: { success: boolean; message: string };
+  }, { id: string }>(DELETE_BARCODE, {
+    onCompleted: () => {
+      toast({
+        title: "Barcode Deleted",
+        description: "Barcode removed successfully."
+      });
+      refetchBarcodes();
+    }
+  });
 
   const barcodeTypes = ["EAN-13", "EAN-8", "UPC-A", "Code 128", "Code 39"];
-  const barcodeList = barcodes || [];
+  const barcodeList = barcodesData?.barcodes || [];
 
   const generateBarcode = () => {
     // Generate a random barcode based on type
@@ -63,37 +87,25 @@ const BarcodeGenerator = () => {
 
   const addBarcode = async () => {
     if (newBarcode.productName && newBarcode.sku && newBarcode.price && newBarcode.barcode) {
-      const barcodeData: Omit<BarcodeData, 'id'> = {
-        productName: newBarcode.productName,
-        sku: newBarcode.sku,
-        price: parseFloat(newBarcode.price),
-        barcode: newBarcode.barcode,
-        barcodeType: newBarcode.barcodeType,
-        brand: newBarcode.brand || "Generic"
-      };
-      
-      const result = await createBarcodeMutation(apiClient.createBarcode)(barcodeData);
-      
-      if (result) {
+      try {
+        await createBarcode({
+          input: {
+            ...newBarcode,
+            price: Number(newBarcode.price),
+            brand: newBarcode.brand || "Generic"
+          }
+        });
+        
         setNewBarcode({
           productName: "",
           sku: "",
-          price: "",
+          price: 0,
           barcode: "",
           barcodeType: "EAN-13",
           brand: ""
         });
-        refetchBarcodes();
-        toast({
-          title: "Barcode Generated",
-          description: "New barcode created successfully."
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to create barcode. Please try again.",
-          variant: "destructive"
-        });
+      } catch (error) {
+        console.error("Error creating barcode:", error);
       }
     } else {
       toast({
@@ -120,21 +132,11 @@ const BarcodeGenerator = () => {
     });
   };
 
-  const deleteBarcode = async (id: number) => {
-    const result = await deleteBarcodeMutation(apiClient.deleteBarcode)(id);
-    
-    if (result !== null) {
-      refetchBarcodes();
-      toast({
-        title: "Barcode Deleted",
-        description: "Barcode removed successfully."
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to delete barcode. Please try again.",
-        variant: "destructive"
-      });
+  const handleDeleteBarcode = async (id: string) => {
+    try {
+      await deleteBarcode({ id });
+    } catch (error) {
+      console.error("Error deleting barcode:", error);
     }
   };
 
@@ -270,7 +272,7 @@ const BarcodeGenerator = () => {
                       <Button 
                         size="sm" 
                         variant="destructive" 
-                        onClick={() => deleteBarcode(barcode.id)}
+                        onClick={() => handleDeleteBarcode(barcode.id)}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
