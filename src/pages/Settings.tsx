@@ -23,8 +23,10 @@ import {
   TestTube
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useApi, useApiMutation } from "@/hooks/useApi";
-import apiClient, { StoreProfile } from "@/lib/api";
+import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
+import { GET_STORE_PROFILE } from "@/lib/graphql/queries";
+import { UPDATE_STORE_PROFILE } from "@/lib/graphql/mutations";
+import { StoreProfile, StoreProfileInput } from "@/lib/graphql/types";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
@@ -34,7 +36,7 @@ const Settings = () => {
   const [activeTab, setActiveTab] = useState("store");
 
   // Store Profile State
-  const [storeProfile, setStoreProfile] = useState<Partial<StoreProfile>>({
+  const [storeProfile, setStoreProfile] = useState<StoreProfileInput>({
     name: "",
     address: "",
     phone: "",
@@ -43,22 +45,38 @@ const Settings = () => {
     showOnReceipt: true
   });
 
-  // API hooks
-  const { data: profileData, loading: profileLoading } = useApi(
-    () => apiClient.getStoreProfile(),
-    []
-  );
+  // GraphQL hooks
+  const { data: profileData, loading: profileLoading } = useGraphQLQuery<{
+    storeProfile: StoreProfile;
+  }>(GET_STORE_PROFILE);
 
-  const { mutate: updateProfileMutation, loading: updateLoading } = useApiMutation<StoreProfile>();
+  const { mutate: updateProfile, loading: updateLoading } = useGraphQLMutation<{
+    updateStoreProfile: StoreProfile;
+  }, { input: StoreProfileInput }>(UPDATE_STORE_PROFILE, {
+    onCompleted: () => {
+      toast({
+        title: "Success",
+        description: "Store profile updated successfully."
+      });
+    }
+  });
 
   // Load profile data when available
   useEffect(() => {
-    if (profileData) {
-      setStoreProfile(profileData);
+    if (profileData?.storeProfile) {
+      const profile = profileData.storeProfile;
+      setStoreProfile({
+        name: profile.name,
+        address: profile.address,
+        phone: profile.phone,
+        email: profile.email,
+        gstin: profile.gstin,
+        showOnReceipt: profile.showOnReceipt
+      });
     }
   }, [profileData]);
 
-  // Other settings state (these would also be connected to API in a real app)
+  // Other settings state (these would also be connected to GraphQL in a real app)
   const [printerSettings, setPrinterSettings] = useState({
     receiptPrinter: "",
     receiptPaperSize: "80mm",
@@ -96,14 +114,10 @@ const Settings = () => {
   });
 
   const saveStoreProfile = async () => {
-    const result = await updateProfileMutation(apiClient.updateStoreProfile)(storeProfile);
-    
-    if (result) {
-      toast({
-        title: "Success",
-        description: "Store profile updated successfully."
-      });
-    } else {
+    try {
+      await updateProfile({ input: storeProfile });
+    } catch (error) {
+      console.error("Error updating store profile:", error);
       toast({
         title: "Error",
         description: "Failed to update store profile. Please try again.",
@@ -207,7 +221,7 @@ const Settings = () => {
                         <Label htmlFor="storeName">Store Name</Label>
                         <Input
                           id="storeName"
-                          value={storeProfile.name || ""}
+                          value={storeProfile.name}
                           onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
                         />
                       </div>
@@ -215,7 +229,7 @@ const Settings = () => {
                         <Label htmlFor="phone">Phone Number</Label>
                         <Input
                           id="phone"
-                          value={storeProfile.phone || ""}
+                          value={storeProfile.phone}
                           onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
                         />
                       </div>
@@ -224,7 +238,7 @@ const Settings = () => {
                         <Input
                           id="email"
                           type="email"
-                          value={storeProfile.email || ""}
+                          value={storeProfile.email}
                           onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
                         />
                       </div>
@@ -232,7 +246,7 @@ const Settings = () => {
                         <Label htmlFor="gstin">GSTIN</Label>
                         <Input
                           id="gstin"
-                          value={storeProfile.gstin || ""}
+                          value={storeProfile.gstin}
                           onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
                         />
                       </div>
@@ -241,14 +255,14 @@ const Settings = () => {
                       <Label htmlFor="address">Address</Label>
                       <Textarea
                         id="address"
-                        value={storeProfile.address || ""}
+                        value={storeProfile.address}
                         onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
                       />
                     </div>
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="showOnReceipt"
-                        checked={storeProfile.showOnReceipt || false}
+                        checked={storeProfile.showOnReceipt}
                         onCheckedChange={(checked) => setStoreProfile({...storeProfile, showOnReceipt: checked})}
                       />
                       <Label htmlFor="showOnReceipt">Show store info on receipts</Label>
@@ -553,7 +567,7 @@ const Settings = () => {
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">API Status</span>
+                    <span className="font-medium">GraphQL Status</span>
                     <Badge variant="default">Connected</Badge>
                   </div>
                 </div>
