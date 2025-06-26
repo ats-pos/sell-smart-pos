@@ -1,19 +1,17 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import apolloClient from "@/lib/graphql/client";
 import Index from "./pages/Index";
 import SaleOperator from "./pages/SaleOperator";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <ApolloProvider client={apolloClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -28,7 +26,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
-  </QueryClientProvider>
+  </ApolloProvider>
 );
 
 export default App;

@@ -24,8 +24,23 @@ import {
   WifiOff
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useApi, useApiMutation } from "@/hooks/useApi";
-import apiClient, { Product, Sale, SaleItem, Customer } from "@/lib/api";
+import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
+import { 
+  GET_PRODUCTS, 
+  SEARCH_PRODUCTS 
+} from "@/lib/graphql/queries";
+import { 
+  CREATE_SALE, 
+  CREATE_CUSTOMER 
+} from "@/lib/graphql/mutations";
+import { 
+  Product, 
+  Sale, 
+  SaleInput, 
+  SaleItem, 
+  Customer, 
+  CustomerInput 
+} from "@/lib/graphql/types";
 
 const BillingModule = () => {
   const { toast } = useToast();
@@ -33,7 +48,7 @@ const BillingModule = () => {
   // State management
   const [cart, setCart] = useState<SaleItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [customer, setCustomer] = useState<Partial<Customer>>({
+  const [customer, setCustomer] = useState<Partial<CustomerInput>>({
     name: "",
     phone: "",
     email: "",
@@ -45,14 +60,35 @@ const BillingModule = () => {
   const [holdBills, setHoldBills] = useState<any[]>([]);
   const [currentBillNumber, setCurrentBillNumber] = useState("INV-2024-001");
 
-  // API hooks
-  const { data: products, loading: productsLoading } = useApi(
-    () => searchTerm ? apiClient.searchProducts(searchTerm) : apiClient.getProducts(),
-    [searchTerm]
-  );
+  // GraphQL hooks
+  const { data: productsData, loading: productsLoading } = useGraphQLQuery<{
+    products: Product[];
+  }>(GET_PRODUCTS, {
+    variables: { limit: 50 },
+    skip: !searchTerm || searchTerm.length < 2
+  });
 
-  const { mutate: createSaleMutation, loading: saleLoading } = useApiMutation<Sale>();
-  const { mutate: createCustomerMutation } = useApiMutation<Customer>();
+  const { data: searchData, loading: searchLoading } = useGraphQLQuery<{
+    searchProducts: Product[];
+  }>(SEARCH_PRODUCTS, {
+    variables: { query: searchTerm },
+    skip: !searchTerm || searchTerm.length < 2
+  });
+
+  const { mutate: createSale, loading: saleLoading } = useGraphQLMutation<{
+    createSale: Sale;
+  }, { input: SaleInput }>(CREATE_SALE, {
+    onCompleted: () => {
+      toast({
+        title: "Sale Completed",
+        description: `Bill ${currentBillNumber} processed successfully.`
+      });
+    }
+  });
+
+  const { mutate: createCustomer } = useGraphQLMutation<{
+    createCustomer: Customer;
+  }, { input: CustomerInput }>(CREATE_CUSTOMER);
 
   // Check online status
   useEffect(() => {
@@ -68,7 +104,7 @@ const BillingModule = () => {
     };
   }, []);
 
-  const updateQuantity = (id: number, change: number) => {
+  const updateQuantity = (id: string, change: number) => {
     setCart(cart.map(item => 
       item.id === id 
         ? { ...item, quantity: Math.max(0, item.quantity + change) }
@@ -76,7 +112,7 @@ const BillingModule = () => {
     ).filter(item => item.quantity > 0));
   };
 
-  const updateItemDiscount = (id: number, discount: number) => {
+  const updateItemDiscount = (id: string, discount: number) => {
     setCart(cart.map(item => 
       item.id === id ? { ...item, discount: Math.max(0, Math.min(100, discount)) } : item
     ));
@@ -88,7 +124,7 @@ const BillingModule = () => {
       updateQuantity(existingItem.id, 1);
     } else {
       const newItem: SaleItem = {
-        id: Date.now(),
+        id: Date.now().toString(),
         productId: product.id,
         productName: product.name,
         price: product.price,
@@ -100,7 +136,7 @@ const BillingModule = () => {
     }
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart(cart.filter(item => item.id !== id));
   };
 
@@ -178,26 +214,32 @@ const BillingModule = () => {
 
     try {
       // Create customer if provided
-      let customerId: number | undefined;
+      let customerId: string | undefined;
       if (customer.name || customer.phone) {
-        const customerResult = await createCustomerMutation(apiClient.createCustomer)({
-          name: customer.name || "",
-          phone: customer.phone || "",
-          email: customer.email || "",
-          gstin: customer.gstin || ""
+        const customerResult = await createCustomer({
+          input: {
+            name: customer.name || "",
+            phone: customer.phone || "",
+            email: customer.email || "",
+            gstin: customer.gstin || ""
+          }
         });
-        if (customerResult) {
-          customerId = customerResult.id;
+        if (customerResult?.data?.createCustomer) {
+          customerId = customerResult.data.createCustomer.id;
         }
       }
 
       // Create sale
-      const saleData: Omit<Sale, 'id' | 'createdAt'> = {
+      const saleData: SaleInput = {
         billNumber: currentBillNumber,
         customerId,
         customerName: customer.name,
         items: cart.map(item => ({
-          ...item,
+          productId: item.productId,
+          productName: item.productName,
+          price: item.price,
+          quantity: item.quantity,
+          discount: item.discount,
           total: calculateItemTotal(item)
         })),
         subtotal,
@@ -208,9 +250,9 @@ const BillingModule = () => {
         status: 'completed'
       };
 
-      const result = await createSaleMutation(apiClient.createSale)(saleData);
+      const result = await createSale({ input: saleData });
       
-      if (result) {
+      if (result?.data?.createSale) {
         printReceipt();
         setCart([]);
         setCustomer({ name: "", phone: "", email: "", gstin: "" });
@@ -220,28 +262,17 @@ const BillingModule = () => {
         // Generate next bill number
         const nextNum = parseInt(currentBillNumber.split('-')[2]) + 1;
         setCurrentBillNumber(`INV-2024-${String(nextNum).padStart(3, '0')}`);
-
-        toast({
-          title: "Sale Completed",
-          description: `Bill ${currentBillNumber} processed successfully.`
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to complete sale. Please try again.",
-          variant: "destructive"
-        });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to complete sale. Please check your connection.",
-        variant: "destructive"
-      });
+      console.error("Sale completion error:", error);
     }
   };
 
-  const filteredProducts = products || [];
+  const products = searchTerm.length >= 2 
+    ? (searchData?.searchProducts || [])
+    : (productsData?.products || []);
+
+  const loading = searchTerm.length >= 2 ? searchLoading : productsLoading;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -319,12 +350,14 @@ const BillingModule = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {productsLoading ? (
+              {loading ? (
                 <div className="col-span-2 text-center py-8">Loading products...</div>
-              ) : filteredProducts.length === 0 ? (
-                <div className="col-span-2 text-center py-8 text-gray-500">No products found</div>
+              ) : products.length === 0 ? (
+                <div className="col-span-2 text-center py-8 text-gray-500">
+                  {searchTerm.length >= 2 ? "No products found" : "Type to search products"}
+                </div>
               ) : (
-                filteredProducts.map((product) => (
+                products.map((product) => (
                   <div
                     key={product.id}
                     className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
