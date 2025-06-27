@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -266,5 +265,122 @@
 @screen xs {
   .xs\:inline {
     display: inline;
+  }
+}
+
+/* Enhanced Mobile-First Responsive Design */
+@media (max-width: 640px) {
+  .mobile-card {
+    @apply mx-2 rounded-2xl p-4;
+  }
+  
+  .mobile-text {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .mobile-padding {
+    @apply px-4 py-6;
+  }
+  
+  .mobile-gap {
+    @apply gap-3;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid {
+    @apply grid-cols-2 gap-6;
+  }
+  
+  .tablet-padding {
+    @apply px-6 py-8;
+  }
+}
+
+/* Desktop enhancements */
+@media (min-width: 1025px) {
+  .desktop-hover {
+    @apply hover:scale-105 transition-transform duration-200;
+  }
+  
+  .desktop-grid {
+    @apply grid-cols-3 gap-8;
+  }
+}
+
+/* Enhanced Glassmorphism Effects */
+.glass-card {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl;
+}
+
+.glass-button {
+  @apply backdrop-blur-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-300;
+}
+
+/* Modern Card Variants */
+.modern-card {
+  @apply glass rounded-2xl p-6 hover-lift;
+}
+
+.gradient-card {
+  @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl;
+}
+
+/* Enhanced Responsive Typography */
+.responsive-heading {
+  @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+}
+
+.responsive-subheading {
+  @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+}
+
+.responsive-body {
+  @apply text-sm sm:text-base lg:text-lg;
+}
+
+/* Interactive Elements */
+.interactive-element {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95;
+}
+
+/* Focus States for Accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-transparent;
+}
+
+/* Safe Area for Mobile Devices */
+.safe-area {
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* Touch Targets for Mobile */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px] touch-manipulation;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .glass {
+    @apply bg-black/80 border-white/50;
+  }
+  
+  .gradient-text {
+    @apply text-white;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-slide-up,
+  .hover-lift {
+    animation: none;
+    transition: none;
   }
 }
