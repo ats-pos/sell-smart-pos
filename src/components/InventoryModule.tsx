@@ -147,14 +147,6 @@ const InventoryModule = () => {
     }
   };
 
-  const handleDeleteProduct = async (id: string) => {
-    try {
-      await deleteProduct({ id });
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <Tabs defaultValue="inventory" className="space-y-6">
