@@ -146,7 +146,7 @@ const Settings = () => {
               </div>
               <div>
                 <h1 className="text-lg sm:text-xl font-bold text-gray-900">Settings</h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Configure your SPMPOS system</p>
+                <p className="text-xs text-gray-500 hidden sm:block">Configure your SPM-POS system</p>
               </div>
             </div>
           </div>

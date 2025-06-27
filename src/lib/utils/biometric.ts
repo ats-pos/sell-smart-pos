@@ -50,7 +50,7 @@ export class BiometricAuth {
       const options: BiometricOptions = {
         challenge,
         rp: {
-          name: "SPMPOS",
+          name: "SPM-POS",
           id: window.location.hostname,
         },
         user: {

@@ -351,7 +351,7 @@ const Login = () => {
               <Receipt className="h-10 w-10 text-white" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold text-white mb-2">SPMPOS</CardTitle>
+          <CardTitle className="text-3xl font-bold text-white mb-2">SPM-POS</CardTitle>
           <p className="text-blue-100 mb-4 flex items-center justify-center gap-2">
             <Sparkles className="h-4 w-4" />
             Sell Smart. Grow Fast.

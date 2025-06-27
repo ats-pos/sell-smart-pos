@@ -379,7 +379,7 @@
 }
 
 .interactive-card {
-  @apply transition-all duration-300 hover:scale-102 hover:shadow-xl hover:border-white/30 cursor-pointer;
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl hover:border-white/30 cursor-pointer;
 }
 
 /* Focus States for Accessibility */

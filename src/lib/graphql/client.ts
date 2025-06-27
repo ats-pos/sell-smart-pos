@@ -4,7 +4,7 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 
 const httpLink = createHttpLink({
-  uri: 'http://api.indyzai.com/api', // Your GraphQL endpoint
+  uri: 'http://gql.indyzai.com/graphql', // Your GraphQL endpoint
 });
 
 const authLink = setContext((_, { headers }) => {

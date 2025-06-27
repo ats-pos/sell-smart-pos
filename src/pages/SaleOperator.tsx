@@ -13,8 +13,10 @@ import {
 import BillingModule from "@/components/BillingModule";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const SaleOperator = () => {
+  const { logout } = useAuth();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
@@ -34,7 +36,7 @@ const SaleOperator = () => {
                 <Receipt className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">SPMPOS</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">SPM-POS</h1>
                 <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
                   Sell Smart. Grow Fast.
@@ -54,7 +56,7 @@ const SaleOperator = () => {
                 <Store className="h-4 w-4" />
                 Sales Terminal
               </Badge>
-              <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift">
+              <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" onClick={logout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
