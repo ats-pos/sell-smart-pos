@@ -285,6 +285,17 @@
   .mobile-gap {
     @apply gap-3;
   }
+
+  /* Enhanced touch targets for mobile */
+  button, [role="button"], input, select, textarea {
+    @apply touch-manipulation;
+    min-height: 44px;
+  }
+
+  /* Improved mobile card spacing */
+  .card-mobile {
+    @apply p-4 rounded-2xl shadow-lg;
+  }
 }
 
 /* Tablet optimizations */
@@ -295,6 +306,10 @@
   
   .tablet-padding {
     @apply px-6 py-8;
+  }
+
+  .tablet-card {
+    @apply p-6 rounded-2xl shadow-xl;
   }
 }
 
@@ -307,42 +322,58 @@
   .desktop-grid {
     @apply grid-cols-3 gap-8;
   }
+
+  .desktop-card {
+    @apply p-8 rounded-3xl shadow-2xl;
+  }
 }
 
 /* Enhanced Glassmorphism Effects */
 .glass-card {
-  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl;
+  @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl rounded-2xl;
 }
 
 .glass-button {
-  @apply backdrop-blur-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-300;
+  @apply backdrop-blur-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all duration-300 rounded-xl;
+}
+
+.glass-nav {
+  @apply backdrop-blur-lg bg-white/10 border-b border-white/20 sticky top-0 z-50;
 }
 
 /* Modern Card Variants */
 .modern-card {
-  @apply glass rounded-2xl p-6 hover-lift;
+  @apply glass rounded-2xl p-6 hover-lift shadow-lg border border-white/20;
 }
 
 .gradient-card {
-  @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl;
+  @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300;
+}
+
+.feature-card {
+  @apply backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-white/30 transition-all duration-300 hover:scale-105;
 }
 
 /* Enhanced Responsive Typography */
 .responsive-heading {
-  @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  @apply text-2xl sm:text-3xl lg:text-4xl font-bold text-white;
 }
 
 .responsive-subheading {
-  @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+  @apply text-lg sm:text-xl lg:text-2xl font-semibold text-blue-100;
 }
 
 .responsive-body {
-  @apply text-sm sm:text-base lg:text-lg;
+  @apply text-sm sm:text-base lg:text-lg text-blue-200;
 }
 
 /* Interactive Elements */
 .interactive-element {
-  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95;
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 cursor-pointer;
+}
+
+.interactive-card {
+  @apply transition-all duration-300 hover:scale-102 hover:shadow-xl hover:border-white/30 cursor-pointer;
 }
 
 /* Focus States for Accessibility */
@@ -363,6 +394,32 @@
   @apply min-h-[44px] min-w-[44px] touch-manipulation;
 }
 
+/* Modern Navigation */
+.nav-modern {
+  @apply backdrop-blur-lg bg-white/10 border-b border-white/20 sticky top-0 z-50;
+}
+
+.nav-item {
+  @apply text-blue-200 hover:text-white transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-white/10;
+}
+
+.nav-item-active {
+  @apply text-white bg-white/20 border border-white/30;
+}
+
+/* Modern Forms */
+.form-modern {
+  @apply space-y-6 p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10;
+}
+
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply text-sm font-medium text-white;
+}
+
 /* High Contrast Mode Support */
 @media (prefers-contrast: high) {
   .glass {
@@ -372,6 +429,10 @@
   .gradient-text {
     @apply text-white;
   }
+
+  .glass-button {
+    @apply bg-black/60 border-white/60;
+  }
 }
 
 /* Reduced Motion Support */
@@ -379,8 +440,94 @@
   .animate-float,
   .animate-pulse-soft,
   .animate-slide-up,
-  .hover-lift {
+  .hover-lift,
+  .interactive-element,
+  .interactive-card {
     animation: none;
     transition: none;
   }
+}
+
+/* Modern Scrollbar for WebKit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Modern Loading States */
+.loading-shimmer {
+  @apply animate-pulse bg-gradient-to-r from-white/5 via-white/10 to-white/5 bg-[length:200%_100%];
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Modern Transitions */
+.transition-modern {
+  @apply transition-all duration-300 ease-out;
+}
+
+.transition-fast {
+  @apply transition-all duration-150 ease-out;
+}
+
+.transition-slow {
+  @apply transition-all duration-500 ease-out;
+}
+
+/* Modern Shadows */
+.shadow-modern {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+}
+
+.shadow-3xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Button Styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95;
+}
+
+.btn-secondary {
+  @apply bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/30 font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95;
+}
+
+.btn-outline {
+  @apply border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 font-medium px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95;
+}
+
+/* Modern Input Styles */
+.input-modern {
+  @apply bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-blue-200 rounded-xl px-4 py-3 focus:bg-white/20 focus:border-white/40 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200;
 }
