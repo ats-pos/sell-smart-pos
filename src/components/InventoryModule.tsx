@@ -19,36 +19,82 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BarcodeGenerator from "./BarcodeGenerator";
-import { useApi, useApiMutation } from "@/hooks/useApi";
-import apiClient, { Product } from "@/lib/api";
+import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
+import { GET_PRODUCTS, SEARCH_PRODUCTS } from "@/lib/graphql/queries";
+import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from "@/lib/graphql/mutations";
+import { Product, ProductInput } from "@/lib/graphql/types";
 import { useToast } from "@/hooks/use-toast";
 
 const InventoryModule = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
-  const [newProduct, setNewProduct] = useState({
+  const [newProduct, setNewProduct] = useState<ProductInput>({
     name: "",
     barcode: "",
-    price: "",
-    stock: "",
-    minStock: "",
+    price: 0,
+    stock: 0,
+    minStock: 5,
     category: "",
     brand: "",
     supplier: ""
   });
 
-  // API hooks
-  const { data: products, loading: productsLoading, refetch: refetchProducts } = useApi(
-    () => searchTerm ? apiClient.searchProducts(searchTerm) : apiClient.getProducts(),
-    [searchTerm]
-  );
+  // GraphQL hooks
+  const { data: productsData, loading: productsLoading, refetch: refetchProducts } = useGraphQLQuery<{
+    products: Product[];
+  }>(GET_PRODUCTS, {
+    variables: { limit: 100 }
+  });
 
-  const { mutate: createProductMutation, loading: createLoading } = useApiMutation<Product>();
-  const { mutate: updateProductMutation } = useApiMutation<Product>();
-  const { mutate: deleteProductMutation } = useApiMutation<void>();
+  const { data: searchData, loading: searchLoading } = useGraphQLQuery<{
+    searchProducts: Product[];
+  }>(SEARCH_PRODUCTS, {
+    variables: { query: searchTerm },
+    skip: !searchTerm || searchTerm.length < 2
+  });
 
-  const productList = products || [];
-  const lowStockProducts = productList.filter(product => product.stock <= product.minStock);
+  const { mutate: createProduct, loading: createLoading } = useGraphQLMutation<{
+    createProduct: Product;
+  }, { input: ProductInput }>(CREATE_PRODUCT, {
+    onCompleted: () => {
+      toast({
+        title: "Product Added",
+        description: "Product has been added successfully."
+      });
+      refetchProducts();
+    }
+  });
+
+  const { mutate: updateProduct } = useGraphQLMutation<{
+    updateProduct: Product;
+  }, { id: string; input: ProductInput }>(UPDATE_PRODUCT, {
+    onCompleted: () => {
+      toast({
+        title: "Product Updated",
+        description: "Product has been updated successfully."
+      });
+      refetchProducts();
+    }
+  });
+
+  const { mutate: deleteProduct } = useGraphQLMutation<{
+    deleteProduct: { success: boolean; message: string };
+  }, { id: string }>(DELETE_PRODUCT, {
+    onCompleted: () => {
+      toast({
+        title: "Product Deleted",
+        description: "Product has been deleted successfully."
+      });
+      refetchProducts();
+    }
+  });
+
+  const products = searchTerm.length >= 2 
+    ? (searchData?.searchProducts || [])
+    : (productsData?.products || []);
+
+  const loading = searchTerm.length >= 2 ? searchLoading : productsLoading;
+  const lowStockProducts = products.filter(product => product.stock <= product.minStock);
 
   const getStockStatus = (stock: number, minStock: number) => {
     if (stock === 0) return { label: "Out of Stock", color: "destructive" };
@@ -58,41 +104,31 @@ const InventoryModule = () => {
 
   const addProduct = async () => {
     if (newProduct.name && newProduct.barcode && newProduct.price) {
-      const productData: Omit<Product, 'id'> = {
-        name: newProduct.name,
-        barcode: newProduct.barcode,
-        price: parseInt(newProduct.price),
-        stock: parseInt(newProduct.stock) || 0,
-        minStock: parseInt(newProduct.minStock) || 5,
-        category: newProduct.category || "General",
-        brand: newProduct.brand || "Generic",
-        supplier: newProduct.supplier || "Unknown"
-      };
-
-      const result = await createProductMutation(apiClient.createProduct)(productData);
-      
-      if (result) {
+      try {
+        await createProduct({
+          input: {
+            ...newProduct,
+            price: Number(newProduct.price),
+            stock: Number(newProduct.stock),
+            minStock: Number(newProduct.minStock),
+            category: newProduct.category || "General",
+            brand: newProduct.brand || "Generic",
+            supplier: newProduct.supplier || "Unknown"
+          }
+        });
+        
         setNewProduct({
           name: "",
           barcode: "",
-          price: "",
-          stock: "",
-          minStock: "",
+          price: 0,
+          stock: 0,
+          minStock: 5,
           category: "",
           brand: "",
           supplier: ""
         });
-        refetchProducts();
-        toast({
-          title: "Product Added",
-          description: "Product has been added successfully."
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to add product. Please try again.",
-          variant: "destructive"
-        });
+      } catch (error) {
+        console.error("Error adding product:", error);
       }
     } else {
       toast({
@@ -103,21 +139,11 @@ const InventoryModule = () => {
     }
   };
 
-  const deleteProduct = async (id: number) => {
-    const result = await deleteProductMutation(apiClient.deleteProduct)(id);
-    
-    if (result !== null) {
-      refetchProducts();
-      toast({
-        title: "Product Deleted",
-        description: "Product has been deleted successfully."
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to delete product. Please try again.",
-        variant: "destructive"
-      });
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await deleteProduct({ id });
+    } catch (error) {
+      console.error("Error deleting product:", error);
     }
   };
 
@@ -142,7 +168,7 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <Package className="h-8 w-8 text-blue-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">{productsLoading ? "..." : productList.length}</p>
+                  <p className="text-2xl font-bold">{loading ? "..." : products.length}</p>
                   <p className="text-sm text-gray-500">Total Products</p>
                 </div>
               </CardContent>
@@ -151,7 +177,7 @@ const InventoryModule = () => {
               <CardContent className="flex items-center p-4">
                 <AlertTriangle className="h-8 w-8 text-amber-500 mr-3" />
                 <div>
-                  <p className="text-2xl font-bold">{productsLoading ? "..." : lowStockProducts.length}</p>
+                  <p className="text-2xl font-bold">{loading ? "..." : lowStockProducts.length}</p>
                   <p className="text-sm text-gray-500">Low Stock Items</p>
                 </div>
               </CardContent>
@@ -161,7 +187,7 @@ const InventoryModule = () => {
                 <Package className="h-8 w-8 text-green-500 mr-3" />
                 <div>
                   <p className="text-2xl font-bold">
-                    {productsLoading ? "..." : productList.reduce((sum, p) => sum + p.stock, 0)}
+                    {loading ? "..." : products.reduce((sum, p) => sum + p.stock, 0)}
                   </p>
                   <p className="text-sm text-gray-500">Total Stock</p>
                 </div>
@@ -172,7 +198,7 @@ const InventoryModule = () => {
                 <Package className="h-8 w-8 text-purple-500 mr-3" />
                 <div>
                   <p className="text-2xl font-bold">
-                    ₹{productsLoading ? "..." : productList.reduce((sum, p) => sum + (p.price * p.stock), 0).toLocaleString()}
+                    ₹{loading ? "..." : products.reduce((sum, p) => sum + (p.price * p.stock), 0).toLocaleString()}
                   </p>
                   <p className="text-sm text-gray-500">Stock Value</p>
                 </div>
@@ -240,7 +266,7 @@ const InventoryModule = () => {
                             id="price"
                             type="number"
                             value={newProduct.price}
-                            onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                            onChange={(e) => setNewProduct({...newProduct, price: Number(e.target.value)})}
                             placeholder="0"
                           />
                         </div>
@@ -250,7 +276,7 @@ const InventoryModule = () => {
                             id="stock"
                             type="number"
                             value={newProduct.stock}
-                            onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                            onChange={(e) => setNewProduct({...newProduct, stock: Number(e.target.value)})}
                             placeholder="0"
                           />
                         </div>
@@ -262,7 +288,7 @@ const InventoryModule = () => {
                             id="minStock"
                             type="number"
                             value={newProduct.minStock}
-                            onChange={(e) => setNewProduct({...newProduct, minStock: e.target.value})}
+                            onChange={(e) => setNewProduct({...newProduct, minStock: Number(e.target.value)})}
                             placeholder="5"
                           />
                         </div>
@@ -318,13 +344,15 @@ const InventoryModule = () => {
           {/* Products Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Products ({productList.length})</CardTitle>
+              <CardTitle>Products ({products.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              {productsLoading ? (
+              {loading ? (
                 <div className="text-center py-8">Loading products...</div>
-              ) : productList.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">No products found</div>
+              ) : products.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  {searchTerm.length >= 2 ? "No products found" : "No products available"}
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -341,7 +369,7 @@ const InventoryModule = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {productList.map((product) => {
+                      {products.map((product) => {
                         const status = getStockStatus(product.stock, product.minStock);
                         return (
                           <tr key={product.id} className="border-b hover:bg-gray-50">
@@ -372,7 +400,7 @@ const InventoryModule = () => {
                                 <Button 
                                   size="sm" 
                                   variant="destructive"
-                                  onClick={() => deleteProduct(product.id)}
+                                  onClick={() => handleDeleteProduct(product.id)}
                                 >
                                   <Trash2 className="h-3 w-3" />
                                 </Button>
