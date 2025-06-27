@@ -77,11 +77,11 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState("");
 
   // Check if store registration is needed
-  useEffect(() => {
-    if (!storeCheckLoading && !storeExists) {
-      setCurrentView('register');
-    }
-  }, [storeExists, storeCheckLoading]);
+  // useEffect(() => {
+  //   if (!storeCheckLoading && !storeExists) {
+  //     setCurrentView('register');
+  //   }
+  // }, [storeExists, storeCheckLoading]);
 
   // Biometric authentication check
   useEffect(() => {
@@ -428,6 +428,16 @@ const Login = () => {
                     className="text-sm"
                   >
                     Forgot password?
+                  </Button>
+                </div>
+                  <div className="text-center">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setCurrentView('register')}
+                    className="text-sm"
+                  >
+                    Setup New Store
                   </Button>
                 </div>
               </form>
