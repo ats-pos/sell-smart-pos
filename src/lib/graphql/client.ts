@@ -211,7 +211,43 @@ class MockApolloClientWrapper {
       updateQuery: () => {},
       startPolling: () => {},
       stopPolling: () => {},
-      subscribeToMore: () => () => {}
+      subscribeToMore: () => () => {},
+      
+      // Add missing methods that Apollo Client expects
+      setOptions: () => Promise.resolve(currentResult),
+      setVariables: () => Promise.resolve(currentResult),
+      currentResult: () => ({
+        data: currentResult?.data,
+        loading: isLoading,
+        error: error,
+        networkStatus: isLoading ? 1 : 7,
+        stale: false
+      }),
+      getLastResult: () => currentResult,
+      getLastError: () => error,
+      resetLastResults: () => {
+        currentResult = null;
+        error = null;
+      },
+      reobserve: () => Promise.resolve(currentResult),
+      
+      // Additional methods that might be expected
+      result: () => Promise.resolve({
+        data: currentResult?.data,
+        loading: isLoading,
+        error: error,
+        networkStatus: isLoading ? 1 : 7,
+        stale: false
+      }),
+      getCurrentResult: () => ({
+        data: currentResult?.data,
+        loading: isLoading,
+        error: error,
+        networkStatus: isLoading ? 1 : 7,
+        stale: false
+      }),
+      isDifferentFromLastResult: () => false,
+      getLastResultSnapshot: () => currentResult
     };
 
     // Bind all methods to prevent binding errors
