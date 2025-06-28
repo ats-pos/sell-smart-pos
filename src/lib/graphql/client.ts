@@ -95,21 +95,116 @@ class MockApolloClientWrapper {
     return this.mockClient.clearStore();
   }
 
-  // Add other Apollo Client methods as needed
+  // Properly implement watchQuery to return an Observable-like object
   watchQuery(options: any) {
-    // For mock mode, we'll simulate a simple observable
+    let currentSubscriber: any = null;
+    let currentResult: any = null;
+    let isLoading = true;
+    let error: any = null;
+
+    // Execute the query immediately
+    this.query(options)
+      .then(result => {
+        currentResult = result;
+        isLoading = false;
+        error = null;
+        if (currentSubscriber) {
+          currentSubscriber.next({
+            data: result.data,
+            loading: false,
+            error: null,
+            networkStatus: 7, // ready
+            stale: false
+          });
+        }
+      })
+      .catch(err => {
+        error = err;
+        isLoading = false;
+        if (currentSubscriber) {
+          currentSubscriber.error(err);
+        }
+      });
+
     return {
       subscribe: (observer: any) => {
-        this.query(options).then(result => {
-          observer.next(result);
-        }).catch(error => {
-          observer.error(error);
+        currentSubscriber = observer;
+        
+        // Immediately emit loading state
+        observer.next({
+          data: undefined,
+          loading: true,
+          error: null,
+          networkStatus: 1, // loading
+          stale: false
         });
+
+        // If we already have a result, emit it
+        if (currentResult && !isLoading) {
+          observer.next({
+            data: currentResult.data,
+            loading: false,
+            error: null,
+            networkStatus: 7, // ready
+            stale: false
+          });
+        }
+
+        // If we have an error, emit it
+        if (error && !isLoading) {
+          observer.error(error);
+        }
         
         return {
-          unsubscribe: () => {}
+          unsubscribe: () => {
+            currentSubscriber = null;
+          }
         };
-      }
+      },
+      
+      // Add other methods that Apollo's watchQuery returns
+      refetch: () => {
+        isLoading = true;
+        if (currentSubscriber) {
+          currentSubscriber.next({
+            data: currentResult?.data,
+            loading: true,
+            error: null,
+            networkStatus: 4, // refetch
+            stale: false
+          });
+        }
+        
+        return this.query(options)
+          .then(result => {
+            currentResult = result;
+            isLoading = false;
+            if (currentSubscriber) {
+              currentSubscriber.next({
+                data: result.data,
+                loading: false,
+                error: null,
+                networkStatus: 7, // ready
+                stale: false
+              });
+            }
+            return result;
+          })
+          .catch(err => {
+            error = err;
+            isLoading = false;
+            if (currentSubscriber) {
+              currentSubscriber.error(err);
+            }
+            throw err;
+          });
+      },
+      
+      fetchMore: () => Promise.resolve(currentResult),
+      updateQuery: () => {},
+      startPolling: () => {},
+      stopPolling: () => {},
+      subscribeToMore: () => () => {}
     };
   }
 }
