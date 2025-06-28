@@ -102,6 +102,17 @@ class MockApolloClientWrapper {
     return this.mockClient.clearStore();
   }
 
+  // Helper function to safely call observer methods
+  private safeObserverCall(observer: any, method: string, data: any) {
+    if (observer && typeof observer[method] === 'function') {
+      try {
+        observer[method](data);
+      } catch (error) {
+        console.error(`Error calling observer.${method}:`, error);
+      }
+    }
+  }
+
   // Properly implement watchQuery to return an Observable-like object
   watchQuery(options: any) {
     let currentSubscriber: any = null;
@@ -116,7 +127,7 @@ class MockApolloClientWrapper {
         isLoading = false;
         error = null;
         if (currentSubscriber) {
-          currentSubscriber.next({
+          this.safeObserverCall(currentSubscriber, 'next', {
             data: result.data,
             loading: false,
             error: null,
@@ -129,7 +140,7 @@ class MockApolloClientWrapper {
         error = err;
         isLoading = false;
         if (currentSubscriber) {
-          currentSubscriber.error(err);
+          this.safeObserverCall(currentSubscriber, 'error', err);
         }
       });
 
@@ -138,7 +149,7 @@ class MockApolloClientWrapper {
         currentSubscriber = observer;
         
         // Immediately emit loading state
-        observer.next({
+        this.safeObserverCall(observer, 'next', {
           data: undefined,
           loading: true,
           error: null,
@@ -148,7 +159,7 @@ class MockApolloClientWrapper {
 
         // If we already have a result, emit it
         if (currentResult && !isLoading) {
-          observer.next({
+          this.safeObserverCall(observer, 'next', {
             data: currentResult.data,
             loading: false,
             error: null,
@@ -159,7 +170,7 @@ class MockApolloClientWrapper {
 
         // If we have an error, emit it
         if (error && !isLoading) {
-          observer.error(error);
+          this.safeObserverCall(observer, 'error', error);
         }
         
         return {
@@ -173,7 +184,7 @@ class MockApolloClientWrapper {
       refetch: () => {
         isLoading = true;
         if (currentSubscriber) {
-          currentSubscriber.next({
+          this.safeObserverCall(currentSubscriber, 'next', {
             data: currentResult?.data,
             loading: true,
             error: null,
@@ -187,7 +198,7 @@ class MockApolloClientWrapper {
             currentResult = result;
             isLoading = false;
             if (currentSubscriber) {
-              currentSubscriber.next({
+              this.safeObserverCall(currentSubscriber, 'next', {
                 data: result.data,
                 loading: false,
                 error: null,
@@ -201,7 +212,7 @@ class MockApolloClientWrapper {
             error = err;
             isLoading = false;
             if (currentSubscriber) {
-              currentSubscriber.error(err);
+              this.safeObserverCall(currentSubscriber, 'error', err);
             }
             throw err;
           });
