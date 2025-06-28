@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -9,18 +10,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "btn-primary",
-        destructive: "bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 shadow-lg rounded-2xl px-8 py-4",
-        outline: "btn-outline",
-        secondary: "btn-secondary",
-        ghost: "text-white hover:bg-white/10 hover:text-white rounded-xl px-4 py-3",
-        link: "text-blue-300 underline-offset-4 hover:underline hover:text-white px-4 py-3",
+        default: "bg-blue-600 text-white hover:bg-blue-700 shadow-soft hover:shadow-medium rounded-xl",
+        destructive: "bg-red-600 text-white hover:bg-red-700 shadow-soft hover:shadow-medium rounded-xl",
+        outline: "border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 bg-white hover:bg-blue-50 rounded-xl",
+        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 shadow-soft rounded-xl",
+        ghost: "text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl",
+        link: "text-blue-600 underline-offset-4 hover:underline hover:text-blue-700",
       },
       size: {
-        default: "px-8 py-4 rounded-2xl text-base min-h-[48px]",
-        sm: "px-4 py-2 rounded-xl text-sm min-h-[40px]",
-        lg: "px-10 py-5 rounded-2xl text-lg min-h-[56px]",
-        icon: "btn-icon",
+        default: "px-6 py-3 rounded-xl text-sm min-h-[48px]",
+        sm: "px-4 py-2 rounded-lg text-sm min-h-[40px]",
+        lg: "px-8 py-4 rounded-xl text-base min-h-[56px]",
+        icon: "p-3 rounded-xl min-w-[48px] min-h-[48px]",
       },
     },
     defaultVariants: {

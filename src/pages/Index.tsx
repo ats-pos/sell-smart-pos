@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,6 @@ import {
   TrendingUp,
   Menu,
   Settings,
-  Sparkles,
   LogOut
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -43,39 +43,29 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-500"></div>
-      </div>
-
-      {/* Modern Header */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Modern Header - Clean & Minimal */}
       <header className="nav-modern">
         <div className="responsive-container">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-18">
             {/* Logo Section */}
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-2xl shadow-modern-lg">
-                <Receipt className="h-8 w-8 text-white" />
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2.5 rounded-xl shadow-soft">
+                <Receipt className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-heading-3 gradient-text">SPM-POS</h1>
-                <p className="text-body-sm flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" />
-                  Admin Dashboard
-                </p>
+                <h1 className="text-xl font-bold gradient-text">SPM-POS</h1>
+                <p className="text-xs text-gray-500 font-medium">Admin Dashboard</p>
               </div>
             </div>
 
             {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-3">
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={handleSettings}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
               >
                 <Settings className="h-4 w-4" />
                 Settings
@@ -83,7 +73,7 @@ const Index = () => {
               <Button 
                 onClick={handleNewSale}
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
               >
                 <Plus className="h-4 w-4" />
                 New Sale
@@ -92,7 +82,7 @@ const Index = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={handleLogout}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-gray-600 hover:text-red-600 hover:border-red-300"
               >
                 <LogOut className="h-4 w-4" />
                 Logout
@@ -105,18 +95,19 @@ const Index = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               </Button>
             </div>
           </div>
 
           {/* Mobile Menu */}
           {showMobileMenu && (
-            <div className="lg:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-6 space-y-4 animate-slide-up">
+            <div className="lg:hidden border-t border-gray-200 bg-white py-4 space-y-2 animate-slide-up">
               <Button
-                variant="secondary"
-                className="w-full justify-start"
+                variant="ghost"
+                className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 onClick={handleSettings}
               >
                 <Settings className="h-4 w-4 mr-2" />
@@ -127,14 +118,14 @@ const Index = () => {
                   handleNewSale();
                   setShowMobileMenu(false);
                 }}
-                className="w-full justify-start"
+                className="w-full justify-start bg-blue-600 hover:bg-blue-700"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
               </Button>
               <Button 
-                variant="outline" 
-                className="w-full justify-start" 
+                variant="ghost" 
+                className="w-full justify-start text-gray-600 hover:text-red-600 hover:bg-red-50" 
                 onClick={handleLogout}
               >
                 <LogOut className="h-4 w-4 mr-2" />
@@ -146,38 +137,42 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="responsive-container py-8 lg:py-12 relative z-10">
+      <main className="responsive-container py-6 lg:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-lg">
           {/* Modern Tab Navigation */}
-          <div className="glass-strong p-3 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-4 gap-2">
+          <div className="bg-white p-2 rounded-2xl border border-gray-200 shadow-soft animate-slide-up">
+            <TabsList className="grid w-full grid-cols-4 gap-1 bg-gray-100 p-1 rounded-xl">
               <TabsTrigger
                 value="dashboard"
-                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold px-3 py-2.5 rounded-lg transition-all duration-200"
               >
-                <BarChart3 className="h-5 w-5" />
+                <BarChart3 className="h-4 w-4" />
                 <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden text-xs">Dash</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold px-3 py-2.5 rounded-lg transition-all duration-200"
               >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="h-4 w-4" />
                 <span className="hidden sm:inline">Billing</span>
+                <span className="sm:hidden text-xs">Bill</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold px-3 py-2.5 rounded-lg transition-all duration-200"
               >
-                <Package className="h-5 w-5" />
+                <Package className="h-4 w-4" />
                 <span className="hidden sm:inline">Inventory</span>
+                <span className="sm:hidden text-xs">Stock</span>
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold px-3 py-2.5 rounded-lg transition-all duration-200"
               >
-                <TrendingUp className="h-5 w-5" />
+                <TrendingUp className="h-4 w-4" />
                 <span className="hidden sm:inline">Reports</span>
+                <span className="sm:hidden text-xs">Stats</span>
               </TabsTrigger>
             </TabsList>
           </div>
