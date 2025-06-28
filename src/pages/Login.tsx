@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -142,13 +143,8 @@ const Login = () => {
   // Store Registration View
   if (currentView === 'register') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        </div>
-        
-        <div className="w-full max-w-2xl relative z-10">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-2xl animate-fade-in">
           <StoreRegistration
             onRegister={handleStoreRegistration}
             onBack={() => setCurrentView('main')}
@@ -162,13 +158,8 @@ const Login = () => {
   // User Selection View
   if (currentView === 'users') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        </div>
-        
-        <div className="w-full max-w-md relative z-10">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md animate-fade-in">
           <UserSelector
             users={deviceUsers}
             onUserSelect={handleUserSelect}
@@ -184,76 +175,70 @@ const Login = () => {
   // PIN Login View
   if (currentView === 'pin' && selectedUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        </div>
-        
-        <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
-          <CardHeader className="text-center">
-            <div className="flex items-center gap-3 mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-sm animate-scale-in shadow-medium border-0">
+          <CardHeader className="text-center pb-4">
+            <div className="flex items-center justify-between mb-4">
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => setCurrentView('users')}
-                className="text-white hover:bg-white/10"
+                className="p-2 hover:bg-slate-100 rounded-full"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
-                <Lock className="h-8 w-8 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-full shadow-soft">
+                <Lock className="h-6 w-6 text-white" />
               </div>
+              <div className="w-8" />
             </div>
-            <CardTitle className="text-xl text-white">Enter PIN</CardTitle>
-            <p className="text-blue-100">Welcome back, {selectedUser.name}</p>
+            <CardTitle className="text-xl font-semibold text-slate-800">Enter PIN</CardTitle>
+            <p className="text-sm text-slate-600">Welcome back, {selectedUser.name}</p>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-6">
             <form onSubmit={handlePINSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-white">Enter your PIN</Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-medium text-slate-700">Enter your PIN</Label>
                 <InputOTP
                   maxLength={6}
                   value={pinForm.pin}
                   onChange={(value) => setPinForm({ ...pinForm, pin: value })}
                 >
                   <InputOTPGroup className="gap-2 justify-center">
-                    <InputOTPSlot index={0} className="bg-white/10 border-white/20 text-white" />
-                    <InputOTPSlot index={1} className="bg-white/10 border-white/20 text-white" />
-                    <InputOTPSlot index={2} className="bg-white/10 border-white/20 text-white" />
-                    <InputOTPSlot index={3} className="bg-white/10 border-white/20 text-white" />
-                    <InputOTPSlot index={4} className="bg-white/10 border-white/20 text-white" />
-                    <InputOTPSlot index={5} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={0} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                    <InputOTPSlot index={1} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                    <InputOTPSlot index={2} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                    <InputOTPSlot index={3} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                    <InputOTPSlot index={4} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                    <InputOTPSlot index={5} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                className="w-full h-12 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-soft hover:shadow-medium transition-all duration-200"
                 disabled={pinForm.pin.length < 4 || pinLoginLoading}
               >
                 {pinLoginLoading ? "Verifying..." : "Login"}
               </Button>
 
-              <div className="text-center">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleBiometric}
-                  className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
-                >
-                  <Fingerprint className="h-4 w-4 mr-2" />
-                  Use Biometric
-                </Button>
-              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBiometric}
+                className="w-full h-12 rounded-xl font-medium border-slate-200 hover:bg-slate-50"
+              >
+                <Fingerprint className="h-4 w-4 mr-2" />
+                Use Biometric
+              </Button>
 
               <div className="text-center">
                 <Button
                   type="button"
                   variant="link"
                   onClick={() => setCurrentView('forgot')}
-                  className="text-sm text-blue-200 hover:text-white"
+                  className="text-sm text-slate-600 hover:text-slate-800"
                 >
                   Forgot PIN?
                 </Button>
@@ -268,47 +253,43 @@ const Login = () => {
   // Forgot Password View
   if (currentView === 'forgot') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        </div>
-        
-        <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
-          <CardHeader className="text-center">
-            <div className="flex items-center gap-3 mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-sm animate-scale-in shadow-medium border-0">
+          <CardHeader className="text-center pb-4">
+            <div className="flex items-center justify-between mb-4">
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => setCurrentView('main')}
-                className="text-white hover:bg-white/10"
+                className="p-2 hover:bg-slate-100 rounded-full"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
-                <Mail className="h-8 w-8 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-3 rounded-full shadow-soft">
+                <Mail className="h-6 w-6 text-white" />
               </div>
+              <div className="w-8" />
             </div>
-            <CardTitle className="text-xl text-white">Reset Password</CardTitle>
-            <p className="text-blue-100">Enter your email to receive reset instructions</p>
+            <CardTitle className="text-xl font-semibold text-slate-800">Reset Password</CardTitle>
+            <p className="text-sm text-slate-600">Enter your email to receive reset instructions</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleForgotSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="forgotEmail" className="text-white">Email</Label>
+                <Label htmlFor="forgotEmail" className="text-sm font-medium text-slate-700">Email</Label>
                 <Input
                   id="forgotEmail"
                   type="email"
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                  className="h-12 rounded-xl border-slate-200"
                   required
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg"
+                className="w-full h-12 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-soft hover:shadow-medium transition-all duration-200"
                 disabled={forgotLoading}
               >
                 {forgotLoading ? "Sending..." : "Send Reset Link"}
@@ -322,37 +303,31 @@ const Login = () => {
 
   // Main Login View
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
-      </div>
-
-      <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
-        <CardHeader className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md animate-fade-in shadow-medium border-0">
+        <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-2xl shadow-lg">
-              <Receipt className="h-10 w-10 text-white" />
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 rounded-2xl shadow-soft">
+              <Receipt className="h-8 w-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold text-white mb-2">SPM-POS</CardTitle>
-          <p className="text-blue-100 mb-4 flex items-center justify-center gap-2">
-            <Sparkles className="h-4 w-4" />
+          <CardTitle className="text-2xl font-bold text-slate-800 mb-2">SPM-POS</CardTitle>
+          <p className="text-sm text-slate-600 mb-4 flex items-center justify-center gap-2">
+            <Sparkles className="h-4 w-4 text-indigo-500" />
             Sell Smart. Grow Fast.
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4 text-indigo-500" />
           </p>
           
-          {/* API Status and Online/Offline Status */}
+          {/* Status Indicators */}
           <div className="flex items-center justify-center gap-2 mb-4">
             <ApiStatusIndicator />
             {isOnline ? (
-              <Badge variant="default" className="flex items-center gap-1 bg-green-500/20 text-green-300 border-green-500/30">
+              <Badge variant="secondary" className="flex items-center gap-1 bg-green-50 text-green-700 border-green-200 px-3 py-1">
                 <Wifi className="h-3 w-3" />
                 Online
               </Badge>
             ) : (
-              <Badge variant="destructive" className="flex items-center gap-1 bg-red-500/20 text-red-300 border-red-500/30">
+              <Badge variant="destructive" className="flex items-center gap-1 bg-red-50 text-red-700 border-red-200 px-3 py-1">
                 <WifiOff className="h-3 w-3" />
                 Offline Mode
               </Badge>
@@ -361,10 +336,10 @@ const Login = () => {
 
           {/* Store Info */}
           {existingStore && (
-            <div className="mb-4 p-3 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20">
+            <div className="mb-6 p-3 bg-slate-50 rounded-xl border border-slate-100">
               <div className="flex items-center gap-2 justify-center">
-                <Store className="h-4 w-4 text-blue-300" />
-                <span className="text-sm font-medium text-white">{existingStore.name}</span>
+                <Store className="h-4 w-4 text-slate-500" />
+                <span className="text-sm font-medium text-slate-700">{existingStore.name}</span>
               </div>
             </div>
           )}
@@ -375,7 +350,7 @@ const Login = () => {
           {deviceUsers.length > 0 && (
             <Button
               variant="outline"
-              className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+              className="w-full h-12 flex items-center gap-2 border-slate-200 hover:bg-slate-50 rounded-xl font-medium"
               onClick={() => setCurrentView('users')}
             >
               <Users className="h-4 w-4" />
@@ -384,20 +359,20 @@ const Login = () => {
           )}
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 rounded-xl">
               <TabsTrigger 
                 value="email" 
-                className="flex items-center gap-2 data-[state=active]:bg-white/20 data-[state=active]:text-white text-blue-200"
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg py-2 text-sm font-medium"
               >
                 <Mail className="h-4 w-4" />
-                <span className="hidden sm:inline">Email</span>
+                Email
               </TabsTrigger>
               <TabsTrigger 
                 value="phone" 
-                className="flex items-center gap-2 data-[state=active]:bg-white/20 data-[state=active]:text-white text-blue-200"
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg py-2 text-sm font-medium"
               >
                 <Phone className="h-4 w-4" />
-                <span className="hidden sm:inline">Phone</span>
+                Phone
               </TabsTrigger>
             </TabsList>
 
@@ -405,7 +380,7 @@ const Login = () => {
             <TabsContent value="email">
               <form onSubmit={handleEmailLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white">Email</Label>
+                  <Label htmlFor="email" className="text-sm font-medium text-slate-700">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -413,12 +388,12 @@ const Login = () => {
                     value={emailForm.email}
                     onChange={(e) => setEmailForm({...emailForm, email: e.target.value})}
                     disabled={loginLoading}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200"
+                    className="h-12 rounded-xl border-slate-200"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-white">Password</Label>
+                  <Label htmlFor="password" className="text-sm font-medium text-slate-700">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -427,12 +402,12 @@ const Login = () => {
                       value={emailForm.password}
                       onChange={(e) => setEmailForm({...emailForm, password: e.target.value})}
                       disabled={loginLoading}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200 pr-10"
+                      className="h-12 rounded-xl border-slate-200 pr-12"
                       required
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-200 hover:text-white transition-colors"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={loginLoading}
                     >
@@ -447,12 +422,12 @@ const Login = () => {
                     checked={emailForm.rememberMe}
                     onCheckedChange={(checked) => setEmailForm({...emailForm, rememberMe: checked})}
                   />
-                  <Label htmlFor="rememberMe" className="text-sm text-blue-200">Remember me</Label>
+                  <Label htmlFor="rememberMe" className="text-sm text-slate-600">Remember me</Label>
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
+                  className="w-full h-12 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-soft hover:shadow-medium transition-all duration-200"
                   disabled={loginLoading}
                 >
                   {loginLoading ? "Signing in..." : "Sign In"}
@@ -463,7 +438,7 @@ const Login = () => {
                     type="button"
                     variant="link"
                     onClick={() => setCurrentView('forgot')}
-                    className="text-sm text-blue-200 hover:text-white"
+                    className="text-sm text-slate-600 hover:text-slate-800"
                   >
                     Forgot password?
                   </Button>
@@ -471,7 +446,7 @@ const Login = () => {
                     type="button"
                     variant="link"
                     onClick={() => setCurrentView('register')}
-                    className="text-sm text-blue-200 hover:text-white"
+                    className="text-sm text-slate-600 hover:text-slate-800"
                   >
                     Setup New Store
                   </Button>
@@ -483,7 +458,7 @@ const Login = () => {
             <TabsContent value="phone">
               <form onSubmit={handleOTPSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-sm font-medium text-slate-700">Phone Number</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -492,26 +467,26 @@ const Login = () => {
                     onChange={(e) => setOtpForm({...otpForm, phone: e.target.value})}
                     disabled={otpLoginLoading || sendingOTP || otpSent}
                     maxLength={10}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200"
+                    className="h-12 rounded-xl border-slate-200"
                     required
                   />
                 </div>
 
                 {otpSent && (
                   <div className="space-y-2">
-                    <Label className="text-white">Enter OTP</Label>
+                    <Label className="text-sm font-medium text-slate-700">Enter OTP</Label>
                     <InputOTP
                       maxLength={6}
                       value={otpForm.otp}
                       onChange={(value) => setOtpForm({...otpForm, otp: value})}
                     >
                       <InputOTPGroup className="gap-2 justify-center">
-                        <InputOTPSlot index={0} className="bg-white/10 border-white/20 text-white" />
-                        <InputOTPSlot index={1} className="bg-white/10 border-white/20 text-white" />
-                        <InputOTPSlot index={2} className="bg-white/10 border-white/20 text-white" />
-                        <InputOTPSlot index={3} className="bg-white/10 border-white/20 text-white" />
-                        <InputOTPSlot index={4} className="bg-white/10 border-white/20 text-white" />
-                        <InputOTPSlot index={5} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={0} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                        <InputOTPSlot index={1} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                        <InputOTPSlot index={2} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                        <InputOTPSlot index={3} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                        <InputOTPSlot index={4} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
+                        <InputOTPSlot index={5} className="w-12 h-12 border border-slate-200 rounded-xl text-lg font-semibold" />
                       </InputOTPGroup>
                     </InputOTP>
                   </div>
@@ -519,7 +494,7 @@ const Login = () => {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
+                  className="w-full h-12 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 shadow-soft hover:shadow-medium transition-all duration-200"
                   disabled={otpLoginLoading || sendingOTP}
                 >
                   {sendingOTP ? "Sending OTP..." : 
@@ -536,7 +511,7 @@ const Login = () => {
                         setOtpSent(false);
                         setOtpForm({...otpForm, otp: ""});
                       }}
-                      className="text-sm text-blue-200 hover:text-white"
+                      className="text-sm text-slate-600 hover:text-slate-800"
                     >
                       Change phone number
                     </Button>
@@ -547,12 +522,12 @@ const Login = () => {
           </Tabs>
           
           {/* Demo Credentials */}
-          <div className="p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
-            <p className="text-sm text-blue-200 mb-2 flex items-center gap-2">
+          <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <p className="text-sm text-slate-700 mb-2 flex items-center gap-2 font-medium">
               <Shield className="h-4 w-4" />
               Demo Credentials:
             </p>
-            <div className="text-xs text-blue-300 space-y-1">
+            <div className="text-xs text-slate-600 space-y-1 leading-relaxed">
               <div>Admin: admin@spmpos.com / admin123</div>
               <div>Manager: manager@spmpos.com / manager123</div>
               <div>Cashier: cashier@spmpos.com / cashier123</div>
