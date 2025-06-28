@@ -1,16 +1,20 @@
-import { graphql } from 'msw';
+
 import { 
   mockProducts, 
   mockSales, 
   mockCustomers, 
   mockBarcodes,
-  mockAnalytics 
+  mockSalesAnalytics,
+  mockDashboardStats,
+  mockTopProducts,
+  mockGSTSummary,
+  mockStoreProfile
 } from '../data';
 import type { 
   Product, 
   Sale, 
   Customer, 
-  Barcode, 
+  BarcodeData, 
   ProductInput, 
   SaleInput,
   SaleItem,
@@ -25,18 +29,29 @@ let barcodes = [...mockBarcodes];
 // Helper function to generate ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-export const dataHandlers = [
+export const mockDataHandlers = {
   // Product handlers
-  graphql.query('GetProducts', () => {
-    return {
-      data: {
-        products
-      }
-    };
-  }),
+  async getProducts(variables?: any) {
+    return { products };
+  },
 
-  graphql.mutation('CreateProduct', ({ variables }) => {
-    const { input } = variables as { input: ProductInput };
+  async getProduct(variables: { id: string }) {
+    const product = products.find(p => p.id === variables.id);
+    return { product };
+  },
+
+  async searchProducts(variables: { query: string }) {
+    const query = variables.query.toLowerCase();
+    const filteredProducts = products.filter(p => 
+      p.name.toLowerCase().includes(query) ||
+      p.barcode.includes(query) ||
+      p.category.toLowerCase().includes(query)
+    );
+    return { products: filteredProducts };
+  },
+
+  async createProduct(variables: { input: ProductInput }) {
+    const { input } = variables;
     
     const newProduct: Product = {
       id: generateId(),
@@ -45,49 +60,30 @@ export const dataHandlers = [
     };
     
     products.unshift(newProduct);
-    
-    return {
-      data: {
-        createProduct: newProduct
-      }
-    };
-  }),
+    return { createProduct: newProduct };
+  },
 
-  graphql.mutation('UpdateProduct', ({ variables }) => {
-    const { id, input } = variables as { id: string, input: ProductInput };
+  async updateProduct(variables: { id: string, input: ProductInput }) {
+    const { id, input } = variables;
     
     products = products.map(product => product.id === id ? { ...product, ...input } : product);
-    
-    return {
-      data: {
-        updateProduct: products.find(product => product.id === id)
-      }
-    };
-  }),
+    return { updateProduct: products.find(product => product.id === id) };
+  },
 
-  graphql.mutation('DeleteProduct', ({ variables }) => {
-    const { id } = variables as { id: string };
+  async deleteProduct(variables: { id: string }) {
+    const { id } = variables;
     
     products = products.filter(product => product.id !== id);
-    
-    return {
-      data: {
-        deleteProduct: id
-      }
-    };
-  }),
+    return { deleteProduct: id };
+  },
 
   // Customer handlers
-  graphql.query('GetCustomers', () => {
-    return {
-      data: {
-        customers
-      }
-    };
-  }),
+  async getCustomers(variables?: any) {
+    return { customers };
+  },
 
-  graphql.mutation('CreateCustomer', ({ variables }) => {
-    const { input } = variables as { input: Customer };
+  async createCustomer(variables: { input: Customer }) {
+    const { input } = variables;
     
     const newCustomer: Customer = {
       id: generateId(),
@@ -95,114 +91,22 @@ export const dataHandlers = [
     };
     
     customers.unshift(newCustomer);
-    
-    return {
-      data: {
-        createCustomer: newCustomer
-      }
-    };
-  }),
-
-  graphql.mutation('UpdateCustomer', ({ variables }) => {
-    const { id, input } = variables as { id: string, input: Customer };
-    
-    customers = customers.map(customer => customer.id === id ? { ...customer, ...input } : customer);
-    
-    return {
-      data: {
-        updateCustomer: customers.find(customer => customer.id === id)
-      }
-    };
-  }),
-
-  graphql.mutation('DeleteCustomer', ({ variables }) => {
-    const { id } = variables as { id: string };
-    
-    customers = customers.filter(customer => customer.id !== id);
-    
-    return {
-      data: {
-        deleteCustomer: id
-      }
-    };
-  }),
-
-  // Barcode handlers
-  graphql.query('GetBarcodes', () => {
-    return {
-      data: {
-        barcodes
-      }
-    };
-  }),
-
-  graphql.mutation('CreateBarcode', ({ variables }) => {
-    const { input } = variables as { input: Barcode };
-    
-    const newBarcode: Barcode = {
-      id: generateId(),
-      ...input
-    };
-    
-    barcodes.unshift(newBarcode);
-    
-    return {
-      data: {
-        createBarcode: newBarcode
-      }
-    };
-  }),
-
-  graphql.mutation('UpdateBarcode', ({ variables }) => {
-    const { id, input } = variables as { id: string, input: Barcode };
-    
-    barcodes = barcodes.map(barcode => barcode.id === id ? { ...barcode, ...input } : barcode);
-    
-    return {
-      data: {
-        updateBarcode: barcodes.find(barcode => barcode.id === id)
-      }
-    };
-  }),
-
-  graphql.mutation('DeleteBarcode', ({ variables }) => {
-    const { id } = variables as { id: string };
-    
-    barcodes = barcodes.filter(barcode => barcode.id !== id);
-    
-    return {
-      data: {
-        deleteBarcode: id
-      }
-    };
-  }),
-
-  // Analytics handlers
-  graphql.query('GetAnalytics', () => {
-    return {
-      data: {
-        analytics: mockAnalytics
-      }
-    };
-  }),
+    return { createCustomer: newCustomer };
+  },
 
   // Sales handlers
-  graphql.query('GetSales', () => {
-    return {
-      data: {
-        sales: sales.map(sale => ({
-          ...sale,
-          items: sale.items.map(item => ({
-            ...item,
-            id: item.id || generateId()
-          }))
-        }))
-      }
-    };
-  }),
+  async getSales(variables?: any) {
+    return { sales: sales.map(sale => ({
+      ...sale,
+      items: sale.items.map(item => ({
+        ...item,
+        id: item.id || generateId()
+      }))
+    })) };
+  },
 
-  graphql.mutation('CreateSale', ({ variables }) => {
-    const { input } = variables as { input: SaleInput };
+  async createSale(variables: { input: SaleInput }) {
+    const { input } = variables;
     
     const newSale: Sale = {
       id: generateId(),
@@ -223,35 +127,65 @@ export const dataHandlers = [
     };
     
     sales.unshift(newSale);
-    
-    return {
-      data: {
-        createSale: newSale
-      }
-    };
-  }),
+    return { createSale: newSale };
+  },
 
-  graphql.mutation('UpdateSale', ({ variables }) => {
-    const { id, input } = variables as { id: string, input: SaleInput };
-    
-    sales = sales.map(sale => sale.id === id ? { ...sale, ...input } : sale);
-    
-    return {
-      data: {
-        updateSale: sales.find(sale => sale.id === id)
-      }
-    };
-  }),
+  // Barcode handlers
+  async getBarcodes(variables?: any) {
+    return { barcodes };
+  },
 
-  graphql.mutation('DeleteSale', ({ variables }) => {
-    const { id } = variables as { id: string };
+  async createBarcode(variables: { input: BarcodeData }) {
+    const { input } = variables;
     
-    sales = sales.filter(sale => sale.id !== id);
-    
-    return {
-      data: {
-        deleteSale: id
-      }
+    const newBarcode: BarcodeData = {
+      id: generateId(),
+      ...input
     };
-  }),
-];
+    
+    barcodes.unshift(newBarcode);
+    return { createBarcode: newBarcode };
+  },
+
+  async deleteBarcode(variables: { id: string }) {
+    const { id } = variables;
+    
+    barcodes = barcodes.filter(barcode => barcode.id !== id);
+    return { deleteBarcode: id };
+  },
+
+  // Analytics and dashboard handlers
+  async getDashboardStats() {
+    return mockDashboardStats;
+  },
+
+  async getLowStockItems() {
+    const lowStockItems = products.filter(p => p.stock <= p.minStock);
+    return { lowStockItems };
+  },
+
+  async getRecentTransactions(variables?: any) {
+    const recentSales = sales.slice(0, 10);
+    return { recentTransactions: recentSales };
+  },
+
+  async getSalesAnalytics(variables?: any) {
+    return mockSalesAnalytics;
+  },
+
+  async getTopProducts(variables?: any) {
+    return { topProducts: mockTopProducts };
+  },
+
+  async getGSTSummary(variables?: any) {
+    return mockGSTSummary;
+  },
+
+  async getStoreProfile() {
+    return { storeProfile: mockStoreProfile };
+  },
+
+  async updateStoreProfile(variables: { input: any }) {
+    return { updateStoreProfile: { ...mockStoreProfile, ...variables.input } };
+  }
+};
