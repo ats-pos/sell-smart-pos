@@ -7,7 +7,7 @@ export const APP_CONFIG = {
 } as const;
 
 export const API_ENDPOINTS = {
-  graphql: "http://gql.indyzai.com/graphql",
+  graphql: "https://indyzgql-api.netlify.app/graphql",
   rest: "http://api.indyzai.com/api"
 } as const;
 
