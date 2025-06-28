@@ -3,6 +3,13 @@ import { mockDataHandlers } from './handlers/dataHandlers';
 
 // Mock GraphQL client that mimics Apollo Client interface
 export class MockGraphQLClient {
+  // Add defaultOptions property to match Apollo Client interface
+  public defaultOptions = {
+    watchQuery: {},
+    query: {},
+    mutate: {}
+  };
+
   async query({ query, variables }: { query: any; variables?: any }) {
     const operationName = this.extractOperationName(query);
     
