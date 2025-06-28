@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,11 +9,8 @@ import {
   Users,
   BarChart3,
   Plus,
-  Search,
   Receipt,
   TrendingUp,
-  DollarSign,
-  ShoppingBag,
   Menu,
   Settings,
   Sparkles,
@@ -55,17 +51,18 @@ const Index = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-500"></div>
       </div>
 
-      {/* Modern Glassmorphism Header */}
-      <header className="glass sticky top-0 z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
-                <Receipt className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+      {/* Modern Header */}
+      <header className="nav-modern">
+        <div className="responsive-container">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo Section */}
+            <div className="flex items-center space-x-4">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-2xl shadow-modern-lg">
+                <Receipt className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">SPM-POS</h1>
-                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
+                <h1 className="text-heading-3 gradient-text">SPM-POS</h1>
+                <p className="text-body-sm flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
                   Admin Dashboard
                 </p>
@@ -73,56 +70,56 @@ const Index = () => {
             </div>
 
             {/* Desktop Actions */}
-            <div className="hidden sm:flex items-center space-x-3">
+            <div className="hidden lg:flex items-center space-x-4">
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 onClick={handleSettings}
-                className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift"
+                className="flex items-center gap-2"
               >
                 <Settings className="h-4 w-4" />
                 Settings
               </Button>
               <Button 
                 onClick={handleNewSale}
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift"
+                size="sm"
+                className="flex items-center gap-2"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-4 w-4" />
                 New Sale
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" 
                 onClick={handleLogout}
+                className="flex items-center gap-2"
               >
-                <LogOut className="h-4 w-4 mr-2" />
+                <LogOut className="h-4 w-4" />
                 Logout
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="sm:hidden">
+            <div className="lg:hidden">
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="text-white hover:bg-white/10"
               >
                 <Menu className="h-6 w-6" />
               </Button>
             </div>
           </div>
 
-          {/* Mobile Menu Dropdown */}
+          {/* Mobile Menu */}
           {showMobileMenu && (
-            <div className="sm:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-4 space-y-3 animate-slide-up">
+            <div className="lg:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-6 space-y-4 animate-slide-up">
               <Button
-                variant="outline"
-                className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                variant="secondary"
+                className="w-full justify-start"
                 onClick={handleSettings}
               >
-                <Settings className="h-4 w-4" />
+                <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               <Button 
@@ -130,14 +127,14 @@ const Index = () => {
                   handleNewSale();
                   setShowMobileMenu(false);
                 }}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                className="w-full justify-start"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
               </Button>
               <Button 
                 variant="outline" 
-                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20" 
+                className="w-full justify-start" 
                 onClick={handleLogout}
               >
                 <LogOut className="h-4 w-4 mr-2" />
@@ -149,55 +146,55 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
+      <main className="responsive-container py-8 lg:py-12 relative z-10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-lg">
           {/* Modern Tab Navigation */}
-          <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-4 h-14 sm:h-12 bg-white/10 backdrop-blur-sm border border-white/20 gap-2">
+          <div className="glass-strong p-3 rounded-2xl border border-white/20 animate-slide-up">
+            <TabsList className="grid w-full grid-cols-4 gap-2">
               <TabsTrigger
                 value="dashboard"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Dashboard</span>
+                <BarChart3 className="h-5 w-5" />
+                <span className="hidden sm:inline">Dashboard</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Billing</span>
+                <ShoppingCart className="h-5 w-5" />
+                <span className="hidden sm:inline">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Inventory</span>
+                <Package className="h-5 w-5" />
+                <span className="hidden sm:inline">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Reports</span>
+                <TrendingUp className="h-5 w-5" />
+                <span className="hidden sm:inline">Reports</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="dashboard" className="animate-slide-up delay-200">
+          <TabsContent value="dashboard" className="animate-fade-in">
             <Dashboard />
           </TabsContent>
 
-          <TabsContent value="billing" className="animate-slide-up delay-200">
+          <TabsContent value="billing" className="animate-fade-in">
             <BillingModule />
           </TabsContent>
 
-          <TabsContent value="inventory" className="animate-slide-up delay-200">
+          <TabsContent value="inventory" className="animate-fade-in">
             <InventoryModule />
           </TabsContent>
 
-          <TabsContent value="reports" className="animate-slide-up delay-200">
+          <TabsContent value="reports" className="animate-fade-in">
             <ReportsModule />
           </TabsContent>
         </Tabs>
