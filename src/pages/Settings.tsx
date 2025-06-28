@@ -20,7 +20,8 @@ import {
   Info,
   Settings as SettingsIcon,
   ArrowLeft,
-  TestTube
+  TestTube,
+  Database
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -29,6 +30,8 @@ import { UPDATE_STORE_PROFILE } from "@/lib/graphql/mutations";
 import { StoreProfile, StoreProfileInput } from "@/lib/graphql/types";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { isMockMode, toggleMockMode } from "@/lib/config";
+import { ApiStatusIndicator } from "@/components/common/MockModeIndicator";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -148,6 +151,29 @@ const Settings = () => {
                 <h1 className="text-lg sm:text-xl font-bold text-gray-900">Settings</h1>
                 <p className="text-xs text-gray-500 hidden sm:block">Configure your SPM-POS system</p>
               </div>
+            </div>
+            
+            {/* API Mode Toggle */}
+            <div className="flex items-center gap-2">
+              <ApiStatusIndicator />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={toggleMockMode}
+                className="flex items-center gap-2"
+              >
+                {isMockMode() ? (
+                  <>
+                    <Database className="h-3 w-3" />
+                    Switch to Live
+                  </>
+                ) : (
+                  <>
+                    <TestTube className="h-3 w-3" />
+                    Switch to Mock
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>
@@ -564,6 +590,11 @@ const Settings = () => {
                   <div className="flex justify-between items-center">
                     <span className="font-medium">Last Updated</span>
                     <span className="text-gray-500">Dec 24, 2024</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">API Mode</span>
+                    <ApiStatusIndicator />
                   </div>
                   
                   <div className="flex justify-between items-center">

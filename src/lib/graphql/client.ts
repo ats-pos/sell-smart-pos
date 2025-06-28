@@ -1,12 +1,16 @@
 import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { API_ENDPOINTS, STORAGE_KEYS, ROUTES } from '@/lib/utils/constants';
+import { config, isMockMode } from '@/lib/config';
+import { mockClient } from '@/lib/mock';
+import { STORAGE_KEYS, ROUTES } from '@/lib/utils/constants';
 
+// Create HTTP link for real GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: API_ENDPOINTS.graphql,
+  uri: config.api.graphql,
 });
 
+// Auth link to add authorization header
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem(STORAGE_KEYS.authToken);
   return {
@@ -17,6 +21,7 @@ const authLink = setContext((_, { headers }) => {
   }
 });
 
+// Error link for handling GraphQL and network errors
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) =>
@@ -41,7 +46,8 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   }
 });
 
-const apolloClient = new ApolloClient({
+// Real Apollo Client
+const realApolloClient = new ApolloClient({
   link: from([authLink, errorLink, httpLink]),
   cache: new InMemoryCache(),
   defaultOptions: {
@@ -53,5 +59,49 @@ const apolloClient = new ApolloClient({
     }
   }
 });
+
+// Mock Apollo Client wrapper
+class MockApolloClientWrapper {
+  private mockClient = mockClient;
+
+  async query(options: any) {
+    return this.mockClient.query(options);
+  }
+
+  async mutate(options: any) {
+    return this.mockClient.mutate(options);
+  }
+
+  refetchQueries(options: any) {
+    return this.mockClient.refetchQueries();
+  }
+
+  clearStore() {
+    return this.mockClient.clearStore();
+  }
+
+  // Add other Apollo Client methods as needed
+  watchQuery(options: any) {
+    // For mock mode, we'll simulate a simple observable
+    return {
+      subscribe: (observer: any) => {
+        this.query(options).then(result => {
+          observer.next(result);
+        }).catch(error => {
+          observer.error(error);
+        });
+        
+        return {
+          unsubscribe: () => {}
+        };
+      }
+    };
+  }
+}
+
+// Export the appropriate client based on configuration
+const apolloClient = isMockMode() 
+  ? new MockApolloClientWrapper() as any
+  : realApolloClient;
 
 export default apolloClient;

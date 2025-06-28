@@ -5,6 +5,7 @@ import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import apolloClient from "@/lib/graphql/client";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { MockModeIndicator } from "@/components/common/MockModeIndicator";
 import { ROUTES } from "@/lib/utils/constants";
 import Index from "./pages/Index";
 import SaleOperator from "./pages/SaleOperator";
@@ -19,6 +20,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <MockModeIndicator />
         <BrowserRouter>
           <Routes>
             <Route path={ROUTES.login} element={<Login />} />

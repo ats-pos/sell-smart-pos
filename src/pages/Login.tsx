@@ -24,6 +24,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { ApiStatusIndicator } from "@/components/common/MockModeIndicator";
 import UserSelector from "@/components/auth/UserSelector";
 import StoreRegistration from "@/components/auth/StoreRegistration";
 import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/graphql/auth-types";
@@ -77,18 +78,9 @@ const Login = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
 
-  // Check if store registration is needed
-
-  // useEffect(() => {
-  //   if (!storeCheckLoading && !storeExists) {
-  //     setCurrentView('register');
-  //   }
-  // }, [storeExists, storeCheckLoading]);
-
   // Biometric authentication check
   useEffect(() => {
     if ('credentials' in navigator) {
-      // Check if biometric authentication is available
       console.log('WebAuthn API available');
     }
   }, []);
@@ -138,10 +130,7 @@ const Login = () => {
 
   const handleBiometric = async () => {
     if (selectedUser) {
-      // In a real implementation, this would use WebAuthn API
-      // For demo purposes, we'll simulate biometric authentication
       try {
-        // Simulate biometric data
         const biometricData = `biometric-${selectedUser.id}-${Date.now()}`;
         await handleBiometricLogin(selectedUser.id, biometricData);
       } catch (error) {
@@ -154,7 +143,6 @@ const Login = () => {
   if (currentView === 'register') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
           <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
@@ -175,7 +163,6 @@ const Login = () => {
   if (currentView === 'users') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
           <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
@@ -198,7 +185,6 @@ const Login = () => {
   if (currentView === 'pin' && selectedUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
           <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
@@ -283,7 +269,6 @@ const Login = () => {
   if (currentView === 'forgot') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
           <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
@@ -338,7 +323,6 @@ const Login = () => {
   // Main Login View
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
         <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
@@ -359,8 +343,9 @@ const Login = () => {
             <Sparkles className="h-4 w-4" />
           </p>
           
-          {/* Online/Offline Status */}
+          {/* API Status and Online/Offline Status */}
           <div className="flex items-center justify-center gap-2 mb-4">
+            <ApiStatusIndicator />
             {isOnline ? (
               <Badge variant="default" className="flex items-center gap-1 bg-green-500/20 text-green-300 border-green-500/30">
                 <Wifi className="h-3 w-3" />
