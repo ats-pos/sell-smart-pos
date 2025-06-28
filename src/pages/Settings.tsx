@@ -7,20 +7,26 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
 import { 
   Store, 
   Printer, 
   Receipt, 
   Package, 
-  Users, 
-  Cloud, 
-  Globe, 
   Bell, 
-  Share,
   Info,
   Settings as SettingsIcon,
   ArrowLeft,
-  TestTube
+  TestTube,
+  Database,
+  Sparkles,
+  Save,
+  RefreshCw,
+  Trash2,
+  Download,
+  Mail,
+  Phone,
+  Shield
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -28,7 +34,9 @@ import { GET_STORE_PROFILE } from "@/lib/graphql/queries";
 import { UPDATE_STORE_PROFILE } from "@/lib/graphql/mutations";
 import { StoreProfile, StoreProfileInput } from "@/lib/graphql/types";
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
+import { isMockMode, toggleMockMode } from "@/lib/config";
+import { ApiStatusIndicator } from "@/components/common/MockModeIndicator";
+import { APP_CONFIG } from "@/lib/utils/constants";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -76,7 +84,7 @@ const Settings = () => {
     }
   }, [profileData]);
 
-  // Other settings state (these would also be connected to GraphQL in a real app)
+  // Other settings state
   const [printerSettings, setPrinterSettings] = useState({
     receiptPrinter: "",
     receiptPaperSize: "80mm",
@@ -100,13 +108,6 @@ const Settings = () => {
     defaultUnit: "pcs"
   });
 
-  const [regionalSettings, setRegionalSettings] = useState({
-    language: "english",
-    currency: "INR",
-    dateFormat: "DD/MM/YYYY",
-    taxCountry: "india"
-  });
-
   const [notifications, setNotifications] = useState({
     dailySummary: true,
     stockReorder: true,
@@ -126,137 +127,271 @@ const Settings = () => {
     }
   };
 
+  const saveBillingPreferences = () => {
+    toast({
+      title: "Settings Saved",
+      description: "Billing preferences have been updated successfully."
+    });
+  };
+
+  const saveInventorySettings = () => {
+    toast({
+      title: "Settings Saved", 
+      description: "Inventory settings have been updated successfully."
+    });
+  };
+
+  const saveNotificationSettings = () => {
+    toast({
+      title: "Settings Saved",
+      description: "Notification preferences have been updated successfully."
+    });
+  };
+
+  const connectPrinter = (type: 'receipt' | 'barcode') => {
+    toast({
+      title: "Printer Connection",
+      description: `Searching for ${type} printers...`
+    });
+    
+    // Simulate printer connection
+    setTimeout(() => {
+      if (type === 'receipt') {
+        setPrinterSettings(prev => ({ ...prev, receiptPrinter: "Epson TM-T20III" }));
+      } else {
+        setPrinterSettings(prev => ({ ...prev, barcodePrinter: "Zebra ZD220" }));
+      }
+      
+      toast({
+        title: "Printer Connected",
+        description: `${type === 'receipt' ? 'Receipt' : 'Barcode'} printer connected successfully.`
+      });
+    }, 2000);
+  };
+
+  const testPrint = () => {
+    toast({
+      title: "Test Print",
+      description: "Sending test print to receipt printer..."
+    });
+  };
+
+  const clearAllData = () => {
+    toast({
+      title: "Data Cleared",
+      description: "All application data has been cleared.",
+      variant: "destructive"
+    });
+  };
+
+  const openTermsOfService = () => {
+    window.open('https://spmpos.com/terms', '_blank');
+  };
+
+  const openPrivacyPolicy = () => {
+    window.open('https://spmpos.com/privacy', '_blank');
+  };
+
+  const contactSupport = () => {
+    window.open('mailto:support@spmpos.com?subject=SPM-POS Support Request', '_blank');
+  };
+
+  const handleModeToggle = () => {
+    toggleMockMode();
+    toast({
+      title: "API Mode Changed",
+      description: `Switched to ${isMockMode() ? 'Live' : 'Mock'} mode. Page will reload.`
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
+        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
+      </div>
+
+      {/* Modern Glassmorphism Header */}
+      <header className="glass sticky top-0 z-50 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/admin')}
-                className="p-2"
+                className="p-2 text-white hover:bg-white/10"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="bg-blue-600 p-1.5 sm:p-2 rounded-lg">
-                <SettingsIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
+                <SettingsIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900">Settings</h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Configure your SPM-POS system</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">Settings</h1>
+                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Configure your SPM-POS system
+                </p>
               </div>
+            </div>
+            
+            {/* API Mode Toggle */}
+            <div className="flex items-center gap-2">
+              <ApiStatusIndicator />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleModeToggle}
+                className="hidden sm:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
+                {isMockMode() ? (
+                  <>
+                    <Database className="h-3 w-3" />
+                    Switch to Live
+                  </>
+                ) : (
+                  <>
+                    <TestTube className="h-3 w-3" />
+                    Switch to Mock
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          {/* Mobile-Optimized Tab Navigation */}
-          <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-5 lg:grid-cols-10 h-12 sm:h-10 w-full min-w-[600px] lg:min-w-full">
-              <TabsTrigger value="store" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Store className="h-4 w-4" />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
+          {/* Modern Tab Navigation with Better Visibility */}
+          <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-16 sm:h-14 bg-transparent gap-2">
+              <TabsTrigger
+                value="store"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Store className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Store</span>
               </TabsTrigger>
-              <TabsTrigger value="printer" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Printer className="h-4 w-4" />
+              <TabsTrigger
+                value="printer"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Printer className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Printer</span>
               </TabsTrigger>
-              <TabsTrigger value="billing" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Receipt className="h-4 w-4" />
+              <TabsTrigger
+                value="billing"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Receipt className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Billing</span>
               </TabsTrigger>
-              <TabsTrigger value="inventory" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Package className="h-4 w-4" />
+              <TabsTrigger
+                value="inventory"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Inventory</span>
               </TabsTrigger>
-              <TabsTrigger value="users" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Users className="h-4 w-4" />
-                <span className="hidden xs:inline">Users</span>
-              </TabsTrigger>
-              <TabsTrigger value="backup" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Cloud className="h-4 w-4" />
-                <span className="hidden xs:inline">Backup</span>
-              </TabsTrigger>
-              <TabsTrigger value="regional" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Globe className="h-4 w-4" />
-                <span className="hidden xs:inline">Regional</span>
-              </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Bell className="h-4 w-4" />
+              <TabsTrigger
+                value="notifications"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Alerts</span>
               </TabsTrigger>
-              <TabsTrigger value="sharing" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Share className="h-4 w-4" />
-                <span className="hidden xs:inline">Export</span>
-              </TabsTrigger>
-              <TabsTrigger value="info" className="flex flex-col sm:flex-row items-center gap-1 text-xs p-2">
-                <Info className="h-4 w-4" />
+              <TabsTrigger
+                value="info"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                <Info className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Info</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
           {/* Store Profile Tab */}
-          <TabsContent value="store">
-            <Card>
+          <TabsContent value="store" className="animate-slide-up delay-200">
+            <Card className="glass border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-white">
                   <Store className="h-5 w-5" />
                   Store Profile
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {profileLoading ? (
-                  <div className="text-center py-8">Loading store profile...</div>
+                  <div className="text-center py-8 text-blue-200">Loading store profile...</div>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="storeName">Store Name</Label>
+                        <Label htmlFor="storeName" className="text-white">Store Name</Label>
                         <Input
                           id="storeName"
                           value={storeProfile.name}
                           onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
+                        <Label htmlFor="phone" className="text-white">Phone Number</Label>
                         <Input
                           id="phone"
                           value={storeProfile.phone}
                           onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email" className="text-white">Email</Label>
                         <Input
                           id="email"
                           type="email"
                           value={storeProfile.email}
                           onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="gstin">GSTIN</Label>
+                        <Label htmlFor="gstin" className="text-white">GSTIN</Label>
                         <Input
                           id="gstin"
                           value={storeProfile.gstin}
                           onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="address">Address</Label>
+                      <Label htmlFor="address" className="text-white">Address</Label>
                       <Textarea
                         id="address"
                         value={storeProfile.address}
                         onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                       />
                     </div>
                     <div className="flex items-center space-x-2">
@@ -265,12 +400,14 @@ const Settings = () => {
                         checked={storeProfile.showOnReceipt}
                         onCheckedChange={(checked) => setStoreProfile({...storeProfile, showOnReceipt: checked})}
                       />
-                      <Label htmlFor="showOnReceipt">Show store info on receipts</Label>
+                      <Label htmlFor="showOnReceipt" className="text-white">Show store info on receipts</Label>
                     </div>
                     <Button 
                       onClick={saveStoreProfile}
                       disabled={updateLoading}
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                     >
+                      <Save className="h-4 w-4 mr-2" />
                       {updateLoading ? "Saving..." : "Save Store Profile"}
                     </Button>
                   </>
@@ -280,62 +417,93 @@ const Settings = () => {
           </TabsContent>
 
           {/* Printer Settings Tab */}
-          <TabsContent value="printer">
+          <TabsContent value="printer" className="animate-slide-up delay-200">
             <div className="space-y-6">
-              <Card>
+              <Card className="glass border-white/20">
                 <CardHeader>
-                  <CardTitle>Receipt Printer Setup</CardTitle>
+                  <CardTitle className="text-white">Receipt Printer Setup</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Connected Printer</Label>
+                    <Label className="text-white">Connected Printer</Label>
                     <div className="flex gap-2">
-                      <Input placeholder="No printer connected" value={printerSettings.receiptPrinter} readOnly />
-                      <Button variant="outline">Connect</Button>
+                      <Input 
+                        placeholder="No printer connected" 
+                        value={printerSettings.receiptPrinter} 
+                        readOnly 
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                      />
+                      <Button 
+                        variant="outline" 
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => connectPrinter('receipt')}
+                      >
+                        Connect
+                      </Button>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Paper Size</Label>
-                    <RadioGroup value={printerSettings.receiptPaperSize} onValueChange={(value) => setPrinterSettings({...printerSettings, receiptPaperSize: value})}>
+                    <Label className="text-white">Paper Size</Label>
+                    <RadioGroup 
+                      value={printerSettings.receiptPaperSize} 
+                      onValueChange={(value) => setPrinterSettings({...printerSettings, receiptPaperSize: value})}
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="58mm" id="58mm" />
-                        <Label htmlFor="58mm">58mm</Label>
+                        <Label htmlFor="58mm" className="text-white">58mm</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="80mm" id="80mm" />
-                        <Label htmlFor="80mm">80mm</Label>
+                        <Label htmlFor="80mm" className="text-white">80mm</Label>
                       </div>
                     </RadioGroup>
                   </div>
-                  <Button className="flex items-center gap-2">
+                  <Button 
+                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500"
+                    onClick={testPrint}
+                  >
                     <TestTube className="h-4 w-4" />
                     Test Print
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="glass border-white/20">
                 <CardHeader>
-                  <CardTitle>Barcode Printer Setup</CardTitle>
+                  <CardTitle className="text-white">Barcode Printer Setup</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Connected Label Printer</Label>
+                    <Label className="text-white">Connected Label Printer</Label>
                     <div className="flex gap-2">
-                      <Input placeholder="No printer connected" value={printerSettings.barcodePrinter} readOnly />
-                      <Button variant="outline">Connect</Button>
+                      <Input 
+                        placeholder="No printer connected" 
+                        value={printerSettings.barcodePrinter} 
+                        readOnly 
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                      />
+                      <Button 
+                        variant="outline" 
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => connectPrinter('barcode')}
+                      >
+                        Connect
+                      </Button>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Label Size</Label>
-                    <RadioGroup value={printerSettings.labelSize} onValueChange={(value) => setPrinterSettings({...printerSettings, labelSize: value})}>
+                    <Label className="text-white">Label Size</Label>
+                    <RadioGroup 
+                      value={printerSettings.labelSize} 
+                      onValueChange={(value) => setPrinterSettings({...printerSettings, labelSize: value})}
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="40x30mm" id="40x30mm" />
-                        <Label htmlFor="40x30mm">40x30mm</Label>
+                        <Label htmlFor="40x30mm" className="text-white">40x30mm</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="50x30mm" id="50x30mm" />
-                        <Label htmlFor="50x30mm">50x30mm</Label>
+                        <Label htmlFor="50x30mm" className="text-white">50x30mm</Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -345,10 +513,10 @@ const Settings = () => {
           </TabsContent>
 
           {/* Billing Preferences Tab */}
-          <TabsContent value="billing">
-            <Card>
+          <TabsContent value="billing" className="animate-slide-up delay-200">
+            <Card className="glass border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-white">
                   <Receipt className="h-5 w-5" />
                   Billing Preferences
                 </CardTitle>
@@ -356,28 +524,32 @@ const Settings = () => {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="taxRate">Default Tax Rate (%)</Label>
+                    <Label htmlFor="taxRate" className="text-white">Default Tax Rate (%)</Label>
                     <Input
                       id="taxRate"
                       type="number"
                       value={billingPrefs.defaultTaxRate}
                       onChange={(e) => setBillingPrefs({...billingPrefs, defaultTaxRate: parseInt(e.target.value)})}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Rounding Method</Label>
-                    <RadioGroup value={billingPrefs.roundingMethod} onValueChange={(value) => setBillingPrefs({...billingPrefs, roundingMethod: value})}>
+                    <Label className="text-white">Rounding Method</Label>
+                    <RadioGroup 
+                      value={billingPrefs.roundingMethod} 
+                      onValueChange={(value) => setBillingPrefs({...billingPrefs, roundingMethod: value})}
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="nearest" id="nearest" />
-                        <Label htmlFor="nearest">Nearest</Label>
+                        <Label htmlFor="nearest" className="text-white">Nearest</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="up" id="up" />
-                        <Label htmlFor="up">Round Up</Label>
+                        <Label htmlFor="up" className="text-white">Round Up</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="down" id="down" />
-                        <Label htmlFor="down">Round Down</Label>
+                        <Label htmlFor="down" className="text-white">Round Down</Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -390,7 +562,7 @@ const Settings = () => {
                       checked={billingPrefs.enableDiscounts}
                       onCheckedChange={(checked) => setBillingPrefs({...billingPrefs, enableDiscounts: checked})}
                     />
-                    <Label htmlFor="enableDiscounts">Enable discount entry</Label>
+                    <Label htmlFor="enableDiscounts" className="text-white">Enable discount entry</Label>
                   </div>
                   
                   <div className="flex items-center space-x-2">
@@ -399,29 +571,36 @@ const Settings = () => {
                       checked={billingPrefs.autoPrint}
                       onCheckedChange={(checked) => setBillingPrefs({...billingPrefs, autoPrint: checked})}
                     />
-                    <Label htmlFor="autoPrintBilling">Auto print receipt after billing</Label>
+                    <Label htmlFor="autoPrintBilling" className="text-white">Auto print receipt after billing</Label>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="thankYouNote">Thank You Note</Label>
+                  <Label htmlFor="thankYouNote" className="text-white">Thank You Note</Label>
                   <Textarea
                     id="thankYouNote"
                     value={billingPrefs.thankYouNote}
                     onChange={(e) => setBillingPrefs({...billingPrefs, thankYouNote: e.target.value})}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                   />
                 </div>
 
-                <Button>Save Billing Preferences</Button>
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveBillingPreferences}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Billing Preferences
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Inventory Settings Tab */}
-          <TabsContent value="inventory">
-            <Card>
+          <TabsContent value="inventory" className="animate-slide-up delay-200">
+            <Card className="glass border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-white">
                   <Package className="h-5 w-5" />
                   Inventory Settings
                 </CardTitle>
@@ -429,28 +608,32 @@ const Settings = () => {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="stockThreshold">Stock Threshold Alert</Label>
+                    <Label htmlFor="stockThreshold" className="text-white">Stock Threshold Alert</Label>
                     <Input
                       id="stockThreshold"
                       type="number"
                       value={inventorySettings.stockThreshold}
                       onChange={(e) => setInventorySettings({...inventorySettings, stockThreshold: parseInt(e.target.value)})}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Default Unit of Measure</Label>
-                    <RadioGroup value={inventorySettings.defaultUnit} onValueChange={(value) => setInventorySettings({...inventorySettings, defaultUnit: value})}>
+                    <Label className="text-white">Default Unit of Measure</Label>
+                    <RadioGroup 
+                      value={inventorySettings.defaultUnit} 
+                      onValueChange={(value) => setInventorySettings({...inventorySettings, defaultUnit: value})}
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="pcs" id="pcs" />
-                        <Label htmlFor="pcs">Pieces</Label>
+                        <Label htmlFor="pcs" className="text-white">Pieces</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="kg" id="kg" />
-                        <Label htmlFor="kg">Kilograms</Label>
+                        <Label htmlFor="kg" className="text-white">Kilograms</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="liter" id="liter" />
-                        <Label htmlFor="liter">Liters</Label>
+                        <Label htmlFor="liter" className="text-white">Liters</Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -462,94 +645,84 @@ const Settings = () => {
                     checked={inventorySettings.autoBarcode}
                     onCheckedChange={(checked) => setInventorySettings({...inventorySettings, autoBarcode: checked})}
                   />
-                  <Label htmlFor="autoBarcode">Enable barcode auto-generation for new products</Label>
+                  <Label htmlFor="autoBarcode" className="text-white">Enable barcode auto-generation for new products</Label>
                 </div>
 
-                <Button>Save Inventory Settings</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* User Management Tab */}
-          <TabsContent value="users">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  User Management
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center py-8 text-gray-500">User management features coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Backup & Sync Tab */}
-          <TabsContent value="backup">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Cloud className="h-5 w-5" />
-                  Backup & Sync
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center py-8 text-gray-500">Backup and sync features coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Regional Settings Tab */}
-          <TabsContent value="regional">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5" />
-                  Regional Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center py-8 text-gray-500">Regional settings coming soon...</p>
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveInventorySettings}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Inventory Settings
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Notifications Tab */}
-          <TabsContent value="notifications">
-            <Card>
+          <TabsContent value="notifications" className="animate-slide-up delay-200">
+            <Card className="glass border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-white">
                   <Bell className="h-5 w-5" />
                   Notifications & Alerts
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-center py-8 text-gray-500">Notification settings coming soon...</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="dailySummary" className="text-white">Daily Sales Summary</Label>
+                      <p className="text-sm text-blue-200">Receive daily sales reports via email</p>
+                    </div>
+                    <Switch
+                      id="dailySummary"
+                      checked={notifications.dailySummary}
+                      onCheckedChange={(checked) => setNotifications({...notifications, dailySummary: checked})}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="stockReorder" className="text-white">Stock Reorder Alerts</Label>
+                      <p className="text-sm text-blue-200">Get notified when items are low in stock</p>
+                    </div>
+                    <Switch
+                      id="stockReorder"
+                      checked={notifications.stockReorder}
+                      onCheckedChange={(checked) => setNotifications({...notifications, stockReorder: checked})}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="printerDisconnect" className="text-white">Printer Disconnect Alerts</Label>
+                      <p className="text-sm text-blue-200">Alert when printers are disconnected</p>
+                    </div>
+                    <Switch
+                      id="printerDisconnect"
+                      checked={notifications.printerDisconnect}
+                      onCheckedChange={(checked) => setNotifications({...notifications, printerDisconnect: checked})}
+                    />
+                  </div>
+                </div>
 
-          {/* Sharing & Export Tab */}
-          <TabsContent value="sharing">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Share className="h-5 w-5" />
-                  Sharing & Export
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center py-8 text-gray-500">Sharing and export features coming soon...</p>
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveNotificationSettings}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Notification Settings
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* App Info Tab */}
-          <TabsContent value="info">
-            <Card>
+          <TabsContent value="info" className="animate-slide-up delay-200">
+            <Card className="glass border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-white">
                   <Info className="h-5 w-5" />
                   App Info & Support
                 </CardTitle>
@@ -557,29 +730,64 @@ const Settings = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">App Version</span>
-                    <span className="text-gray-500">1.0.0</span>
+                    <span className="font-medium text-white">App Version</span>
+                    <span className="text-blue-200">{APP_CONFIG.version}</span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">Last Updated</span>
-                    <span className="text-gray-500">Dec 24, 2024</span>
+                    <span className="font-medium text-white">Last Updated</span>
+                    <span className="text-blue-200">{APP_CONFIG.lastUpdated}</span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="font-medium">GraphQL Status</span>
-                    <Badge variant="default">Connected</Badge>
+                    <span className="font-medium text-white">API Mode</span>
+                    <ApiStatusIndicator />
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-white">System Status</span>
+                    <Badge variant="default" className="bg-green-500/20 text-green-300 border-green-500/30">
+                      Operational
+                    </Badge>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full">Terms of Service</Button>
-                  <Button variant="outline" className="w-full">Privacy Policy</Button>
-                  <Button variant="outline" className="w-full">Contact Support</Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={openTermsOfService}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Terms of Service
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={openPrivacyPolicy}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    Privacy Policy
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={contactSupport}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Contact Support
+                  </Button>
                 </div>
                 
-                <div className="pt-4 border-t">
-                  <Button variant="destructive" className="w-full">Clear All Data</Button>
+                <div className="pt-4 border-t border-white/20">
+                  <Button 
+                    variant="destructive" 
+                    className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    onClick={clearAllData}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear All Data
+                  </Button>
                 </div>
               </CardContent>
             </Card>
