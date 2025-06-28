@@ -1,43 +1,25 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { DivideIcon as LucideIcon } from "lucide-react";
+
+import React from 'react';
+import { LucideIcon } from 'lucide-react';
 
 interface EmptyStateProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-  className?: string;
+  action?: React.ReactNode;
 }
 
-export const EmptyState = ({ 
-  icon: Icon, 
-  title, 
-  description, 
-  action, 
-  className 
-}: EmptyStateProps) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ icon: Icon, title, description, action }) => {
   return (
-    <div className={cn(
-      "flex flex-col items-center justify-center py-12 px-4 text-center",
-      className
-    )}>
-      <div className="bg-white/10 p-4 rounded-2xl mb-4">
-        <Icon className="h-12 w-12 text-blue-300" />
+    <div className="flex flex-col items-center justify-center p-12 text-center">
+      <div className="mb-6 p-4 bg-gray-100 rounded-2xl">
+        <Icon className="h-12 w-12 text-gray-400" />
       </div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-      <p className="text-blue-200 mb-6 max-w-sm">{description}</p>
-      {action && (
-        <Button 
-          onClick={action.onClick}
-          className="bg-gradient-to-r from-blue-500 to-purple-500"
-        >
-          {action.label}
-        </Button>
-      )}
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 mb-6 max-w-md">{description}</p>
+      {action && <div>{action}</div>}
     </div>
   );
 };
+
+export default EmptyState;

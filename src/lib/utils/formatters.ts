@@ -10,29 +10,21 @@ export const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-IN').format(num);
 };
 
-export const formatDate = (date: string | Date, format = 'short'): string => {
+export const formatDate = (date: string | Date, format: 'short' | 'long' | 'time' = 'short'): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
-  const options: Intl.DateTimeFormatOptions = {
-    short: { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    },
-    long: { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    },
-    time: {
-      hour: '2-digit',
-      minute: '2-digit'
-    }
-  }[format] || { year: 'numeric', month: 'short', day: 'numeric' };
-  
-  return new Intl.DateTimeFormat('en-IN', options).format(dateObj);
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Date';
+  }
+
+  const options: Intl.DateTimeFormatOptions = 
+    format === 'long' 
+      ? { year: 'numeric', month: 'long', day: 'numeric' }
+      : format === 'time'
+      ? { hour: '2-digit', minute: '2-digit' }
+      : { year: 'numeric', month: 'short', day: 'numeric' };
+
+  return dateObj.toLocaleDateString('en-US', options);
 };
 
 export const formatPhone = (phone: string): string => {

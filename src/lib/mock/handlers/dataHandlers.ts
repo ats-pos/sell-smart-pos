@@ -1,279 +1,257 @@
-import { mockProducts } from '../data/products';
-import { mockCustomers } from '../data/customers';
-import { mockSales } from '../data/sales';
-import { mockBarcodes } from '../data/barcodes';
-import { mockStoreProfile } from '../data/stores';
-import { mockDashboardStats, mockSalesAnalytics, mockTopProducts, mockGSTSummary } from '../data/analytics';
-import { ProductInput, CustomerInput, SaleInput, BarcodeInput, StoreProfileInput } from '@/lib/graphql/types';
+import { graphql } from 'msw';
+import { 
+  mockProducts, 
+  mockSales, 
+  mockCustomers, 
+  mockBarcodes,
+  mockAnalytics 
+} from '../data';
+import type { 
+  Product, 
+  Sale, 
+  Customer, 
+  Barcode, 
+  ProductInput, 
+  SaleInput,
+  SaleItem,
+  SaleItemInput
+} from '../../../lib/graphql/types';
 
-// Mock data handlers
-export const mockDataHandlers = {
-  // Products
-  getProducts: async (variables?: any) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    let products = [...mockProducts];
-    
-    if (variables?.search) {
-      products = products.filter(p => 
-        p.name.toLowerCase().includes(variables.search.toLowerCase()) ||
-        p.barcode.includes(variables.search) ||
-        p.brand.toLowerCase().includes(variables.search.toLowerCase())
-      );
-    }
-    
-    if (variables?.category) {
-      products = products.filter(p => p.category === variables.category);
-    }
-    
-    const limit = variables?.limit || 50;
-    const offset = variables?.offset || 0;
-    
+let products = [...mockProducts];
+let sales = [...mockSales];
+let customers = [...mockCustomers];
+let barcodes = [...mockBarcodes];
+
+// Helper function to generate ID
+const generateId = () => Math.random().toString(36).substr(2, 9);
+
+export const dataHandlers = [
+  // Product handlers
+  graphql.query('GetProducts', () => {
     return {
-      products: products.slice(offset, offset + limit)
+      data: {
+        products
+      }
     };
-  },
+  }),
 
-  getProduct: async (variables: { id: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 300));
+  graphql.mutation('CreateProduct', ({ variables }) => {
+    const { input } = variables as { input: ProductInput };
     
-    const product = mockProducts.find(p => p.id === variables.id);
-    if (!product) throw new Error('Product not found');
-    
-    return { product };
-  },
-
-  searchProducts: async (variables: { query: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const products = mockProducts.filter(p =>
-      p.name.toLowerCase().includes(variables.query.toLowerCase()) ||
-      p.barcode.includes(variables.query) ||
-      p.brand.toLowerCase().includes(variables.query.toLowerCase())
-    );
-    
-    return { searchProducts: products };
-  },
-
-  createProduct: async (variables: { input: ProductInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const newProduct = {
-      id: `prod-${Date.now()}`,
-      ...variables.input,
+    const newProduct: Product = {
+      id: generateId(),
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      ...input
     };
     
-    mockProducts.push(newProduct);
-    
-    return { createProduct: newProduct };
-  },
-
-  updateProduct: async (variables: { id: string; input: ProductInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    
-    const index = mockProducts.findIndex(p => p.id === variables.id);
-    if (index === -1) throw new Error('Product not found');
-    
-    mockProducts[index] = {
-      ...mockProducts[index],
-      ...variables.input,
-      updatedAt: new Date().toISOString()
-    };
-    
-    return { updateProduct: mockProducts[index] };
-  },
-
-  deleteProduct: async (variables: { id: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const index = mockProducts.findIndex(p => p.id === variables.id);
-    if (index === -1) throw new Error('Product not found');
-    
-    mockProducts.splice(index, 1);
+    products.unshift(newProduct);
     
     return {
-      deleteProduct: {
-        success: true,
-        message: 'Product deleted successfully'
+      data: {
+        createProduct: newProduct
       }
     };
-  },
+  }),
 
-  // Customers
-  getCustomers: async (variables?: any) => {
-    await new Promise(resolve => setTimeout(resolve, 400));
+  graphql.mutation('UpdateProduct', ({ variables }) => {
+    const { id, input } = variables as { id: string, input: ProductInput };
     
-    let customers = [...mockCustomers];
-    
-    if (variables?.search) {
-      customers = customers.filter(c =>
-        c.name.toLowerCase().includes(variables.search.toLowerCase()) ||
-        c.phone.includes(variables.search) ||
-        c.email.toLowerCase().includes(variables.search.toLowerCase())
-      );
-    }
-    
-    const limit = variables?.limit || 50;
-    const offset = variables?.offset || 0;
+    products = products.map(product => product.id === id ? { ...product, ...input } : product);
     
     return {
-      customers: customers.slice(offset, offset + limit)
-    };
-  },
-
-  createCustomer: async (variables: { input: CustomerInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    
-    const newCustomer = {
-      id: `cust-${Date.now()}`,
-      ...variables.input,
-      createdAt: new Date().toISOString()
-    };
-    
-    mockCustomers.push(newCustomer);
-    
-    return { createCustomer: newCustomer };
-  },
-
-  // Sales
-  getSales: async (variables?: any) => {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    
-    let sales = [...mockSales];
-    
-    if (variables?.startDate || variables?.endDate) {
-      // Filter by date range if provided
-      sales = sales.filter(sale => {
-        const saleDate = new Date(sale.createdAt);
-        const start = variables?.startDate ? new Date(variables.startDate) : new Date(0);
-        const end = variables?.endDate ? new Date(variables.endDate) : new Date();
-        return saleDate >= start && saleDate <= end;
-      });
-    }
-    
-    const limit = variables?.limit || 50;
-    const offset = variables?.offset || 0;
-    
-    return {
-      sales: sales.slice(offset, offset + limit)
-    };
-  },
-
-  createSale: async (variables: { input: SaleInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const newSale = {
-      id: `sale-${Date.now()}`,
-      ...variables.input,
-      createdAt: new Date().toISOString()
-    };
-    
-    mockSales.unshift(newSale);
-    
-    return { createSale: newSale };
-  },
-
-  // Barcodes
-  getBarcodes: async (variables?: any) => {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const limit = variables?.limit || 50;
-    const offset = variables?.offset || 0;
-    
-    return {
-      barcodes: mockBarcodes.slice(offset, offset + limit)
-    };
-  },
-
-  createBarcode: async (variables: { input: BarcodeInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 700));
-    
-    const newBarcode = {
-      id: `barcode-${Date.now()}`,
-      ...variables.input,
-      createdAt: new Date().toISOString()
-    };
-    
-    mockBarcodes.push(newBarcode);
-    
-    return { createBarcode: newBarcode };
-  },
-
-  deleteBarcode: async (variables: { id: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const index = mockBarcodes.findIndex(b => b.id === variables.id);
-    if (index === -1) throw new Error('Barcode not found');
-    
-    mockBarcodes.splice(index, 1);
-    
-    return {
-      deleteBarcode: {
-        success: true,
-        message: 'Barcode deleted successfully'
+      data: {
+        updateProduct: products.find(product => product.id === id)
       }
     };
-  },
+  }),
 
-  // Store Profile
-  getStoreProfile: async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
+  graphql.mutation('DeleteProduct', ({ variables }) => {
+    const { id } = variables as { id: string };
     
-    return { storeProfile: mockStoreProfile };
-  },
-
-  updateStoreProfile: async (variables: { input: StoreProfileInput }) => {
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    Object.assign(mockStoreProfile, variables.input);
-    
-    return { updateStoreProfile: mockStoreProfile };
-  },
-
-  // Analytics
-  getDashboardStats: async () => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    return { dashboardStats: mockDashboardStats };
-  },
-
-  getLowStockItems: async () => {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const lowStockItems = mockProducts.filter(p => p.stock <= p.minStock);
-    
-    return { lowStockItems };
-  },
-
-  getRecentTransactions: async (variables?: { limit?: number }) => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const limit = variables?.limit || 5;
+    products = products.filter(product => product.id !== id);
     
     return {
-      recentTransactions: mockSales.slice(0, limit)
+      data: {
+        deleteProduct: id
+      }
     };
-  },
+  }),
 
-  getSalesAnalytics: async (variables: { period: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 600));
+  // Customer handlers
+  graphql.query('GetCustomers', () => {
+    return {
+      data: {
+        customers
+      }
+    };
+  }),
+
+  graphql.mutation('CreateCustomer', ({ variables }) => {
+    const { input } = variables as { input: Customer };
     
-    return { salesAnalytics: mockSalesAnalytics };
-  },
-
-  getTopProducts: async (variables: { limit: number }) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
+    const newCustomer: Customer = {
+      id: generateId(),
+      ...input
+    };
+    
+    customers.unshift(newCustomer);
     
     return {
-      topProducts: mockTopProducts.slice(0, variables.limit)
+      data: {
+        createCustomer: newCustomer
+      }
     };
-  },
+  }),
 
-  getGSTSummary: async (variables?: { month?: string; year?: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 400));
+  graphql.mutation('UpdateCustomer', ({ variables }) => {
+    const { id, input } = variables as { id: string, input: Customer };
     
-    return { gstSummary: mockGSTSummary };
-  }
-};
+    customers = customers.map(customer => customer.id === id ? { ...customer, ...input } : customer);
+    
+    return {
+      data: {
+        updateCustomer: customers.find(customer => customer.id === id)
+      }
+    };
+  }),
+
+  graphql.mutation('DeleteCustomer', ({ variables }) => {
+    const { id } = variables as { id: string };
+    
+    customers = customers.filter(customer => customer.id !== id);
+    
+    return {
+      data: {
+        deleteCustomer: id
+      }
+    };
+  }),
+
+  // Barcode handlers
+  graphql.query('GetBarcodes', () => {
+    return {
+      data: {
+        barcodes
+      }
+    };
+  }),
+
+  graphql.mutation('CreateBarcode', ({ variables }) => {
+    const { input } = variables as { input: Barcode };
+    
+    const newBarcode: Barcode = {
+      id: generateId(),
+      ...input
+    };
+    
+    barcodes.unshift(newBarcode);
+    
+    return {
+      data: {
+        createBarcode: newBarcode
+      }
+    };
+  }),
+
+  graphql.mutation('UpdateBarcode', ({ variables }) => {
+    const { id, input } = variables as { id: string, input: Barcode };
+    
+    barcodes = barcodes.map(barcode => barcode.id === id ? { ...barcode, ...input } : barcode);
+    
+    return {
+      data: {
+        updateBarcode: barcodes.find(barcode => barcode.id === id)
+      }
+    };
+  }),
+
+  graphql.mutation('DeleteBarcode', ({ variables }) => {
+    const { id } = variables as { id: string };
+    
+    barcodes = barcodes.filter(barcode => barcode.id !== id);
+    
+    return {
+      data: {
+        deleteBarcode: id
+      }
+    };
+  }),
+
+  // Analytics handlers
+  graphql.query('GetAnalytics', () => {
+    return {
+      data: {
+        analytics: mockAnalytics
+      }
+    };
+  }),
+
+  // Sales handlers
+  graphql.query('GetSales', () => {
+    return {
+      data: {
+        sales: sales.map(sale => ({
+          ...sale,
+          items: sale.items.map(item => ({
+            ...item,
+            id: item.id || generateId()
+          }))
+        }))
+      }
+    };
+  }),
+
+  graphql.mutation('CreateSale', ({ variables }) => {
+    const { input } = variables as { input: SaleInput };
+    
+    const newSale: Sale = {
+      id: generateId(),
+      createdAt: new Date().toISOString(),
+      billNumber: `BILL-${Date.now()}`,
+      customerId: input.customerId,
+      customerName: input.customerName,
+      items: input.items.map((item: SaleItemInput): SaleItem => ({
+        ...item,
+        id: generateId()
+      })),
+      subtotal: input.subtotal,
+      discount: input.discount || 0,
+      gst: input.gst || 0,
+      total: input.total,
+      paymentMethod: input.paymentMethod,
+      status: input.status || 'completed'
+    };
+    
+    sales.unshift(newSale);
+    
+    return {
+      data: {
+        createSale: newSale
+      }
+    };
+  }),
+
+  graphql.mutation('UpdateSale', ({ variables }) => {
+    const { id, input } = variables as { id: string, input: SaleInput };
+    
+    sales = sales.map(sale => sale.id === id ? { ...sale, ...input } : sale);
+    
+    return {
+      data: {
+        updateSale: sales.find(sale => sale.id === id)
+      }
+    };
+  }),
+
+  graphql.mutation('DeleteSale', ({ variables }) => {
+    const { id } = variables as { id: string };
+    
+    sales = sales.filter(sale => sale.id !== id);
+    
+    return {
+      data: {
+        deleteSale: id
+      }
+    };
+  }),
+];
