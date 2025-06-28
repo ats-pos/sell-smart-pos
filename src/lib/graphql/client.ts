@@ -57,7 +57,7 @@ const realApolloClient = new ApolloClient({
     },
     query: {
       errorPolicy: 'all',
-      initialFetchPolicy: 'cache-first'
+      //initialFetchPolicy: 'cache-first'
     }
   }
 });
@@ -75,11 +75,14 @@ class MockApolloClientWrapper {
     this.defaultOptions = {
       watchQuery: {
         errorPolicy: 'all',
-        initialFetchPolicy: 'cache-first'
+        initialFetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-first'
       },
       query: {
         errorPolicy: 'all',
-        initialFetchPolicy: 'cache-first'
+        initialFetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-first'
+        
       }
     };
     
@@ -92,7 +95,10 @@ class MockApolloClientWrapper {
   }
 
   async query(options: any) {
-    return this.mockClient.query(options);
+    const data = await this.mockClient.query(options);
+//console.error('Mock GraphQL Query:', options.query, 'Variables:', options.variables, 'Data:', data);
+
+    return data;
   }
 
   async mutate(options: any) {
@@ -131,6 +137,8 @@ class MockApolloClientWrapper {
         currentResult = result;
         isLoading = false;
         error = null;
+        //console.log('currentSubscriber', currentSubscriber, 'result', result);
+        
         if (currentSubscriber) {
           this.safeObserverCall(currentSubscriber, 'next', {
             data: result.data,
@@ -150,6 +158,7 @@ class MockApolloClientWrapper {
       });
 
     const observable = {
+      options: { ...options },
       subscribe: (observer: any) => {
         currentSubscriber = observer;
         
