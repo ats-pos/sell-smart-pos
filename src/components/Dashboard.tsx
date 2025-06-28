@@ -61,86 +61,88 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-lg">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
-            <DollarSign className="h-4 w-4" />
+      <div className="grid-dashboard">
+        <Card className="card-dashboard bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-500/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-white">Today's Sales</CardTitle>
+            <DollarSign className="h-5 w-5 text-blue-300" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-heading-2 text-white">
               {statsLoading ? "Loading..." : `₹${todayStats.sales?.toLocaleString() || 0}`}
             </div>
-            <p className="text-xs text-blue-100">+20.1% from yesterday</p>
+            <p className="text-body-sm text-blue-200">+20.1% from yesterday</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-            <Receipt className="h-4 w-4" />
+        <Card className="card-dashboard bg-gradient-to-r from-green-500/20 to-green-600/20 border-green-500/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-white">Transactions</CardTitle>
+            <Receipt className="h-5 w-5 text-green-300" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-heading-2 text-white">
               {statsLoading ? "Loading..." : (todayStats.transactions || 0)}
             </div>
-            <p className="text-xs text-green-100">+12% from yesterday</p>
+            <p className="text-body-sm text-green-200">+12% from yesterday</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Customers</CardTitle>
-            <Users className="h-4 w-4" />
+        <Card className="card-dashboard bg-gradient-to-r from-purple-500/20 to-purple-600/20 border-purple-500/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-white">Customers</CardTitle>
+            <Users className="h-5 w-5 text-purple-300" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-heading-2 text-white">
               {statsLoading ? "Loading..." : (todayStats.customers || 0)}
             </div>
-            <p className="text-xs text-purple-100">+5 new customers</p>
+            <p className="text-body-sm text-purple-200">+5 new customers</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Order</CardTitle>
-            <TrendingUp className="h-4 w-4" />
+        <Card className="card-dashboard bg-gradient-to-r from-orange-500/20 to-orange-600/20 border-orange-500/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-white">Avg Order</CardTitle>
+            <TrendingUp className="h-5 w-5 text-orange-300" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-heading-2 text-white">
               {statsLoading ? "Loading..." : `₹${todayStats.avgOrder || 0}`}
             </div>
-            <p className="text-xs text-orange-100">+8.2% increase</p>
+            <p className="text-body-sm text-orange-200">+8.2% increase</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid-features">
         {/* Low Stock Alert */}
-        <Card>
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <AlertTriangle className="h-5 w-5 text-amber-400" />
               Low Stock Alert
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-md">
             {lowStockLoading ? (
-              <div className="text-center py-4">Loading...</div>
+              <div className="text-center py-8 text-blue-200">Loading...</div>
             ) : (
               lowStockProducts.map((item, index) => (
-                <div key={item.id || index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                <div key={item.id || index} className="flex items-center justify-between p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
                   <div>
-                    <p className="font-medium text-sm">{item.name}</p>
-                    <p className="text-xs text-gray-500">Min stock: {item.minStock}</p>
+                    <p className="font-medium text-sm text-white">{item.name}</p>
+                    <p className="text-xs text-amber-200">Min stock: {item.minStock}</p>
                   </div>
-                  <Badge variant="destructive">{item.stock} left</Badge>
+                  <Badge variant="destructive" className="bg-red-500/20 text-red-300 border-red-500/30">
+                    {item.stock} left
+                  </Badge>
                 </div>
               ))
             )}
-            <Button variant="outline" className="w-full mt-3">
+            <Button variant="outline" className="w-full mt-4">
               <Package className="h-4 w-4 mr-2" />
               Manage Inventory
             </Button>
@@ -148,31 +150,31 @@ const Dashboard = () => {
         </Card>
 
         {/* Recent Transactions */}
-        <Card>
+        <Card className="card-modern">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-blue-500" />
+              <BarChart3 className="h-5 w-5 text-blue-400" />
               Recent Transactions
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-md">
             {transactionsLoading ? (
-              <div className="text-center py-4">Loading...</div>
+              <div className="text-center py-8 text-blue-200">Loading...</div>
             ) : (
               recentSales.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={transaction.id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
                   <div>
-                    <p className="font-medium text-sm">{transaction.billNumber}</p>
-                    <p className="text-xs text-gray-500">{transaction.customerName}</p>
+                    <p className="font-medium text-sm text-white">{transaction.billNumber}</p>
+                    <p className="text-xs text-blue-200">{transaction.customerName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-green-600">₹{transaction.total}</p>
-                    <p className="text-xs text-gray-500">{transaction.createdAt}</p>
+                    <p className="font-semibold text-green-400">₹{transaction.total}</p>
+                    <p className="text-xs text-blue-300">{transaction.createdAt}</p>
                   </div>
                 </div>
               ))
             )}
-            <Button variant="outline" className="w-full mt-3">
+            <Button variant="outline" className="w-full mt-4">
               <Receipt className="h-4 w-4 mr-2" />
               View All Transactions
             </Button>
@@ -181,28 +183,28 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="card-modern">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col gap-2 bg-blue-600 hover:bg-blue-700">
-              <ShoppingBag className="h-6 w-6" />
-              New Sale
+          <div className="grid-cards">
+            <Button className="card-compact flex flex-col gap-3 bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-500/30 hover:from-blue-500/30 hover:to-blue-600/30">
+              <ShoppingBag className="h-8 w-8" />
+              <span className="font-semibold">New Sale</span>
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col gap-2">
-              <Package className="h-6 w-6" />
-              Add Product
+            <Button variant="outline" className="card-compact flex flex-col gap-3">
+              <Package className="h-8 w-8" />
+              <span className="font-semibold">Add Product</span>
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col gap-2">
-              <Users className="h-6 w-6" />
-              Add Customer
+            <Button variant="outline" className="card-compact flex flex-col gap-3">
+              <Users className="h-8 w-8" />
+              <span className="font-semibold">Add Customer</span>
             </Button>
             <Link to="/sale-operator">
-              <Button variant="outline" className="h-20 w-full flex flex-col gap-2 border-green-200 hover:bg-green-50">
-                <UserCheck className="h-6 w-6 text-green-600" />
-                Sale Operator
+              <Button variant="outline" className="card-compact flex flex-col gap-3 w-full border-green-500/30 hover:bg-green-500/10">
+                <UserCheck className="h-8 w-8 text-green-400" />
+                <span className="font-semibold text-green-300">Sale Operator</span>
               </Button>
             </Link>
           </div>

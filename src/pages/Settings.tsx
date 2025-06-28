@@ -21,11 +21,8 @@ import {
   Database,
   Sparkles,
   Save,
-  RefreshCw,
   Trash2,
-  Download,
   Mail,
-  Phone,
   Shield
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -212,25 +209,24 @@ const Settings = () => {
         <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
       </div>
 
-      {/* Modern Glassmorphism Header */}
-      <header className="glass sticky top-0 z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center space-x-3 sm:space-x-4">
+      {/* Modern Header */}
+      <header className="nav-modern">
+        <div className="responsive-container">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
-                size="sm"
+                size="icon"
                 onClick={() => navigate('/admin')}
-                className="p-2 text-white hover:bg-white/10"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
-                <SettingsIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-2xl shadow-modern-lg">
+                <SettingsIcon className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">Settings</h1>
-                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
+                <h1 className="text-heading-3 gradient-text">Settings</h1>
+                <p className="text-body-sm flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
                   Configure your SPM-POS system
                 </p>
@@ -238,13 +234,13 @@ const Settings = () => {
             </div>
             
             {/* API Mode Toggle */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <ApiStatusIndicator />
               <Button
                 size="sm"
                 variant="outline"
                 onClick={handleModeToggle}
-                className="hidden sm:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className="hidden sm:flex items-center gap-2"
               >
                 {isMockMode() ? (
                   <>
@@ -264,96 +260,77 @@ const Settings = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
-          {/* Modern Tab Navigation with Better Visibility */}
-          <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-16 sm:h-14 bg-transparent gap-2">
+      <main className="responsive-container py-8 lg:py-12 relative z-10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-lg">
+          {/* Modern Tab Navigation */}
+          <div className="glass-strong p-3 rounded-2xl border border-white/20 animate-slide-up">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 gap-2">
               <TabsTrigger
                 value="store"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Store className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Store</span>
+                <Store className="h-5 w-5" />
+                <span className="hidden sm:inline">Store</span>
               </TabsTrigger>
               <TabsTrigger
                 value="printer"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Printer className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Printer</span>
+                <Printer className="h-5 w-5" />
+                <span className="hidden sm:inline">Printer</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Receipt className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Billing</span>
+                <Receipt className="h-5 w-5" />
+                <span className="hidden sm:inline">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Inventory</span>
+                <Package className="h-5 w-5" />
+                <span className="hidden sm:inline">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="notifications"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Alerts</span>
+                <Bell className="h-5 w-5" />
+                <span className="hidden sm:inline">Alerts</span>
               </TabsTrigger>
               <TabsTrigger
                 value="info"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
-                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
-                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-2 text-sm font-semibold"
               >
-                <Info className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Info</span>
+                <Info className="h-5 w-5" />
+                <span className="hidden sm:inline">Info</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
           {/* Store Profile Tab */}
-          <TabsContent value="store" className="animate-slide-up delay-200">
-            <Card className="glass border-white/20">
+          <TabsContent value="store" className="animate-fade-in">
+            <Card className="card-modern">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Store className="h-5 w-5" />
                   Store Profile
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-md">
                 {profileLoading ? (
                   <div className="text-center py-8 text-blue-200">Loading store profile...</div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="storeName" className="text-white">Store Name</Label>
                         <Input
                           id="storeName"
                           value={storeProfile.name}
                           onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
@@ -362,7 +339,6 @@ const Settings = () => {
                           id="phone"
                           value={storeProfile.phone}
                           onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
@@ -372,7 +348,6 @@ const Settings = () => {
                           type="email"
                           value={storeProfile.email}
                           onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                       <div className="space-y-2">
@@ -381,7 +356,6 @@ const Settings = () => {
                           id="gstin"
                           value={storeProfile.gstin}
                           onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                         />
                       </div>
                     </div>
@@ -391,7 +365,7 @@ const Settings = () => {
                         id="address"
                         value={storeProfile.address}
                         onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                        className="input-modern min-h-[100px]"
                       />
                     </div>
                     <div className="flex items-center space-x-2">
@@ -405,7 +379,7 @@ const Settings = () => {
                     <Button 
                       onClick={saveStoreProfile}
                       disabled={updateLoading}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                      className="w-full sm:w-auto"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {updateLoading ? "Saving..." : "Save Store Profile"}
@@ -417,13 +391,13 @@ const Settings = () => {
           </TabsContent>
 
           {/* Printer Settings Tab */}
-          <TabsContent value="printer" className="animate-slide-up delay-200">
-            <div className="space-y-6">
-              <Card className="glass border-white/20">
+          <TabsContent value="printer" className="animate-fade-in">
+            <div className="space-lg">
+              <Card className="card-modern">
                 <CardHeader>
-                  <CardTitle className="text-white">Receipt Printer Setup</CardTitle>
+                  <CardTitle>Receipt Printer Setup</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-md">
                   <div className="space-y-2">
                     <Label className="text-white">Connected Printer</Label>
                     <div className="flex gap-2">
@@ -431,11 +405,9 @@ const Settings = () => {
                         placeholder="No printer connected" 
                         value={printerSettings.receiptPrinter} 
                         readOnly 
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                       />
                       <Button 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                         onClick={() => connectPrinter('receipt')}
                       >
                         Connect
@@ -459,7 +431,7 @@ const Settings = () => {
                     </RadioGroup>
                   </div>
                   <Button 
-                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500"
+                    className="flex items-center gap-2"
                     onClick={testPrint}
                   >
                     <TestTube className="h-4 w-4" />
@@ -468,11 +440,11 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
-              <Card className="glass border-white/20">
+              <Card className="card-modern">
                 <CardHeader>
-                  <CardTitle className="text-white">Barcode Printer Setup</CardTitle>
+                  <CardTitle>Barcode Printer Setup</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-md">
                   <div className="space-y-2">
                     <Label className="text-white">Connected Label Printer</Label>
                     <div className="flex gap-2">
@@ -480,11 +452,9 @@ const Settings = () => {
                         placeholder="No printer connected" 
                         value={printerSettings.barcodePrinter} 
                         readOnly 
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                       />
                       <Button 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                         onClick={() => connectPrinter('barcode')}
                       >
                         Connect
@@ -513,16 +483,16 @@ const Settings = () => {
           </TabsContent>
 
           {/* Billing Preferences Tab */}
-          <TabsContent value="billing" className="animate-slide-up delay-200">
-            <Card className="glass border-white/20">
+          <TabsContent value="billing" className="animate-fade-in">
+            <Card className="card-modern">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Receipt className="h-5 w-5" />
                   Billing Preferences
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="space-md">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="taxRate" className="text-white">Default Tax Rate (%)</Label>
                     <Input
@@ -530,7 +500,6 @@ const Settings = () => {
                       type="number"
                       value={billingPrefs.defaultTaxRate}
                       onChange={(e) => setBillingPrefs({...billingPrefs, defaultTaxRate: parseInt(e.target.value)})}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
                   <div className="space-y-2">
@@ -555,7 +524,7 @@ const Settings = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-md">
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="enableDiscounts"
@@ -581,13 +550,13 @@ const Settings = () => {
                     id="thankYouNote"
                     value={billingPrefs.thankYouNote}
                     onChange={(e) => setBillingPrefs({...billingPrefs, thankYouNote: e.target.value})}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                    className="input-modern min-h-[80px]"
                   />
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveBillingPreferences}
+                  className="w-full sm:w-auto"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Billing Preferences
@@ -597,16 +566,16 @@ const Settings = () => {
           </TabsContent>
 
           {/* Inventory Settings Tab */}
-          <TabsContent value="inventory" className="animate-slide-up delay-200">
-            <Card className="glass border-white/20">
+          <TabsContent value="inventory" className="animate-fade-in">
+            <Card className="card-modern">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Package className="h-5 w-5" />
                   Inventory Settings
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="space-md">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="stockThreshold" className="text-white">Stock Threshold Alert</Label>
                     <Input
@@ -614,7 +583,6 @@ const Settings = () => {
                       type="number"
                       value={inventorySettings.stockThreshold}
                       onChange={(e) => setInventorySettings({...inventorySettings, stockThreshold: parseInt(e.target.value)})}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
                   <div className="space-y-2">
@@ -649,8 +617,8 @@ const Settings = () => {
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveInventorySettings}
+                  className="w-full sm:w-auto"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Inventory Settings
@@ -660,20 +628,20 @@ const Settings = () => {
           </TabsContent>
 
           {/* Notifications Tab */}
-          <TabsContent value="notifications" className="animate-slide-up delay-200">
-            <Card className="glass border-white/20">
+          <TabsContent value="notifications" className="animate-fade-in">
+            <Card className="card-modern">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Bell className="h-5 w-5" />
                   Notifications & Alerts
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
+              <CardContent className="space-md">
+                <div className="space-md">
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="dailySummary" className="text-white">Daily Sales Summary</Label>
-                      <p className="text-sm text-blue-200">Receive daily sales reports via email</p>
+                      <p className="text-body-sm text-blue-200">Receive daily sales reports via email</p>
                     </div>
                     <Switch
                       id="dailySummary"
@@ -685,7 +653,7 @@ const Settings = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="stockReorder" className="text-white">Stock Reorder Alerts</Label>
-                      <p className="text-sm text-blue-200">Get notified when items are low in stock</p>
+                      <p className="text-body-sm text-blue-200">Get notified when items are low in stock</p>
                     </div>
                     <Switch
                       id="stockReorder"
@@ -697,7 +665,7 @@ const Settings = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="printerDisconnect" className="text-white">Printer Disconnect Alerts</Label>
-                      <p className="text-sm text-blue-200">Alert when printers are disconnected</p>
+                      <p className="text-body-sm text-blue-200">Alert when printers are disconnected</p>
                     </div>
                     <Switch
                       id="printerDisconnect"
@@ -708,8 +676,8 @@ const Settings = () => {
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveNotificationSettings}
+                  className="w-full sm:w-auto"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Notification Settings
@@ -719,16 +687,16 @@ const Settings = () => {
           </TabsContent>
 
           {/* App Info Tab */}
-          <TabsContent value="info" className="animate-slide-up delay-200">
-            <Card className="glass border-white/20">
+          <TabsContent value="info" className="animate-fade-in">
+            <Card className="card-modern">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2">
                   <Info className="h-5 w-5" />
                   App Info & Support
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
+              <CardContent className="space-md">
+                <div className="space-md">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-white">App Version</span>
                     <span className="text-blue-200">{APP_CONFIG.version}</span>
@@ -752,10 +720,10 @@ const Settings = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-sm">
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full justify-start"
                     onClick={openTermsOfService}
                   >
                     <Shield className="h-4 w-4 mr-2" />
@@ -763,7 +731,7 @@ const Settings = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full justify-start"
                     onClick={openPrivacyPolicy}
                   >
                     <Shield className="h-4 w-4 mr-2" />
@@ -771,7 +739,7 @@ const Settings = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full justify-start"
                     onClick={contactSupport}
                   >
                     <Mail className="h-4 w-4 mr-2" />
@@ -779,10 +747,10 @@ const Settings = () => {
                   </Button>
                 </div>
                 
-                <div className="pt-4 border-t border-white/20">
+                <div className="pt-6 border-t border-white/20">
                   <Button 
                     variant="destructive" 
-                    className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    className="w-full"
                     onClick={clearAllData}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
