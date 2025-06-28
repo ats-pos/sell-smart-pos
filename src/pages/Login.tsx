@@ -478,10 +478,6 @@ const Login = () => {
                     type="button"
                     variant="link"
                     onClick={() => setCurrentView('forgot')}
-                    className="text-sm"
-                  >
-                    Forgot password?
-                  </Button>
                     className="text-sm text-blue-200 hover:text-white"
                   >
                     Forgot password?
