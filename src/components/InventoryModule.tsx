@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { 
   Plus, 
   Search, 
@@ -13,21 +14,47 @@ import {
   AlertTriangle,
   Filter,
   Download,
-  Barcode
+  Barcode,
+  Settings,
+  RefreshCw,
+  Wand2
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import BarcodeGenerator from "./BarcodeGenerator";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
 import { GET_PRODUCTS, SEARCH_PRODUCTS } from "@/lib/graphql/queries";
 import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from "@/lib/graphql/mutations";
 import { Product, ProductInput } from "@/lib/graphql/types";
 import { useToast } from "@/hooks/use-toast";
+import { BARCODE_TYPES } from "@/lib/utils/constants";
+import { generateBarcode } from "@/lib/utils/helpers";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+
+interface BarcodeSettings {
+  autoGenerate: boolean;
+  defaultType: string;
+  prefix: string;
+  includeCategory: boolean;
+  includeBrand: boolean;
+}
 
 const InventoryModule = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showBarcodeSettings, setShowBarcodeSettings] = useState(false);
+  
+  // Barcode settings stored in localStorage
+  const [barcodeSettings, setBarcodeSettings] = useLocalStorage<BarcodeSettings>('barcode-settings', {
+    autoGenerate: true,
+    defaultType: 'EAN-13',
+    prefix: '',
+    includeCategory: false,
+    includeBrand: false
+  });
+
   const [newProduct, setNewProduct] = useState<ProductInput>({
     name: "",
     barcode: "",
@@ -59,9 +86,10 @@ const InventoryModule = () => {
     onCompleted: () => {
       toast({
         title: "Product Added",
-        description: "Product has been added successfully."
+        description: "Product has been added successfully with auto-generated barcode."
       });
       refetchProducts();
+      resetForm();
     }
   });
 
@@ -102,30 +130,88 @@ const InventoryModule = () => {
     return { label: "In Stock", color: "default" };
   };
 
+  const generateProductBarcode = (productData: ProductInput): string => {
+    if (!barcodeSettings.autoGenerate) {
+      return productData.barcode || '';
+    }
+
+    let barcode = generateBarcode(barcodeSettings.defaultType);
+    
+    // Add prefix if specified
+    if (barcodeSettings.prefix) {
+      barcode = barcodeSettings.prefix + barcode.slice(barcodeSettings.prefix.length);
+    }
+
+    // Modify barcode based on category/brand settings
+    if (barcodeSettings.includeCategory && productData.category) {
+      const categoryCode = productData.category.substring(0, 2).toUpperCase();
+      barcode = categoryCode + barcode.slice(2);
+    }
+
+    if (barcodeSettings.includeBrand && productData.brand) {
+      const brandCode = productData.brand.substring(0, 2).toUpperCase();
+      barcode = barcode.slice(0, -2) + brandCode;
+    }
+
+    return barcode;
+  };
+
+  const handleProductChange = (field: keyof ProductInput, value: string | number) => {
+    const updatedProduct = { ...newProduct, [field]: value };
+    
+    // Auto-generate barcode when name, category, or brand changes
+    if (barcodeSettings.autoGenerate && (field === 'name' || field === 'category' || field === 'brand')) {
+      if (updatedProduct.name) { // Only generate if product has a name
+        updatedProduct.barcode = generateProductBarcode(updatedProduct);
+      }
+    }
+    
+    setNewProduct(updatedProduct);
+  };
+
+  const regenerateBarcode = () => {
+    if (newProduct.name) {
+      const newBarcode = generateProductBarcode(newProduct);
+      setNewProduct({ ...newProduct, barcode: newBarcode });
+      toast({
+        title: "Barcode Regenerated",
+        description: "A new barcode has been generated for this product."
+      });
+    }
+  };
+
+  const resetForm = () => {
+    setNewProduct({
+      name: "",
+      barcode: "",
+      price: 0,
+      stock: 0,
+      minStock: 5,
+      category: "",
+      brand: "",
+      supplier: ""
+    });
+  };
+
   const addProduct = async () => {
-    if (newProduct.name && newProduct.barcode && newProduct.price) {
+    if (newProduct.name && newProduct.price) {
       try {
+        // Ensure barcode is generated if auto-generation is enabled
+        let finalProduct = { ...newProduct };
+        if (barcodeSettings.autoGenerate && !finalProduct.barcode) {
+          finalProduct.barcode = generateProductBarcode(finalProduct);
+        }
+
         await createProduct({
           input: {
-            ...newProduct,
-            price: Number(newProduct.price),
-            stock: Number(newProduct.stock),
-            minStock: Number(newProduct.minStock),
-            category: newProduct.category || "General",
-            brand: newProduct.brand || "Generic",
-            supplier: newProduct.supplier || "Unknown"
+            ...finalProduct,
+            price: Number(finalProduct.price),
+            stock: Number(finalProduct.stock),
+            minStock: Number(finalProduct.minStock),
+            category: finalProduct.category || "General",
+            brand: finalProduct.brand || "Generic",
+            supplier: finalProduct.supplier || "Unknown"
           }
-        });
-        
-        setNewProduct({
-          name: "",
-          barcode: "",
-          price: 0,
-          stock: 0,
-          minStock: 5,
-          category: "",
-          brand: "",
-          supplier: ""
         });
       } catch (error) {
         console.error("Error adding product:", error);
@@ -133,7 +219,7 @@ const InventoryModule = () => {
     } else {
       toast({
         title: "Error",
-        description: "Please fill in all required fields.",
+        description: "Please fill in product name and price.",
         variant: "destructive"
       });
     }
@@ -144,6 +230,17 @@ const InventoryModule = () => {
       await deleteProduct({ id });
     } catch (error) {
       console.error("Error deleting product:", error);
+    }
+  };
+
+  const updateBarcodeSettings = (settings: Partial<BarcodeSettings>) => {
+    const newSettings = { ...barcodeSettings, ...settings };
+    setBarcodeSettings(newSettings);
+    
+    // If auto-generation is enabled and we have a product name, regenerate barcode
+    if (newSettings.autoGenerate && newProduct.name) {
+      const newBarcode = generateProductBarcode(newProduct);
+      setNewProduct({ ...newProduct, barcode: newBarcode });
     }
   };
 
@@ -225,6 +322,13 @@ const InventoryModule = () => {
                 </Button>
               </div>
               <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowBarcodeSettings(true)}
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Barcode Settings
+                </Button>
                 <Button variant="outline">
                   <Download className="h-4 w-4 mr-2" />
                   Export
@@ -236,65 +340,38 @@ const InventoryModule = () => {
                       Add Product
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-md">
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Add New Product</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="name">Product Name</Label>
-                        <Input
-                          id="name"
-                          value={newProduct.name}
-                          onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                          placeholder="Enter product name"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="barcode">Barcode</Label>
-                        <Input
-                          id="barcode"
-                          value={newProduct.barcode}
-                          onChange={(e) => setNewProduct({...newProduct, barcode: e.target.value})}
-                          placeholder="Enter barcode"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="price">Price (₹)</Label>
+                    <div className="space-y-6">
+                      {/* Barcode Settings Info */}
+                      {barcodeSettings.autoGenerate && (
+                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                          <div className="flex items-center gap-2 text-blue-700 mb-2">
+                            <Wand2 className="h-4 w-4" />
+                            <span className="font-medium">Auto-Barcode Generation Enabled</span>
+                          </div>
+                          <p className="text-sm text-blue-600">
+                            Barcodes will be automatically generated using {barcodeSettings.defaultType} format
+                            {barcodeSettings.prefix && ` with prefix "${barcodeSettings.prefix}"`}.
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Product Name *</Label>
                           <Input
-                            id="price"
-                            type="number"
-                            value={newProduct.price}
-                            onChange={(e) => setNewProduct({...newProduct, price: Number(e.target.value)})}
-                            placeholder="0"
+                            id="name"
+                            value={newProduct.name}
+                            onChange={(e) => handleProductChange('name', e.target.value)}
+                            placeholder="Enter product name"
                           />
                         </div>
-                        <div>
-                          <Label htmlFor="stock">Stock</Label>
-                          <Input
-                            id="stock"
-                            type="number"
-                            value={newProduct.stock}
-                            onChange={(e) => setNewProduct({...newProduct, stock: Number(e.target.value)})}
-                            placeholder="0"
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="minStock">Min Stock</Label>
-                          <Input
-                            id="minStock"
-                            type="number"
-                            value={newProduct.minStock}
-                            onChange={(e) => setNewProduct({...newProduct, minStock: Number(e.target.value)})}
-                            placeholder="5"
-                          />
-                        </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="category">Category</Label>
-                          <Select onValueChange={(value) => setNewProduct({...newProduct, category: value})}>
+                          <Select onValueChange={(value) => handleProductChange('category', value)}>
                             <SelectTrigger>
                               <SelectValue placeholder="Select category" />
                             </SelectTrigger>
@@ -302,38 +379,125 @@ const InventoryModule = () => {
                               <SelectItem value="Electronics">Electronics</SelectItem>
                               <SelectItem value="Accessories">Accessories</SelectItem>
                               <SelectItem value="Clothing">Clothing</SelectItem>
+                              <SelectItem value="Home & Garden">Home & Garden</SelectItem>
+                              <SelectItem value="Sports">Sports</SelectItem>
+                              <SelectItem value="Books">Books</SelectItem>
                               <SelectItem value="General">General</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
                           <Label htmlFor="brand">Brand</Label>
                           <Input
                             id="brand"
                             value={newProduct.brand}
-                            onChange={(e) => setNewProduct({...newProduct, brand: e.target.value})}
+                            onChange={(e) => handleProductChange('brand', e.target.value)}
                             placeholder="Enter brand name"
                           />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                           <Label htmlFor="supplier">Supplier</Label>
                           <Input
                             id="supplier"
                             value={newProduct.supplier}
-                            onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
+                            onChange={(e) => handleProductChange('supplier', e.target.value)}
                             placeholder="Enter supplier name"
                           />
                         </div>
                       </div>
-                      <Button 
-                        onClick={addProduct} 
-                        className="w-full"
-                        disabled={createLoading}
-                      >
-                        {createLoading ? "Adding..." : "Add Product"}
-                      </Button>
+
+                      <Separator />
+
+                      {/* Barcode Section */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="barcode">Barcode</Label>
+                          {barcodeSettings.autoGenerate && newProduct.name && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={regenerateBarcode}
+                            >
+                              <RefreshCw className="h-3 w-3 mr-1" />
+                              Regenerate
+                            </Button>
+                          )}
+                        </div>
+                        <Input
+                          id="barcode"
+                          value={newProduct.barcode}
+                          onChange={(e) => handleProductChange('barcode', e.target.value)}
+                          placeholder={barcodeSettings.autoGenerate ? "Auto-generated" : "Enter or scan barcode"}
+                          disabled={barcodeSettings.autoGenerate}
+                        />
+                        {barcodeSettings.autoGenerate && (
+                          <p className="text-xs text-gray-500">
+                            Barcode is automatically generated based on your settings. 
+                            You can regenerate it or disable auto-generation in settings.
+                          </p>
+                        )}
+                      </div>
+
+                      <Separator />
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="price">Price (₹) *</Label>
+                          <Input
+                            id="price"
+                            type="number"
+                            value={newProduct.price}
+                            onChange={(e) => handleProductChange('price', Number(e.target.value))}
+                            placeholder="0"
+                            min="0"
+                            step="0.01"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="stock">Stock Quantity</Label>
+                          <Input
+                            id="stock"
+                            type="number"
+                            value={newProduct.stock}
+                            onChange={(e) => handleProductChange('stock', Number(e.target.value))}
+                            placeholder="0"
+                            min="0"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="minStock">Min Stock Alert</Label>
+                          <Input
+                            id="minStock"
+                            type="number"
+                            value={newProduct.minStock}
+                            onChange={(e) => handleProductChange('minStock', Number(e.target.value))}
+                            placeholder="5"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 pt-4">
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={resetForm}
+                          className="flex-1"
+                        >
+                          Reset
+                        </Button>
+                        <Button 
+                          onClick={addProduct} 
+                          className="flex-1"
+                          disabled={createLoading}
+                        >
+                          {createLoading ? "Adding..." : "Add Product"}
+                        </Button>
+                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -421,6 +585,114 @@ const InventoryModule = () => {
           <BarcodeGenerator />
         </TabsContent>
       </Tabs>
+
+      {/* Barcode Settings Dialog */}
+      <Dialog open={showBarcodeSettings} onOpenChange={setShowBarcodeSettings}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Barcode Generation Settings
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="autoGenerate">Auto-Generate Barcodes</Label>
+                <p className="text-sm text-gray-500">Automatically create barcodes for new products</p>
+              </div>
+              <Switch
+                id="autoGenerate"
+                checked={barcodeSettings.autoGenerate}
+                onCheckedChange={(checked) => updateBarcodeSettings({ autoGenerate: checked })}
+              />
+            </div>
+
+            {barcodeSettings.autoGenerate && (
+              <>
+                <Separator />
+                
+                <div className="space-y-2">
+                  <Label>Default Barcode Type</Label>
+                  <Select 
+                    value={barcodeSettings.defaultType} 
+                    onValueChange={(value) => updateBarcodeSettings({ defaultType: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BARCODE_TYPES.map(type => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="prefix">Barcode Prefix (Optional)</Label>
+                  <Input
+                    id="prefix"
+                    value={barcodeSettings.prefix}
+                    onChange={(e) => updateBarcodeSettings({ prefix: e.target.value })}
+                    placeholder="e.g., STORE"
+                    maxLength={4}
+                  />
+                  <p className="text-xs text-gray-500">Add a custom prefix to all generated barcodes</p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="includeCategory">Include Category Code</Label>
+                      <p className="text-sm text-gray-500">Use first 2 letters of category in barcode</p>
+                    </div>
+                    <Switch
+                      id="includeCategory"
+                      checked={barcodeSettings.includeCategory}
+                      onCheckedChange={(checked) => updateBarcodeSettings({ includeCategory: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="includeBrand">Include Brand Code</Label>
+                      <p className="text-sm text-gray-500">Use first 2 letters of brand in barcode</p>
+                    </div>
+                    <Switch
+                      id="includeBrand"
+                      checked={barcodeSettings.includeBrand}
+                      onCheckedChange={(checked) => updateBarcodeSettings({ includeBrand: checked })}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowBarcodeSettings(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowBarcodeSettings(false);
+                  toast({
+                    title: "Settings Saved",
+                    description: "Barcode generation settings have been updated."
+                  });
+                }}
+                className="flex-1"
+              >
+                Save Settings
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
