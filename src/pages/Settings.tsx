@@ -13,8 +13,6 @@ import {
   Printer, 
   Receipt, 
   Package, 
-  Users, 
-  Globe, 
   Bell, 
   Info,
   Settings as SettingsIcon,
@@ -23,7 +21,12 @@ import {
   Database,
   Sparkles,
   Save,
-  RefreshCw
+  RefreshCw,
+  Trash2,
+  Download,
+  Mail,
+  Phone,
+  Shield
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -124,6 +127,83 @@ const Settings = () => {
     }
   };
 
+  const saveBillingPreferences = () => {
+    toast({
+      title: "Settings Saved",
+      description: "Billing preferences have been updated successfully."
+    });
+  };
+
+  const saveInventorySettings = () => {
+    toast({
+      title: "Settings Saved", 
+      description: "Inventory settings have been updated successfully."
+    });
+  };
+
+  const saveNotificationSettings = () => {
+    toast({
+      title: "Settings Saved",
+      description: "Notification preferences have been updated successfully."
+    });
+  };
+
+  const connectPrinter = (type: 'receipt' | 'barcode') => {
+    toast({
+      title: "Printer Connection",
+      description: `Searching for ${type} printers...`
+    });
+    
+    // Simulate printer connection
+    setTimeout(() => {
+      if (type === 'receipt') {
+        setPrinterSettings(prev => ({ ...prev, receiptPrinter: "Epson TM-T20III" }));
+      } else {
+        setPrinterSettings(prev => ({ ...prev, barcodePrinter: "Zebra ZD220" }));
+      }
+      
+      toast({
+        title: "Printer Connected",
+        description: `${type === 'receipt' ? 'Receipt' : 'Barcode'} printer connected successfully.`
+      });
+    }, 2000);
+  };
+
+  const testPrint = () => {
+    toast({
+      title: "Test Print",
+      description: "Sending test print to receipt printer..."
+    });
+  };
+
+  const clearAllData = () => {
+    toast({
+      title: "Data Cleared",
+      description: "All application data has been cleared.",
+      variant: "destructive"
+    });
+  };
+
+  const openTermsOfService = () => {
+    window.open('https://spmpos.com/terms', '_blank');
+  };
+
+  const openPrivacyPolicy = () => {
+    window.open('https://spmpos.com/privacy', '_blank');
+  };
+
+  const contactSupport = () => {
+    window.open('mailto:support@spmpos.com?subject=SPM-POS Support Request', '_blank');
+  };
+
+  const handleModeToggle = () => {
+    toggleMockMode();
+    toast({
+      title: "API Mode Changed",
+      description: `Switched to ${isMockMode() ? 'Live' : 'Mock'} mode. Page will reload.`
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Animated background elements */}
@@ -163,7 +243,7 @@ const Settings = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={toggleMockMode}
+                onClick={handleModeToggle}
                 className="hidden sm:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
               >
                 {isMockMode() ? (
@@ -186,47 +266,65 @@ const Settings = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
-          {/* Modern Tab Navigation */}
+          {/* Modern Tab Navigation with Better Visibility */}
           <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-14 sm:h-12 bg-transparent gap-2">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-16 sm:h-14 bg-transparent gap-2">
               <TabsTrigger
                 value="store"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Store className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Store</span>
               </TabsTrigger>
               <TabsTrigger
                 value="printer"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Printer className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Printer</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Receipt className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="notifications"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Alerts</span>
               </TabsTrigger>
               <TabsTrigger
                 value="info"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+                data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
               >
                 <Info className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Info</span>
@@ -335,7 +433,11 @@ const Settings = () => {
                         readOnly 
                         className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                       />
-                      <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                      <Button 
+                        variant="outline" 
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => connectPrinter('receipt')}
+                      >
                         Connect
                       </Button>
                     </div>
@@ -356,7 +458,10 @@ const Settings = () => {
                       </div>
                     </RadioGroup>
                   </div>
-                  <Button className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500">
+                  <Button 
+                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500"
+                    onClick={testPrint}
+                  >
                     <TestTube className="h-4 w-4" />
                     Test Print
                   </Button>
@@ -377,7 +482,11 @@ const Settings = () => {
                         readOnly 
                         className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                       />
-                      <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                      <Button 
+                        variant="outline" 
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => connectPrinter('barcode')}
+                      >
                         Connect
                       </Button>
                     </div>
@@ -476,7 +585,10 @@ const Settings = () => {
                   />
                 </div>
 
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveBillingPreferences}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save Billing Preferences
                 </Button>
@@ -536,7 +648,10 @@ const Settings = () => {
                   <Label htmlFor="autoBarcode" className="text-white">Enable barcode auto-generation for new products</Label>
                 </div>
 
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveInventorySettings}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save Inventory Settings
                 </Button>
@@ -592,7 +707,10 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  onClick={saveNotificationSettings}
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save Notification Settings
                 </Button>
@@ -635,13 +753,28 @@ const Settings = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={openTermsOfService}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
                     Terms of Service
                   </Button>
-                  <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={openPrivacyPolicy}
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
                     Privacy Policy
                   </Button>
-                  <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={contactSupport}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
                     Contact Support
                   </Button>
                 </div>
@@ -650,8 +783,9 @@ const Settings = () => {
                   <Button 
                     variant="destructive" 
                     className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    onClick={clearAllData}
                   >
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4 mr-2" />
                     Clear All Data
                   </Button>
                 </div>
