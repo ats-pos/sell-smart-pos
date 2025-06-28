@@ -56,8 +56,7 @@ const realApolloClient = new ApolloClient({
       initialFetchPolicy: 'cache-first'
     },
     query: {
-      errorPolicy: 'all',
-      //initialFetchPolicy: 'cache-first'
+      errorPolicy: 'all'
     }
   }
 });
@@ -82,7 +81,6 @@ class MockApolloClientWrapper {
         errorPolicy: 'all',
         initialFetchPolicy: 'cache-first',
         fetchPolicy: 'cache-first'
-        
       }
     };
     
@@ -96,8 +94,6 @@ class MockApolloClientWrapper {
 
   async query(options: any) {
     const data = await this.mockClient.query(options);
-//console.error('Mock GraphQL Query:', options.query, 'Variables:', options.variables, 'Data:', data);
-
     return data;
   }
 
@@ -131,32 +127,6 @@ class MockApolloClientWrapper {
     let isLoading = true;
     let error: any = null;
 
-    // Execute the query immediately
-    this.query(options)
-      .then(result => {
-        currentResult = result;
-        isLoading = false;
-        error = null;
-        //console.log('currentSubscriber', currentSubscriber, 'result', result);
-        
-        if (currentSubscriber) {
-          this.safeObserverCall(currentSubscriber, 'next', {
-            data: result.data,
-            loading: false,
-            error: null,
-            networkStatus: 7, // ready
-            stale: false
-          });
-        }
-      })
-      .catch(err => {
-        error = err;
-        isLoading = false;
-        if (currentSubscriber) {
-          this.safeObserverCall(currentSubscriber, 'error', err);
-        }
-      });
-
     const observable = {
       options: { ...options },
       subscribe: (observer: any) => {
@@ -171,21 +141,32 @@ class MockApolloClientWrapper {
           stale: false
         });
 
-        // If we already have a result, emit it
-        if (currentResult && !isLoading) {
-          this.safeObserverCall(observer, 'next', {
-            data: currentResult.data,
-            loading: false,
-            error: null,
-            networkStatus: 7, // ready
-            stale: false
-          });
-        }
-
-        // If we have an error, emit it
-        if (error && !isLoading) {
-          this.safeObserverCall(observer, 'error', error);
-        }
+        // Execute the query asynchronously
+        setTimeout(() => {
+          this.query(options)
+            .then(result => {
+              currentResult = result;
+              isLoading = false;
+              error = null;
+              
+              if (currentSubscriber) {
+                this.safeObserverCall(currentSubscriber, 'next', {
+                  data: result.data,
+                  loading: false,
+                  error: null,
+                  networkStatus: 7, // ready
+                  stale: false
+                });
+              }
+            })
+            .catch(err => {
+              error = err;
+              isLoading = false;
+              if (currentSubscriber) {
+                this.safeObserverCall(currentSubscriber, 'error', err);
+              }
+            });
+        }, 0);
         
         return {
           unsubscribe: () => {
