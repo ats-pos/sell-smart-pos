@@ -52,10 +52,12 @@ const realApolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      initialFetchPolicy: 'cache-first'
     },
     query: {
-      errorPolicy: 'all'
+      errorPolicy: 'all',
+      initialFetchPolicy: 'cache-first'
     }
   }
 });
@@ -65,18 +67,21 @@ class MockApolloClientWrapper {
   private mockClient = mockClient;
   public link: any;
   public cache: any;
-  public defaultOptions: any = {
-    watchQuery: {
-      errorPolicy: 'all'
-    },
-    query: {
-      errorPolicy: 'all'
-    }
-  };
+  public defaultOptions: any;
 
   constructor() {
     this.link = {};
     this.cache = new InMemoryCache();
+    this.defaultOptions = {
+      watchQuery: {
+        errorPolicy: 'all',
+        initialFetchPolicy: 'cache-first'
+      },
+      query: {
+        errorPolicy: 'all',
+        initialFetchPolicy: 'cache-first'
+      }
+    };
     
     // Bind all methods to this instance to prevent binding errors
     this.query = this.query.bind(this);
