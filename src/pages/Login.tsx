@@ -20,7 +20,8 @@ import {
   Wifi,
   WifiOff,
   Shield,
-  ArrowLeft
+  ArrowLeft,
+  Sparkles
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import UserSelector from "@/components/auth/UserSelector";
@@ -77,11 +78,12 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState("");
 
   // Check if store registration is needed
-  useEffect(() => {
-    if (!storeCheckLoading && !storeExists) {
-      setCurrentView('register');
-    }
-  }, [storeExists, storeCheckLoading]);
+
+  // useEffect(() => {
+  //   if (!storeCheckLoading && !storeExists) {
+  //     setCurrentView('register');
+  //   }
+  // }, [storeExists, storeCheckLoading]);
 
   // Biometric authentication check
   useEffect(() => {
@@ -151,8 +153,14 @@ const Login = () => {
   // Store Registration View
   if (currentView === 'register') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <div className="w-full max-w-2xl relative z-10">
           <StoreRegistration
             onRegister={handleStoreRegistration}
             onBack={() => setCurrentView('main')}
@@ -166,8 +174,14 @@ const Login = () => {
   // User Selection View
   if (currentView === 'users') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <div className="w-full max-w-md relative z-10">
           <UserSelector
             users={deviceUsers}
             onUserSelect={handleUserSelect}
@@ -183,55 +197,65 @@ const Login = () => {
   // PIN Login View
   if (currentView === 'pin' && selectedUser) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
           <CardHeader className="text-center">
             <div className="flex items-center gap-3 mb-4">
-              <Button variant="ghost" size="sm" onClick={() => setCurrentView('users')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setCurrentView('users')}
+                className="text-white hover:bg-white/10"
+              >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <div className="bg-blue-600 p-3 rounded-lg">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
                 <Lock className="h-8 w-8 text-white" />
               </div>
             </div>
-            <CardTitle className="text-xl">Enter PIN</CardTitle>
-            <p className="text-gray-600">Welcome back, {selectedUser.name}</p>
+            <CardTitle className="text-xl text-white">Enter PIN</CardTitle>
+            <p className="text-blue-100">Welcome back, {selectedUser.name}</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handlePINSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label>Enter your PIN</Label>
+                <Label className="text-white">Enter your PIN</Label>
                 <InputOTP
                   maxLength={6}
                   value={pinForm.pin}
                   onChange={(value) => setPinForm({ ...pinForm, pin: value })}
                 >
                   <InputOTPGroup className="gap-2 justify-center">
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
+                    <InputOTPSlot index={0} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={1} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={2} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={3} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={4} className="bg-white/10 border-white/20 text-white" />
+                    <InputOTPSlot index={5} className="bg-white/10 border-white/20 text-white" />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
 
               <Button 
                 type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
                 disabled={pinForm.pin.length < 4 || pinLoginLoading}
               >
                 {pinLoginLoading ? "Verifying..." : "Login"}
               </Button>
 
-              {/* Biometric Option */}
               <div className="text-center">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleBiometric}
-                  className="w-full"
+                  className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
                 >
                   <Fingerprint className="h-4 w-4 mr-2" />
                   Use Biometric
@@ -243,7 +267,7 @@ const Login = () => {
                   type="button"
                   variant="link"
                   onClick={() => setCurrentView('forgot')}
-                  className="text-sm"
+                  className="text-sm text-blue-200 hover:text-white"
                 >
                   Forgot PIN?
                 </Button>
@@ -258,36 +282,48 @@ const Login = () => {
   // Forgot Password View
   if (currentView === 'forgot') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
           <CardHeader className="text-center">
             <div className="flex items-center gap-3 mb-4">
-              <Button variant="ghost" size="sm" onClick={() => setCurrentView('main')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setCurrentView('main')}
+                className="text-white hover:bg-white/10"
+              >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <div className="bg-blue-600 p-3 rounded-lg">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
                 <Mail className="h-8 w-8 text-white" />
               </div>
             </div>
-            <CardTitle className="text-xl">Reset Password</CardTitle>
-            <p className="text-gray-600">Enter your email to receive reset instructions</p>
+            <CardTitle className="text-xl text-white">Reset Password</CardTitle>
+            <p className="text-blue-100">Enter your email to receive reset instructions</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleForgotSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="forgotEmail">Email</Label>
+                <Label htmlFor="forgotEmail" className="text-white">Email</Label>
                 <Input
                   id="forgotEmail"
                   type="email"
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   placeholder="Enter your email"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                   required
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg"
                 disabled={forgotLoading}
               >
                 {forgotLoading ? "Sending..." : "Send Reset Link"}
@@ -301,26 +337,37 @@ const Login = () => {
 
   // Main Login View
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+      </div>
+
+      <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="bg-blue-600 p-3 rounded-lg">
-              <Receipt className="h-8 w-8 text-white" />
+          <div className="flex justify-center mb-6">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-2xl shadow-lg">
+              <Receipt className="h-10 w-10 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">SPMPOS</CardTitle>
-          <p className="text-gray-600">Sell Smart. Grow Fast.</p>
+          <CardTitle className="text-3xl font-bold text-white mb-2">SPM-POS</CardTitle>
+          <p className="text-blue-100 mb-4 flex items-center justify-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Sell Smart. Grow Fast.
+            <Sparkles className="h-4 w-4" />
+          </p>
           
           {/* Online/Offline Status */}
-          <div className="flex items-center justify-center gap-2 mt-2">
+          <div className="flex items-center justify-center gap-2 mb-4">
             {isOnline ? (
-              <Badge variant="default" className="flex items-center gap-1">
+              <Badge variant="default" className="flex items-center gap-1 bg-green-500/20 text-green-300 border-green-500/30">
                 <Wifi className="h-3 w-3" />
                 Online
               </Badge>
             ) : (
-              <Badge variant="destructive" className="flex items-center gap-1">
+              <Badge variant="destructive" className="flex items-center gap-1 bg-red-500/20 text-red-300 border-red-500/30">
                 <WifiOff className="h-3 w-3" />
                 Offline Mode
               </Badge>
@@ -329,39 +376,43 @@ const Login = () => {
 
           {/* Store Info */}
           {existingStore && (
-            <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+            <div className="mb-4 p-3 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20">
               <div className="flex items-center gap-2 justify-center">
-                <Store className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-800">{existingStore.name}</span>
+                <Store className="h-4 w-4 text-blue-300" />
+                <span className="text-sm font-medium text-white">{existingStore.name}</span>
               </div>
             </div>
           )}
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="space-y-6">
           {/* Quick User Access */}
           {deviceUsers.length > 0 && (
-            <div className="mb-6">
-              <Button
-                variant="outline"
-                className="w-full flex items-center gap-2"
-                onClick={() => setCurrentView('users')}
-              >
-                <Users className="h-4 w-4" />
-                Quick Login ({deviceUsers.length} users)
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+              onClick={() => setCurrentView('users')}
+            >
+              <Users className="h-4 w-4" />
+              Quick Login ({deviceUsers.length} users)
+            </Button>
           )}
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="email" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-2 bg-white/10 backdrop-blur-sm">
+              <TabsTrigger 
+                value="email" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/20 data-[state=active]:text-white text-blue-200"
+              >
                 <Mail className="h-4 w-4" />
-                Email
+                <span className="hidden sm:inline">Email</span>
               </TabsTrigger>
-              <TabsTrigger value="phone" className="flex items-center gap-2">
+              <TabsTrigger 
+                value="phone" 
+                className="flex items-center gap-2 data-[state=active]:bg-white/20 data-[state=active]:text-white text-blue-200"
+              >
                 <Phone className="h-4 w-4" />
-                Phone
+                <span className="hidden sm:inline">Phone</span>
               </TabsTrigger>
             </TabsList>
 
@@ -369,7 +420,7 @@ const Login = () => {
             <TabsContent value="email">
               <form onSubmit={handleEmailLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-white">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -377,11 +428,12 @@ const Login = () => {
                     value={emailForm.email}
                     onChange={(e) => setEmailForm({...emailForm, email: e.target.value})}
                     disabled={loginLoading}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password" className="text-white">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -390,11 +442,12 @@ const Login = () => {
                       value={emailForm.password}
                       onChange={(e) => setEmailForm({...emailForm, password: e.target.value})}
                       disabled={loginLoading}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200 pr-10"
                       required
                     />
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-200 hover:text-white transition-colors"
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={loginLoading}
                     >
@@ -409,18 +462,18 @@ const Login = () => {
                     checked={emailForm.rememberMe}
                     onCheckedChange={(checked) => setEmailForm({...emailForm, rememberMe: checked})}
                   />
-                  <Label htmlFor="rememberMe" className="text-sm">Remember me</Label>
+                  <Label htmlFor="rememberMe" className="text-sm text-blue-200">Remember me</Label>
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
                   disabled={loginLoading}
                 >
                   {loginLoading ? "Signing in..." : "Sign In"}
                 </Button>
 
-                <div className="text-center">
+                <div className="text-center space-y-2">
                   <Button
                     type="button"
                     variant="link"
@@ -428,6 +481,18 @@ const Login = () => {
                     className="text-sm"
                   >
                     Forgot password?
+                  </Button>
+                    className="text-sm text-blue-200 hover:text-white"
+                  >
+                    Forgot password?
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setCurrentView('register')}
+                    className="text-sm text-blue-200 hover:text-white"
+                  >
+                    Setup New Store
                   </Button>
                 </div>
               </form>
@@ -437,7 +502,7 @@ const Login = () => {
             <TabsContent value="phone">
               <form onSubmit={handleOTPSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -446,25 +511,26 @@ const Login = () => {
                     onChange={(e) => setOtpForm({...otpForm, phone: e.target.value})}
                     disabled={otpLoginLoading || sendingOTP || otpSent}
                     maxLength={10}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200"
                     required
                   />
                 </div>
 
                 {otpSent && (
                   <div className="space-y-2">
-                    <Label>Enter OTP</Label>
+                    <Label className="text-white">Enter OTP</Label>
                     <InputOTP
                       maxLength={6}
                       value={otpForm.otp}
                       onChange={(value) => setOtpForm({...otpForm, otp: value})}
                     >
                       <InputOTPGroup className="gap-2 justify-center">
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
+                        <InputOTPSlot index={0} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={1} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={2} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={3} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={4} className="bg-white/10 border-white/20 text-white" />
+                        <InputOTPSlot index={5} className="bg-white/10 border-white/20 text-white" />
                       </InputOTPGroup>
                     </InputOTP>
                   </div>
@@ -472,7 +538,7 @@ const Login = () => {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
                   disabled={otpLoginLoading || sendingOTP}
                 >
                   {sendingOTP ? "Sending OTP..." : 
@@ -489,7 +555,7 @@ const Login = () => {
                         setOtpSent(false);
                         setOtpForm({...otpForm, otp: ""});
                       }}
-                      className="text-sm"
+                      className="text-sm text-blue-200 hover:text-white"
                     >
                       Change phone number
                     </Button>
@@ -500,12 +566,12 @@ const Login = () => {
           </Tabs>
           
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-            <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
+          <div className="p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
+            <p className="text-sm text-blue-200 mb-2 flex items-center gap-2">
               <Shield className="h-4 w-4" />
               Demo Credentials:
             </p>
-            <div className="text-xs text-gray-500 space-y-1">
+            <div className="text-xs text-blue-300 space-y-1">
               <div>Admin: admin@spmpos.com / admin123</div>
               <div>Manager: manager@spmpos.com / manager123</div>
               <div>Cashier: cashier@spmpos.com / cashier123</div>

@@ -231,7 +231,7 @@ export function useAuth() {
         
         toast({
           title: "Store Registered",
-          description: `Welcome to SPMPOS, ${result.data.registerStore.store?.name}!`
+          description: `Welcome to SPM-POS, ${result.data.registerStore.store?.name}!`
         });
       }
     } catch (error) {
