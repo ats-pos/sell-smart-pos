@@ -77,6 +77,13 @@ class MockApolloClientWrapper {
   constructor() {
     this.link = {};
     this.cache = new InMemoryCache();
+    
+    // Bind all methods to this instance to prevent binding errors
+    this.query = this.query.bind(this);
+    this.mutate = this.mutate.bind(this);
+    this.watchQuery = this.watchQuery.bind(this);
+    this.refetchQueries = this.refetchQueries.bind(this);
+    this.clearStore = this.clearStore.bind(this);
   }
 
   async query(options: any) {
@@ -126,7 +133,7 @@ class MockApolloClientWrapper {
         }
       });
 
-    return {
+    const observable = {
       subscribe: (observer: any) => {
         currentSubscriber = observer;
         
@@ -206,6 +213,15 @@ class MockApolloClientWrapper {
       stopPolling: () => {},
       subscribeToMore: () => () => {}
     };
+
+    // Bind all methods to prevent binding errors
+    Object.keys(observable).forEach(key => {
+      if (typeof observable[key] === 'function') {
+        observable[key] = observable[key].bind(observable);
+      }
+    });
+
+    return observable;
   }
 }
 
