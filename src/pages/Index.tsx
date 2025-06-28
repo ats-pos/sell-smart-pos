@@ -33,6 +33,19 @@ const Index = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
+  const handleNewSale = () => {
+    setActiveTab("billing");
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleSettings = () => {
+    navigate('/settings');
+    setShowMobileMenu(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Animated background elements */}
@@ -64,17 +77,25 @@ const Index = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate('/settings')}
+                onClick={handleSettings}
                 className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift"
               >
                 <Settings className="h-4 w-4" />
                 Settings
               </Button>
-              <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift">
+              <Button 
+                onClick={handleNewSale}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
               </Button>
-              <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" onClick={logout}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" 
+                onClick={handleLogout}
+              >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
@@ -99,17 +120,28 @@ const Index = () => {
               <Button
                 variant="outline"
                 className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
-                onClick={() => {
-                  navigate('/settings');
-                  setShowMobileMenu(false);
-                }}
+                onClick={handleSettings}
               >
                 <Settings className="h-4 w-4" />
                 Settings
               </Button>
-              <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg">
+              <Button 
+                onClick={() => {
+                  handleNewSale();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 New Sale
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20" 
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
               </Button>
             </div>
           )}
@@ -121,31 +153,31 @@ const Index = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
           {/* Modern Tab Navigation */}
           <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-4 h-14 sm:h-12 bg-transparent gap-2">
+            <TabsList className="grid w-full grid-cols-4 h-14 sm:h-12 bg-white/10 backdrop-blur-sm border border-white/20 gap-2">
               <TabsTrigger
                 value="dashboard"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
                 <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Dashboard</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
                 <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
                 <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-blue-200 hover:bg-white/10 transition-all duration-200"
+                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
                 <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="hidden xs:inline">Reports</span>

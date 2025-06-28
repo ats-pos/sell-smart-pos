@@ -11,13 +11,22 @@ import {
   Sparkles
 } from "lucide-react";
 import BillingModule from "@/components/BillingModule";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 const SaleOperator = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleAdminDashboard = () => {
+    navigate('/admin');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -46,17 +55,25 @@ const SaleOperator = () => {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-4">
-              <Link to={'/admin'}>
-                <Badge variant="secondary" className="flex items-center gap-2 bg-white/10 text-white border-white/20 hover:bg-white/20 transition-all duration-200">
-                  <User className="h-4 w-4" />
-                  Admin Dashboard
-                </Badge>
-              </Link>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleAdminDashboard}
+                className="flex items-center gap-2 bg-white/10 text-white border-white/20 hover:bg-white/20 transition-all duration-200"
+              >
+                <User className="h-4 w-4" />
+                Admin Dashboard
+              </Button>
               <Badge className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30">
                 <Store className="h-4 w-4" />
                 Sales Terminal
               </Badge>
-              <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" onClick={logout}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" 
+                onClick={handleLogout}
+              >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
@@ -78,17 +95,28 @@ const SaleOperator = () => {
           {/* Mobile Menu Dropdown */}
           {showMobileMenu && (
             <div className="md:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-4 space-y-3 animate-slide-up">
-              <Link to={'/admin'} className="block">
-                <Badge variant="secondary" className="flex items-center gap-2 w-fit bg-white/10 text-white border-white/20">
-                  <User className="h-4 w-4" />
-                  Admin Dashboard
-                </Badge>
-              </Link>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  handleAdminDashboard();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full justify-start bg-white/10 text-white border-white/20 hover:bg-white/20"
+              >
+                <User className="h-4 w-4 mr-2" />
+                Admin Dashboard
+              </Button>
               <Badge className="flex items-center gap-2 w-fit bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-300 border-green-500/30">
                 <Store className="h-4 w-4" />
                 Sales Terminal
               </Badge>
-              <Button variant="outline" size="sm" className="w-full justify-start bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={handleLogout}
+              >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
