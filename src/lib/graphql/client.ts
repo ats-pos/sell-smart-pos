@@ -63,6 +63,21 @@ const realApolloClient = new ApolloClient({
 // Mock Apollo Client wrapper
 class MockApolloClientWrapper {
   private mockClient = mockClient;
+  public link: any;
+  public cache: any;
+  public defaultOptions: any = {
+    watchQuery: {
+      errorPolicy: 'all'
+    },
+    query: {
+      errorPolicy: 'all'
+    }
+  };
+
+  constructor() {
+    this.link = {};
+    this.cache = new InMemoryCache();
+  }
 
   async query(options: any) {
     return this.mockClient.query(options);
