@@ -24,6 +24,7 @@ export const STORAGE_KEYS = {
 export const ROUTES = {
   login: "/login",
   admin: "/admin",
+  purchase: "/purchase",
   saleOperator: "/",
   settings: "/settings"
 } as const;

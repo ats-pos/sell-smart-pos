@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import PrivateRoutes from "./components/auth/PrivateRoutes";
+import PurchaseEntryScreen from "./components/inventory/PurchaseEntryScreen";
 
 const App = () => (
   <ErrorBoundary>
@@ -26,6 +27,7 @@ const App = () => (
             <Route path={ROUTES.login} element={<Login />} />
             <Route element={<PrivateRoutes />}>
               <Route path={ROUTES.admin} element={<Index />} />
+              <Route path={ROUTES.purchase} element={<PurchaseEntryScreen />} />
               <Route path={ROUTES.settings} element={<Settings />} />
               <Route path={ROUTES.saleOperator} element={<SaleOperator />} />
             </Route>
