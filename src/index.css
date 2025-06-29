@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -167,6 +166,15 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  /* Toast positioning */
+  .toast-top-center {
+    position: fixed !important;
+    top: 1rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 100 !important;
   }
 }
 
