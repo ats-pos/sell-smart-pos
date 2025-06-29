@@ -64,21 +64,23 @@ export const DefaultHeader = ({
   return (
     <header className="glass sticky top-0 z-50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
-              <Receipt className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center space-x-3">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-xl shadow-lg">
+              <Receipt className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">{title}</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-white gradient-text">{title}</h1>
               {showUserInfo ? (
-                <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-blue-200">
+                <div className="flex items-center gap-2 text-xs text-blue-200">
                   <span>{getCurrentDate()}</span>
+                  <span className="hidden sm:inline">•</span>
                   <span className="hidden sm:inline">4ztain Inne</span>
+                  <span className="hidden sm:inline">•</span>
                   <span>John Doe</span>
                 </div>
               ) : (
-                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
+                <p className="text-xs text-blue-200 flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
                   {subtitle}
                 </p>
@@ -87,9 +89,9 @@ export const DefaultHeader = ({
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden sm:flex items-center space-x-3">
+          <div className="hidden sm:flex items-center space-x-2">
             {/* Online Status */}
-            <Badge variant={isOnline ? "default" : "destructive"} className="flex items-center gap-1">
+            <Badge variant={isOnline ? "default" : "destructive"} className="flex items-center gap-1 text-xs">
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
               {isOnline ? "Online" : "Offline"}
             </Badge>
@@ -103,10 +105,10 @@ export const DefaultHeader = ({
                 variant="outline"
                 size="sm"
                 onClick={handleAdminDashboard}
-                className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift"
+                className="flex items-center gap-1 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs"
               >
-                <User className="h-4 w-4" />
-                Admin Dashboard
+                <User className="h-3 w-3" />
+                <span className="hidden md:inline">Admin</span>
               </Button>
             )}
 
@@ -116,10 +118,10 @@ export const DefaultHeader = ({
                 variant="outline"
                 size="sm"
                 onClick={handleSettings}
-                className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift"
+                className="flex items-center gap-1 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs"
               >
-                <Settings className="h-4 w-4" />
-                Settings
+                <Settings className="h-3 w-3" />
+                <span className="hidden md:inline">Settings</span>
               </Button>
             )}
 
@@ -128,11 +130,11 @@ export const DefaultHeader = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs" 
                 onClick={handleLogout}
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                <LogOut className="h-3 w-3 mr-1" />
+                <span className="hidden md:inline">Logout</span>
               </Button>
             )}
           </div>
@@ -145,7 +147,7 @@ export const DefaultHeader = ({
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="text-white hover:bg-white/10"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5" />
             </Button>
           </div>
         </div>

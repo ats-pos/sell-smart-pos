@@ -24,10 +24,10 @@ const Index = () => {
   const customActions = (
     <Button 
       onClick={handleNewSale}
-      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift"
+      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift h-8 px-3 text-xs"
     >
-      <Plus className="h-4 w-4 mr-2" />
-      New Sale
+      <Plus className="h-3 w-3 mr-1" />
+      <span className="hidden md:inline">New Sale</span>
     </Button>
   );
 
@@ -53,36 +53,36 @@ const Index = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
-          {/* Modern Tab Navigation */}
+          {/* Modern Tab Navigation with Fixed Alignment */}
           <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-4 h-14 sm:h-12 bg-white/10 backdrop-blur-sm border border-white/20 gap-2">
+            <TabsList className="grid w-full grid-cols-4 h-12 bg-white/10 backdrop-blur-sm border border-white/20 gap-2">
               <TabsTrigger
                 value="dashboard"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
-                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Dashboard</span>
+                <BarChart3 className="h-4 w-4" />
+                <span className="hidden sm:inline">Dashboard</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
-                <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Billing</span>
+                <ShoppingCart className="h-4 w-4" />
+                <span className="hidden sm:inline">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
-                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Inventory</span>
+                <Package className="h-4 w-4" />
+                <span className="hidden sm:inline">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl text-white font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
               >
-                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Reports</span>
+                <TrendingUp className="h-4 w-4" />
+                <span className="hidden sm:inline">Reports</span>
               </TabsTrigger>
             </TabsList>
           </div>
