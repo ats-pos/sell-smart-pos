@@ -89,7 +89,7 @@ export const ProductSearch = ({ onProductSelect, onAddManualItem }: ProductSearc
     }
 
     // Apply advanced filters
-    if (advancedFilters.category) {
+    if (advancedFilters.category && advancedFilters.category !== "any") {
       products = products.filter(p => p.category === advancedFilters.category);
     }
     if (advancedFilters.brand) {
@@ -288,7 +288,7 @@ export const ProductSearch = ({ onProductSelect, onAddManualItem }: ProductSearc
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Any Category</SelectItem>
+                    <SelectItem value="any">Any Category</SelectItem>
                     <SelectItem value="Electronics">Electronics</SelectItem>
                     <SelectItem value="Accessories">Accessories</SelectItem>
                     <SelectItem value="Clothing">Clothing</SelectItem>
