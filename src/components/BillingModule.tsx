@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -35,7 +36,6 @@ const BillingModule = () => {
       toast({
         title: "Sale Completed",
         description: `Bill ${currentBillNumber} processed successfully.`,
-        className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
       });
     }
   });
@@ -90,7 +90,6 @@ const BillingModule = () => {
       toast({
         title: "Bill Held",
         description: "Bill has been saved and can be resumed later.",
-        className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
       });
     }
   };
@@ -126,7 +125,6 @@ const BillingModule = () => {
     toast({
       title: "Receipt Printed",
       description: `Receipt ${currentBillNumber} sent to thermal printer.`,
-      className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
     });
   };
 
@@ -134,7 +132,6 @@ const BillingModule = () => {
     toast({
       title: "Invoice Shared",
       description: "Invoice shared via WhatsApp/Email/SMS.",
-      className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
     });
   };
 
@@ -144,7 +141,6 @@ const BillingModule = () => {
         title: "Error",
         description: "Cart is empty. Add items to complete sale.",
         variant: "destructive",
-        className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
       });
       return;
     }
@@ -154,7 +150,6 @@ const BillingModule = () => {
         title: "Error",
         description: "Please select a payment method.",
         variant: "destructive",
-        className: "fixed top-4 left-1/2 transform -translate-x-1/2 z-[100]"
       });
       return;
     }
@@ -210,10 +205,10 @@ const BillingModule = () => {
   };
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-[calc(100vh-140px)]">
+    <div className="p-3 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[calc(100vh-120px)]">
         {/* Left Panel - Product Search & Cart */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           <ProductSearch 
             onProductSelect={addToCart}
             onAddManualItem={() => setShowManualItemDialog(true)}
@@ -230,7 +225,7 @@ const BillingModule = () => {
         </div>
 
         {/* Right Panel - Billing Summary & Customer */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           <BillingSummary
             subtotal={subtotal}
             billDiscount={billDiscount}
