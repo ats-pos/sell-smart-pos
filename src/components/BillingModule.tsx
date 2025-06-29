@@ -1,46 +1,15 @@
+
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Search, 
-  Plus, 
-  Minus, 
-  Trash2, 
-  Calculator,
-  CreditCard,
-  Printer,
-  Share,
-  Pause,
-  Play,
-  Percent,
-  User,
-  Bluetooth,
-  Wifi,
-  WifiOff
-} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
-import { 
-  GET_PRODUCTS, 
-  SEARCH_PRODUCTS 
-} from "@/lib/graphql/queries";
-import { 
-  CREATE_SALE, 
-  CREATE_CUSTOMER 
-} from "@/lib/graphql/mutations";
-import { 
-  Product, 
-  Sale, 
-  SaleInput, 
-  SaleItem, 
-  Customer, 
-  CustomerInput 
-} from "@/lib/graphql/types";
+import { GET_PRODUCTS, SEARCH_PRODUCTS } from "@/lib/graphql/queries";
+import { CREATE_SALE, CREATE_CUSTOMER } from "@/lib/graphql/mutations";
+import { Product, Sale, SaleInput, SaleItem, Customer, CustomerInput } from "@/lib/graphql/types";
+
+import { BillingHeader } from "./billing/BillingHeader";
+import { ProductSearch } from "./billing/ProductSearch";
+import { CartSection } from "./billing/CartSection";
+import { BillingSummary } from "./billing/BillingSummary";
 
 const BillingModule = () => {
   const { toast } = useToast();
@@ -55,9 +24,8 @@ const BillingModule = () => {
     gstin: ""
   });
   const [billDiscount, setBillDiscount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   const [isOnline, setIsOnline] = useState(true);
-  const [holdBills, setHoldBills] = useState<any[]>([]);
   const [currentBillNumber, setCurrentBillNumber] = useState("INV-2024-001");
 
   // GraphQL hooks
@@ -134,38 +102,29 @@ const BillingModule = () => {
       };
       setCart([...cart, newItem]);
     }
+    setSearchTerm(""); // Clear search after adding
   };
 
   const removeFromCart = (id: string) => {
     setCart(cart.filter(item => item.id !== id));
   };
 
-  const holdBill = () => {
-    if (cart.length > 0) {
-      const billData = {
-        id: Date.now(),
-        cart: [...cart],
-        customer: { ...customer },
-        timestamp: new Date().toLocaleString()
+  const addManualItem = () => {
+    const itemName = prompt("Enter item name:");
+    const itemPrice = prompt("Enter item price:");
+    
+    if (itemName && itemPrice) {
+      const newItem: SaleItem = {
+        id: Date.now().toString(),
+        productId: "manual-" + Date.now(),
+        productName: itemName,
+        price: parseFloat(itemPrice),
+        quantity: 1,
+        discount: 0,
+        total: parseFloat(itemPrice)
       };
-      setHoldBills([...holdBills, billData]);
-      setCart([]);
-      setCustomer({ name: "", phone: "", email: "", gstin: "" });
-      toast({
-        title: "Bill Held",
-        description: "Bill has been saved and can be resumed later."
-      });
+      setCart([...cart, newItem]);
     }
-  };
-
-  const resumeBill = (billData: any) => {
-    setCart(billData.cart);
-    setCustomer(billData.customer);
-    setHoldBills(holdBills.filter(bill => bill.id !== billData.id));
-    toast({
-      title: "Bill Resumed",
-      description: "Previous bill has been restored."
-    });
   };
 
   const calculateItemTotal = (item: SaleItem) => {
@@ -186,10 +145,10 @@ const BillingModule = () => {
     });
   };
 
-  const shareReceipt = () => {
+  const shareInvoice = () => {
     toast({
-      title: "Receipt Shared",
-      description: "Receipt shared via WhatsApp/Email/SMS."
+      title: "Invoice Shared",
+      description: "Invoice shared successfully."
     });
   };
 
@@ -198,15 +157,6 @@ const BillingModule = () => {
       toast({
         title: "Error",
         description: "Cart is empty. Add items to complete sale.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!paymentMethod) {
-      toast({
-        title: "Error",
-        description: "Please select a payment method.",
         variant: "destructive"
       });
       return;
@@ -256,7 +206,7 @@ const BillingModule = () => {
         printReceipt();
         setCart([]);
         setCustomer({ name: "", phone: "", email: "", gstin: "" });
-        setPaymentMethod("");
+        setPaymentMethod("cash");
         setBillDiscount(0);
         
         // Generate next bill number
@@ -275,280 +225,44 @@ const BillingModule = () => {
   const loading = searchTerm.length >= 2 ? searchLoading : productsLoading;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Product Search & Selection */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Status Bar */}
-        <Card>
-          <CardContent className="flex items-center justify-between p-4">
-            <div className="flex items-center gap-4">
-              <Badge variant={isOnline ? "default" : "destructive"} className="flex items-center gap-1">
-                {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-                {isOnline ? "Online" : "Offline"}
-              </Badge>
-              <Badge variant="outline">Bill: {currentBillNumber}</Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              {holdBills.length > 0 && (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <Play className="h-4 w-4 mr-2" />
-                      Resume ({holdBills.length})
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Resume Held Bills</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-2">
-                      {holdBills.map((bill: any) => (
-                        <div key={bill.id} className="flex items-center justify-between p-3 border rounded">
-                          <div>
-                            <p className="font-medium">{bill.customer.name || "Walk-in Customer"}</p>
-                            <p className="text-sm text-gray-500">{bill.timestamp}</p>
-                            <p className="text-sm">Items: {bill.cart.length}</p>
-                          </div>
-                          <Button size="sm" onClick={() => resumeBill(bill)}>
-                            Resume
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              )}
-              <Button variant="outline" size="sm" onClick={holdBill}>
-                <Pause className="h-4 w-4 mr-2" />
-                Hold
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
-              Product Search
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Search by name or scan barcode..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Button variant="outline" size="icon">
-                <Bluetooth className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {loading ? (
-                <div className="col-span-2 text-center py-8">Loading products...</div>
-              ) : products.length === 0 ? (
-                <div className="col-span-2 text-center py-8 text-gray-500">
-                  {searchTerm.length >= 2 ? "No products found" : "Type to search products"}
-                </div>
-              ) : (
-                products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                    onClick={() => addToCart(product)}
-                  >
-                    <div>
-                      <p className="font-medium">{product.name}</p>
-                      <p className="text-sm text-gray-500">₹{product.price} • Stock: {product.stock}</p>
-                      <p className="text-xs text-gray-400 font-mono">{product.barcode}</p>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Shopping Cart & Checkout */}
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="h-5 w-5" />
-              Current Sale
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {cart.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">Cart is empty</p>
-            ) : (
-              <>
-                <div className="space-y-3 max-h-60 overflow-y-auto">
-                  {cart.map((item) => (
-                    <div key={item.id} className="border rounded p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex-1">
-                          <p className="font-medium text-sm">{item.productName}</p>
-                          <p className="text-xs text-gray-500">₹{item.price} each</p>
-                        </div>
-                        <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, -1)}>
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-8 text-center">{item.quantity}</span>
-                          <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, 1)}>
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            value={item.discount}
-                            onChange={(e) => updateItemDiscount(item.id, Number(e.target.value))}
-                            className="w-16 h-8 text-xs"
-                            min="0"
-                            max="100"
-                          />
-                          <Percent className="h-3 w-3 text-gray-400" />
-                        </div>
-                      </div>
-                      
-                      <div className="flex justify-between text-sm">
-                        <span>Subtotal:</span>
-                        <span>₹{calculateItemTotal(item).toFixed(2)}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <Separator />
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Subtotal:</span>
-                    <span>₹{subtotal.toFixed(2)}</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Bill Discount:</span>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        placeholder="0"
-                        value={billDiscount}
-                        onChange={(e) => setBillDiscount(Number(e.target.value))}
-                        className="w-16 h-8 text-xs"
-                        min="0"
-                        max="100"
-                      />
-                      <Percent className="h-3 w-3 text-gray-400" />
-                    </div>
-                  </div>
-                  
-                  {billDiscountAmount > 0 && (
-                    <div className="flex justify-between text-sm text-green-600">
-                      <span>Discount Amount:</span>
-                      <span>-₹{billDiscountAmount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  
-                  <div className="flex justify-between text-sm">
-                    <span>GST (18%):</span>
-                    <span>₹{gst.toFixed(2)}</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total:</span>
-                    <span>₹{total.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Payment Method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="card">Card Payment</SelectItem>
-                      <SelectItem value="upi">UPI Payment</SelectItem>
-                      <SelectItem value="cash">Cash Payment</SelectItem>
-                      <SelectItem value="split">Split Payment</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  
-                  <Button 
-                    className="w-full bg-green-600 hover:bg-green-700" 
-                    onClick={completeSale}
-                    disabled={cart.length === 0 || !paymentMethod || saleLoading}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    {saleLoading ? "Processing..." : "Complete Sale"}
-                  </Button>
-                  
-                  <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1" onClick={printReceipt}>
-                      <Printer className="h-4 w-4 mr-2" />
-                      Print
-                    </Button>
-                    <Button variant="outline" className="flex-1" onClick={shareReceipt}>
-                      <Share className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Customer Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Customer Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Input 
-              placeholder="Customer Name (Optional)" 
-              value={customer.name || ""}
-              onChange={(e) => setCustomer({...customer, name: e.target.value})}
-            />
-            <Input 
-              placeholder="Phone Number (Optional)" 
-              value={customer.phone || ""}
-              onChange={(e) => setCustomer({...customer, phone: e.target.value})}
-            />
-            <Input 
-              placeholder="Email (Optional)" 
-              value={customer.email || ""}
-              onChange={(e) => setCustomer({...customer, email: e.target.value})}
-            />
-            <Input 
-              placeholder="GSTIN (Optional)" 
-              value={customer.gstin || ""}
-              onChange={(e) => setCustomer({...customer, gstin: e.target.value})}
-            />
-          </CardContent>
-        </Card>
+    <div className="h-screen flex flex-col bg-gray-50">
+      <BillingHeader 
+        isOnline={isOnline}
+        billNumber={currentBillNumber}
+      />
+      
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex-1 flex flex-col">
+          <ProductSearch
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            products={products}
+            loading={loading}
+            onAddToCart={addToCart}
+            onAddManualItem={addManualItem}
+          />
+          
+          <CartSection
+            cart={cart}
+            onUpdateQuantity={updateQuantity}
+            onUpdateDiscount={updateItemDiscount}
+            onRemoveItem={removeFromCart}
+            calculateItemTotal={calculateItemTotal}
+          />
+        </div>
+        
+        <BillingSummary
+          subtotal={subtotal}
+          gstAmount={gst}
+          discount={billDiscountAmount}
+          total={total}
+          paymentMethod={paymentMethod}
+          onPaymentMethodChange={setPaymentMethod}
+          onCompleteeSale={completeSale}
+          onPrintReceipt={printReceipt}
+          onShareInvoice={shareInvoice}
+          loading={saleLoading}
+        />
       </div>
     </div>
   );
