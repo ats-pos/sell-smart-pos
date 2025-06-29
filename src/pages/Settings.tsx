@@ -251,70 +251,70 @@ const Settings = () => {
       />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
-          {/* Modern Tab Navigation with Better Visibility */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6 lg:space-y-8">
+          {/* Mobile-Optimized Tab Navigation */}
           <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-16 sm:h-14 bg-transparent gap-2">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 sm:gap-2 overflow-x-auto">
               <TabsTrigger
                 value="store"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Store className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Store</span>
+                <Store className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Store</span>
               </TabsTrigger>
               <TabsTrigger
                 value="printer"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Printer className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Printer</span>
+                <Printer className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Print</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Receipt className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Billing</span>
+                <Receipt className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Bill</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Inventory</span>
+                <Package className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Stock</span>
               </TabsTrigger>
               <TabsTrigger
                 value="notifications"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Alerts</span>
+                <Bell className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Alert</span>
               </TabsTrigger>
               <TabsTrigger
                 value="info"
-                className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm p-3 rounded-xl 
+                className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
                 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
-                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200"
+                text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px]"
               >
-                <Info className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="hidden xs:inline">Info</span>
+                <Info className="h-4 w-4" />
+                <span className="text-[10px] sm:text-xs">Info</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -322,77 +322,78 @@ const Settings = () => {
           {/* Store Profile Tab */}
           <TabsContent value="store" className="animate-slide-up delay-200">
             <Card className="glass border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
                   <Store className="h-5 w-5" />
                   Store Profile
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                 {profileLoading ? (
                   <div className="text-center py-8 text-blue-200">Loading store profile...</div>
                 ) : (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="storeName" className="text-white">Store Name</Label>
+                        <Label htmlFor="storeName" className="text-white text-sm sm:text-base">Store Name</Label>
                         <Input
                           id="storeName"
                           value={storeProfile.name}
                           onChange={(e) => setStoreProfile({...storeProfile, name: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                          className="text-sm sm:text-base"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                        <Label htmlFor="phone" className="text-white text-sm sm:text-base">Phone Number</Label>
                         <Input
                           id="phone"
                           value={storeProfile.phone}
                           onChange={(e) => setStoreProfile({...storeProfile, phone: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                          className="text-sm sm:text-base"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-white">Email</Label>
+                        <Label htmlFor="email" className="text-white text-sm sm:text-base">Email</Label>
                         <Input
                           id="email"
                           type="email"
                           value={storeProfile.email}
                           onChange={(e) => setStoreProfile({...storeProfile, email: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                          className="text-sm sm:text-base"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="gstin" className="text-white">GSTIN</Label>
+                        <Label htmlFor="gstin" className="text-white text-sm sm:text-base">GSTIN</Label>
                         <Input
                           id="gstin"
                           value={storeProfile.gstin}
                           onChange={(e) => setStoreProfile({...storeProfile, gstin: e.target.value})}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                          className="text-sm sm:text-base"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="address" className="text-white">Address</Label>
+                      <Label htmlFor="address" className="text-white text-sm sm:text-base">Address</Label>
                       <Textarea
                         id="address"
                         value={storeProfile.address}
                         onChange={(e) => setStoreProfile({...storeProfile, address: e.target.value})}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 min-h-[80px] text-sm sm:text-base"
                       />
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-3 py-2">
                       <Switch
                         id="showOnReceipt"
                         checked={storeProfile.showOnReceipt}
                         onCheckedChange={(checked) => setStoreProfile({...storeProfile, showOnReceipt: checked})}
                       />
-                      <Label htmlFor="showOnReceipt" className="text-white">Show store info on receipts</Label>
+                      <Label htmlFor="showOnReceipt" className="text-white text-sm sm:text-base">Show store info on receipts</Label>
                     </div>
                     <Button 
                       onClick={saveStoreProfile}
                       disabled={updateLoading}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                      className="w-full sm:w-auto"
+                      size="lg"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       {updateLoading ? "Saving..." : "Save Store Profile"}
@@ -405,92 +406,93 @@ const Settings = () => {
 
           {/* Printer Settings Tab */}
           <TabsContent value="printer" className="animate-slide-up delay-200">
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <Card className="glass border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white">Receipt Printer Setup</CardTitle>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="text-white text-lg sm:text-xl">Receipt Printer Setup</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <div className="space-y-2">
-                    <Label className="text-white">Connected Printer</Label>
-                    <div className="flex gap-2">
+                    <Label className="text-white text-sm sm:text-base">Connected Printer</Label>
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Input 
                         placeholder="No printer connected" 
                         value={printerSettings.receiptPrinter} 
                         readOnly 
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                        className="flex-1"
                       />
                       <Button 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                         onClick={() => connectPrinter('receipt')}
+                        className="w-full sm:w-auto"
                       >
                         Connect
                       </Button>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Paper Size</Label>
+                  <div className="space-y-3">
+                    <Label className="text-white text-sm sm:text-base">Paper Size</Label>
                     <RadioGroup 
                       value={printerSettings.receiptPaperSize} 
                       onValueChange={(value) => setPrinterSettings({...printerSettings, receiptPaperSize: value})}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="58mm" id="58mm" />
-                        <Label htmlFor="58mm" className="text-white">58mm</Label>
+                        <Label htmlFor="58mm" className="text-white text-sm sm:text-base">58mm</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="80mm" id="80mm" />
-                        <Label htmlFor="80mm" className="text-white">80mm</Label>
+                        <Label htmlFor="80mm" className="text-white text-sm sm:text-base">80mm</Label>
                       </div>
                     </RadioGroup>
                   </div>
                   <Button 
-                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500"
+                    className="w-full sm:w-auto"
                     onClick={testPrint}
+                    size="lg"
                   >
-                    <TestTube className="h-4 w-4" />
+                    <TestTube className="h-4 w-4 mr-2" />
                     Test Print
                   </Button>
                 </CardContent>
               </Card>
 
               <Card className="glass border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white">Barcode Printer Setup</CardTitle>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="text-white text-lg sm:text-xl">Barcode Printer Setup</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <div className="space-y-2">
-                    <Label className="text-white">Connected Label Printer</Label>
-                    <div className="flex gap-2">
+                    <Label className="text-white text-sm sm:text-base">Connected Label Printer</Label>
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Input 
                         placeholder="No printer connected" 
                         value={printerSettings.barcodePrinter} 
                         readOnly 
-                        className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                        className="flex-1"
                       />
                       <Button 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                         onClick={() => connectPrinter('barcode')}
+                        className="w-full sm:w-auto"
                       >
                         Connect
                       </Button>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Label Size</Label>
+                  <div className="space-y-3">
+                    <Label className="text-white text-sm sm:text-base">Label Size</Label>
                     <RadioGroup 
                       value={printerSettings.labelSize} 
                       onValueChange={(value) => setPrinterSettings({...printerSettings, labelSize: value})}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="40x30mm" id="40x30mm" />
-                        <Label htmlFor="40x30mm" className="text-white">40x30mm</Label>
+                        <Label htmlFor="40x30mm" className="text-white text-sm sm:text-base">40x30mm</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="50x30mm" id="50x30mm" />
-                        <Label htmlFor="50x30mm" className="text-white">50x30mm</Label>
+                        <Label htmlFor="50x30mm" className="text-white text-sm sm:text-base">50x30mm</Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -502,79 +504,85 @@ const Settings = () => {
           {/* Billing Preferences Tab */}
           <TabsContent value="billing" className="animate-slide-up delay-200">
             <Card className="glass border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
                   <Receipt className="h-5 w-5" />
                   Billing Preferences
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="taxRate" className="text-white">Default Tax Rate (%)</Label>
+                    <Label htmlFor="taxRate" className="text-white text-sm sm:text-base">Default Tax Rate (%)</Label>
                     <Input
                       id="taxRate"
                       type="number"
                       value={billingPrefs.defaultTaxRate}
                       onChange={(e) => setBillingPrefs({...billingPrefs, defaultTaxRate: parseInt(e.target.value)})}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Rounding Method</Label>
+                  <div className="space-y-3">
+                    <Label className="text-white text-sm sm:text-base">Rounding Method</Label>
                     <RadioGroup 
                       value={billingPrefs.roundingMethod} 
                       onValueChange={(value) => setBillingPrefs({...billingPrefs, roundingMethod: value})}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="nearest" id="nearest" />
-                        <Label htmlFor="nearest" className="text-white">Nearest</Label>
+                        <Label htmlFor="nearest" className="text-white text-sm sm:text-base">Nearest</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="up" id="up" />
-                        <Label htmlFor="up" className="text-white">Round Up</Label>
+                        <Label htmlFor="up" className="text-white text-sm sm:text-base">Round Up</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="down" id="down" />
-                        <Label htmlFor="down" className="text-white">Round Down</Label>
+                        <Label htmlFor="down" className="text-white text-sm sm:text-base">Round Down</Label>
                       </div>
                     </RadioGroup>
                   </div>
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex-1 pr-4">
+                      <Label htmlFor="enableDiscounts" className="text-white text-sm sm:text-base">Enable discount entry</Label>
+                      <p className="text-xs sm:text-sm text-blue-200 mt-1">Allow discounts on individual items and bills</p>
+                    </div>
                     <Switch
                       id="enableDiscounts"
                       checked={billingPrefs.enableDiscounts}
                       onCheckedChange={(checked) => setBillingPrefs({...billingPrefs, enableDiscounts: checked})}
                     />
-                    <Label htmlFor="enableDiscounts" className="text-white">Enable discount entry</Label>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex-1 pr-4">
+                      <Label htmlFor="autoPrintBilling" className="text-white text-sm sm:text-base">Auto print receipt</Label>
+                      <p className="text-xs sm:text-sm text-blue-200 mt-1">Automatically print receipt after billing</p>
+                    </div>
                     <Switch
                       id="autoPrintBilling"
                       checked={billingPrefs.autoPrint}
                       onCheckedChange={(checked) => setBillingPrefs({...billingPrefs, autoPrint: checked})}
                     />
-                    <Label htmlFor="autoPrintBilling" className="text-white">Auto print receipt after billing</Label>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="thankYouNote" className="text-white">Thank You Note</Label>
+                  <Label htmlFor="thankYouNote" className="text-white text-sm sm:text-base">Thank You Note</Label>
                   <Textarea
                     id="thankYouNote"
                     value={billingPrefs.thankYouNote}
                     onChange={(e) => setBillingPrefs({...billingPrefs, thankYouNote: e.target.value})}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-blue-200 min-h-[80px]"
                   />
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveBillingPreferences}
+                  className="w-full sm:w-auto"
+                  size="lg"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Billing Preferences
@@ -586,58 +594,61 @@ const Settings = () => {
           {/* Inventory Settings Tab */}
           <TabsContent value="inventory" className="animate-slide-up delay-200">
             <Card className="glass border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
                   <Package className="h-5 w-5" />
                   Inventory Settings
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="stockThreshold" className="text-white">Stock Threshold Alert</Label>
+                    <Label htmlFor="stockThreshold" className="text-white text-sm sm:text-base">Stock Threshold Alert</Label>
                     <Input
                       id="stockThreshold"
                       type="number"
                       value={inventorySettings.stockThreshold}
                       onChange={(e) => setInventorySettings({...inventorySettings, stockThreshold: parseInt(e.target.value)})}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Default Unit of Measure</Label>
+                  <div className="space-y-3">
+                    <Label className="text-white text-sm sm:text-base">Default Unit of Measure</Label>
                     <RadioGroup 
                       value={inventorySettings.defaultUnit} 
                       onValueChange={(value) => setInventorySettings({...inventorySettings, defaultUnit: value})}
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="pcs" id="pcs" />
-                        <Label htmlFor="pcs" className="text-white">Pieces</Label>
+                        <Label htmlFor="pcs" className="text-white text-sm sm:text-base">Pieces</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="kg" id="kg" />
-                        <Label htmlFor="kg" className="text-white">Kilograms</Label>
+                        <Label htmlFor="kg" className="text-white text-sm sm:text-base">Kilograms</Label>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1">
                         <RadioGroupItem value="liter" id="liter" />
-                        <Label htmlFor="liter" className="text-white">Liters</Label>
+                        <Label htmlFor="liter" className="text-white text-sm sm:text-base">Liters</Label>
                       </div>
                     </RadioGroup>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-between py-2">
+                  <div className="flex-1 pr-4">
+                    <Label htmlFor="autoBarcode" className="text-white text-sm sm:text-base">Auto-generate barcodes</Label>
+                    <p className="text-xs sm:text-sm text-blue-200 mt-1">Automatically generate barcodes for new products</p>
+                  </div>
                   <Switch
                     id="autoBarcode"
                     checked={inventorySettings.autoBarcode}
                     onCheckedChange={(checked) => setInventorySettings({...inventorySettings, autoBarcode: checked})}
                   />
-                  <Label htmlFor="autoBarcode" className="text-white">Enable barcode auto-generation for new products</Label>
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveInventorySettings}
+                  className="w-full sm:w-auto"
+                  size="lg"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Inventory Settings
@@ -649,18 +660,18 @@ const Settings = () => {
           {/* Notifications Tab */}
           <TabsContent value="notifications" className="animate-slide-up delay-200">
             <Card className="glass border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
                   <Bell className="h-5 w-5" />
                   Notifications & Alerts
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="dailySummary" className="text-white">Daily Sales Summary</Label>
-                      <p className="text-sm text-blue-200">Receive daily sales reports via email</p>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex-1 pr-4">
+                      <Label htmlFor="dailySummary" className="text-white text-sm sm:text-base">Daily Sales Summary</Label>
+                      <p className="text-xs sm:text-sm text-blue-200 mt-1">Receive daily sales reports via email</p>
                     </div>
                     <Switch
                       id="dailySummary"
@@ -669,10 +680,10 @@ const Settings = () => {
                     />
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="stockReorder" className="text-white">Stock Reorder Alerts</Label>
-                      <p className="text-sm text-blue-200">Get notified when items are low in stock</p>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex-1 pr-4">
+                      <Label htmlFor="stockReorder" className="text-white text-sm sm:text-base">Stock Reorder Alerts</Label>
+                      <p className="text-xs sm:text-sm text-blue-200 mt-1">Get notified when items are low in stock</p>
                     </div>
                     <Switch
                       id="stockReorder"
@@ -681,10 +692,10 @@ const Settings = () => {
                     />
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="printerDisconnect" className="text-white">Printer Disconnect Alerts</Label>
-                      <p className="text-sm text-blue-200">Alert when printers are disconnected</p>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex-1 pr-4">
+                      <Label htmlFor="printerDisconnect" className="text-white text-sm sm:text-base">Printer Disconnect Alerts</Label>
+                      <p className="text-xs sm:text-sm text-blue-200 mt-1">Alert when printers are disconnected</p>
                     </div>
                     <Switch
                       id="printerDisconnect"
@@ -695,8 +706,9 @@ const Settings = () => {
                 </div>
 
                 <Button 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                   onClick={saveNotificationSettings}
+                  className="w-full sm:w-auto"
+                  size="lg"
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Save Notification Settings
@@ -708,58 +720,61 @@ const Settings = () => {
           {/* App Info Tab */}
           <TabsContent value="info" className="animate-slide-up delay-200">
             <Card className="glass border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-white text-lg sm:text-xl">
                   <Info className="h-5 w-5" />
                   App Info & Support
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-white">App Version</span>
-                    <span className="text-blue-200">{APP_CONFIG.version}</span>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="font-medium text-white text-sm sm:text-base">App Version</span>
+                    <span className="text-blue-200 text-sm sm:text-base">{APP_CONFIG.version}</span>
                   </div>
                   
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-white">Last Updated</span>
-                    <span className="text-blue-200">{APP_CONFIG.lastUpdated}</span>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="font-medium text-white text-sm sm:text-base">Last Updated</span>
+                    <span className="text-blue-200 text-sm sm:text-base">{APP_CONFIG.lastUpdated}</span>
                   </div>
                   
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-white">API Mode</span>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="font-medium text-white text-sm sm:text-base">API Mode</span>
                     <ApiStatusIndicator />
                   </div>
                   
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium text-white">System Status</span>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="font-medium text-white text-sm sm:text-base">System Status</span>
                     <Badge variant="default" className="bg-green-500/20 text-green-300 border-green-500/30">
                       Operational
                     </Badge>
                   </div>
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full"
                     onClick={openTermsOfService}
+                    size="lg"
                   >
                     <Shield className="h-4 w-4 mr-2" />
                     Terms of Service
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full"
                     onClick={openPrivacyPolicy}
+                    size="lg"
                   >
                     <Shield className="h-4 w-4 mr-2" />
                     Privacy Policy
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    className="w-full"
                     onClick={contactSupport}
+                    size="lg"
                   >
                     <Mail className="h-4 w-4 mr-2" />
                     Contact Support
@@ -769,8 +784,9 @@ const Settings = () => {
                 <div className="pt-4 border-t border-white/20">
                   <Button 
                     variant="destructive" 
-                    className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                    className="w-full"
                     onClick={clearAllData}
+                    size="lg"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Clear All Data
