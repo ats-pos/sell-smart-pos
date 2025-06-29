@@ -15,18 +15,13 @@ import {
   Package, 
   Bell, 
   Info,
-  Settings as SettingsIcon,
-  ArrowLeft,
   TestTube,
   Database,
-  Sparkles,
   Save,
-  RefreshCw,
   Trash2,
-  Download,
   Mail,
-  Phone,
-  Shield
+  Shield,
+  ArrowLeft
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -37,6 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isMockMode, toggleMockMode } from "@/lib/config";
 import { ApiStatusIndicator } from "@/components/common/MockModeIndicator";
 import { APP_CONFIG } from "@/lib/utils/constants";
+import { DefaultHeader } from "@/components/common/DefaultHeader";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -204,6 +200,38 @@ const Settings = () => {
     });
   };
 
+  const customActions = (
+    <div className="flex items-center gap-2">
+      <ApiStatusIndicator />
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={handleModeToggle}
+        className="hidden sm:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+      >
+        {isMockMode() ? (
+          <>
+            <Database className="h-3 w-3" />
+            Switch to Live
+          </>
+        ) : (
+          <>
+            <TestTube className="h-3 w-3" />
+            Switch to Mock
+          </>
+        )}
+      </Button>
+      <Button 
+        variant="ghost" 
+        size="sm"
+        onClick={() => navigate('/admin')}
+        className="p-2 text-white hover:bg-white/10"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </Button>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Animated background elements */}
@@ -212,56 +240,15 @@ const Settings = () => {
         <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
       </div>
 
-      {/* Modern Glassmorphism Header */}
-      <header className="glass sticky top-0 z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/admin')}
-                className="p-2 text-white hover:bg-white/10"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
-                <SettingsIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">Settings</h1>
-                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" />
-                  Configure your SPM-POS system
-                </p>
-              </div>
-            </div>
-            
-            {/* API Mode Toggle */}
-            <div className="flex items-center gap-2">
-              <ApiStatusIndicator />
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleModeToggle}
-                className="hidden sm:flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                {isMockMode() ? (
-                  <>
-                    <Database className="h-3 w-3" />
-                    Switch to Live
-                  </>
-                ) : (
-                  <>
-                    <TestTube className="h-3 w-3" />
-                    Switch to Mock
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Default Header */}
+      <DefaultHeader 
+        title="Settings"
+        subtitle="Configure your SPM-POS system"
+        showUserInfo={false}
+        showSettings={false}
+        showLogout={true}
+        customActions={customActions}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">

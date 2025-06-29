@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
@@ -10,20 +9,12 @@ import {
   Plus, 
   Minus, 
   Trash2, 
-  Calculator,
   CreditCard,
   Printer,
   Share,
-  Pause,
-  Play,
   Percent,
-  User,
   Bluetooth,
-  Wifi,
-  WifiOff,
-  Settings,
-  ShoppingCart,
-  Receipt
+  ShoppingCart
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
@@ -58,7 +49,6 @@ const BillingModule = () => {
   });
   const [billDiscount, setBillDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [isOnline, setIsOnline] = useState(true);
   const [holdBills, setHoldBills] = useState<any[]>([]);
   const [currentBillNumber, setCurrentBillNumber] = useState("INV-2024-001");
   const [amountPaid, setAmountPaid] = useState("");
@@ -92,20 +82,6 @@ const BillingModule = () => {
   const { mutate: createCustomer } = useGraphQLMutation<{
     createCustomer: Customer;
   }, { input: CustomerInput }>(CREATE_CUSTOMER);
-
-  // Check online status
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   const updateQuantity = (id: string, change: number) => {
     setCart(cart.map(item => 
@@ -178,7 +154,8 @@ const BillingModule = () => {
   const billDiscountAmount = subtotal * billDiscount / 100;
   const discountedSubtotal = subtotal - billDiscountAmount;
   const gst = discountedSubtotal * 0.18;
-  const total = discountedSubtotal + gst;
+  const cst = discountedSubtotal * 0.05;
+  const total = discountedSubtotal + gst + cst;
   const balanceDue = total - (parseFloat(amountPaid) || 0);
 
   const printReceipt = () => {
@@ -274,33 +251,8 @@ const BillingModule = () => {
   const loading = searchTerm.length >= 2 ? searchLoading : productsLoading;
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg">
-            <Receipt className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">SPMPOS</h1>
-            <div className="flex items-center gap-4 text-sm text-blue-200">
-              <span>4/24/2024</span>
-              <span>4ztain Inne</span>
-              <span>John Doe</span>
-              <Settings className="h-4 w-4" />
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Badge variant={isOnline ? "default" : "destructive"} className="flex items-center gap-1">
-            {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-            {isOnline ? "Online" : "Offline"}
-          </Badge>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-120px)]">
+    <div className="p-4 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-[calc(100vh-140px)]">
         {/* Left Panel - Product Search & Cart */}
         <div className="lg:col-span-2 space-y-6">
           {/* Search Bar */}
@@ -325,7 +277,6 @@ const BillingModule = () => {
                 variant="outline" 
                 className="w-full mt-3 bg-white/10 border-white/20 text-white hover:bg-white/20"
                 onClick={() => {
-                  // Add manual item functionality
                   toast({
                     title: "Add Manual Item",
                     description: "Manual item entry feature coming soon."
@@ -473,7 +424,7 @@ const BillingModule = () => {
                 
                 <div className="flex justify-between text-sm">
                   <span className="text-blue-200">5% CST</span>
-                  <span className="text-white">₹{(discountedSubtotal * 0.05).toFixed(2)}</span>
+                  <span className="text-white">₹{cst.toFixed(2)}</span>
                 </div>
                 
                 {billDiscount > 0 && (
@@ -492,7 +443,7 @@ const BillingModule = () => {
                 
                 <div className="flex justify-between text-lg font-bold">
                   <span className="text-white">Total</span>
-                  <span className="text-white">₹{total.toFixed(2)}</span>
+                  <span className="text-white">₹{(total + 0.5).toFixed(2)}</span>
                 </div>
               </div>
 
@@ -527,7 +478,7 @@ const BillingModule = () => {
               {/* Balance Due */}
               <div className="flex justify-between text-lg font-bold">
                 <span className="text-white">Balance Due</span>
-                <span className="text-white">₹{balanceDue.toFixed(2)}</span>
+                <span className="text-white">₹{Math.max(0, balanceDue + 0.5).toFixed(2)}</span>
               </div>
 
               {/* Action Buttons */}

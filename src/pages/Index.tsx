@@ -1,50 +1,35 @@
-
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ShoppingCart,
   Package,
-  Users,
   BarChart3,
-  Plus,
-  Search,
-  Receipt,
   TrendingUp,
-  DollarSign,
-  ShoppingBag,
-  Menu,
-  Settings,
-  Sparkles,
-  LogOut
+  Plus
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import Dashboard from "@/components/Dashboard";
 import BillingModule from "@/components/BillingModule";
 import InventoryModule from "@/components/InventoryModule";
 import ReportsModule from "@/components/ReportsModule";
-import { useAuth } from "@/hooks/useAuth";
+import { DefaultHeader } from "@/components/common/DefaultHeader";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const navigate = useNavigate();
-  const { logout } = useAuth();
 
   const handleNewSale = () => {
     setActiveTab("billing");
   };
 
-  const handleLogout = () => {
-    logout();
-  };
-
-  const handleSettings = () => {
-    navigate('/settings');
-    setShowMobileMenu(false);
-  };
+  const customActions = (
+    <Button 
+      onClick={handleNewSale}
+      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift"
+    >
+      <Plus className="h-4 w-4 mr-2" />
+      New Sale
+    </Button>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -55,98 +40,15 @@ const Index = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-500"></div>
       </div>
 
-      {/* Modern Glassmorphism Header */}
-      <header className="glass sticky top-0 z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 sm:p-3 rounded-xl shadow-lg">
-                <Receipt className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white gradient-text">SPM-POS</h1>
-                <p className="text-xs sm:text-sm text-blue-200 flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" />
-                  Admin Dashboard
-                </p>
-              </div>
-            </div>
-
-            {/* Desktop Actions */}
-            <div className="hidden sm:flex items-center space-x-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSettings}
-                className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift"
-              >
-                <Settings className="h-4 w-4" />
-                Settings
-              </Button>
-              <Button 
-                onClick={handleNewSale}
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Sale
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift" 
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="sm:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="text-white hover:bg-white/10"
-              >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Menu Dropdown */}
-          {showMobileMenu && (
-            <div className="sm:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-4 space-y-3 animate-slide-up">
-              <Button
-                variant="outline"
-                className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
-                onClick={handleSettings}
-              >
-                <Settings className="h-4 w-4" />
-                Settings
-              </Button>
-              <Button 
-                onClick={() => {
-                  handleNewSale();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Sale
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20" 
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          )}
-        </div>
-      </header>
+      {/* Default Header */}
+      <DefaultHeader 
+        title="SPM-POS"
+        subtitle="Admin Dashboard"
+        showUserInfo={true}
+        showSettings={true}
+        showLogout={true}
+        customActions={customActions}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
