@@ -6,6 +6,9 @@ export { buttonVariants, cardVariants, inputVariants } from './components';
 export type { DesignTokens } from './tokens';
 export type { Theme, ThemeMode } from './theme';
 
+// Import designTokens for use in utility functions
+import { designTokens } from './tokens';
+
 // Utility functions for design system
 export const getColorValue = (path: string) => {
   const keys = path.split('.');
