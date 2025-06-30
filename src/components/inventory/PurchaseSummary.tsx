@@ -95,7 +95,7 @@ export const PurchaseSummary = ({
       </Card>
 
       {/* Purchase Statistics */}
-      <Card variant="default" className="bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+      <Card className="bg-gradient-to-br from-blue-500/10 to-purple-500/10">
         <CardHeader>
           <CardTitle className="text-blue-300 text-lg">Purchase Summary</CardTitle>
         </CardHeader>
