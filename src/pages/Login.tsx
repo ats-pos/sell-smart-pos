@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import UserSelector from "@/components/auth/UserSelector";
 import StoreRegistration from "@/components/auth/StoreRegistration";
 import { LoginHeader } from "@/components/auth/LoginHeader";
@@ -15,6 +15,7 @@ import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/grap
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     isAuthenticated,
     currentUser,
@@ -43,7 +44,6 @@ const Login = () => {
   const [currentView, setCurrentView] = useState<'main' | 'users' | 'register' | 'pin' | 'forgot'>('main');
   const [activeTab, setActiveTab] = useState("email");
   const [selectedUser, setSelectedUser] = useState<DeviceUser | null>(null);
-  const [hasRedirected, setHasRedirected] = useState(false);
 
   // Form States
   const [emailForm, setEmailForm] = useState<LoginInput>({
@@ -65,17 +65,28 @@ const Login = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
 
-  // Handle authentication redirect with useEffect to prevent multiple redirects
+  // Handle authentication redirect
   useEffect(() => {
-    if (isAuthenticated && currentUser && !hasRedirected) {
-      setHasRedirected(true);
-      const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
-      navigate(redirectPath, { replace: true });
+    if (isAuthenticated && currentUser) {
+      // Get the intended destination from location state or default based on role
+      const from = location.state?.from?.pathname;
+      let redirectPath;
+      
+      if (from && from !== '/login') {
+        redirectPath = from;
+      } else {
+        redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
+      }
+      
+      // Use setTimeout to ensure the redirect happens after the current render cycle
+      setTimeout(() => {
+        navigate(redirectPath, { replace: true });
+      }, 100);
     }
-  }, [isAuthenticated, currentUser, hasRedirected, navigate]);
+  }, [isAuthenticated, currentUser, navigate, location.state]);
 
-  // Show loading state while checking authentication
-  if (isAuthenticated && currentUser && !hasRedirected) {
+  // Show loading state while authenticated user exists but hasn't redirected yet
+  if (isAuthenticated && currentUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-white text-center">
