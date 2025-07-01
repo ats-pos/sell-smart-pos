@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import UserSelector from "@/components/auth/UserSelector";
 import StoreRegistration from "@/components/auth/StoreRegistration";
 import { LoginHeader } from "@/components/auth/LoginHeader";
@@ -14,6 +14,7 @@ import { DemoCredentials } from "@/components/auth/DemoCredentials";
 import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/graphql/auth-types";
 
 const Login = () => {
+  const navigate = useNavigate();
   const {
     isAuthenticated,
     currentUser,
@@ -42,6 +43,7 @@ const Login = () => {
   const [currentView, setCurrentView] = useState<'main' | 'users' | 'register' | 'pin' | 'forgot'>('main');
   const [activeTab, setActiveTab] = useState("email");
   const [selectedUser, setSelectedUser] = useState<DeviceUser | null>(null);
+  const [hasRedirected, setHasRedirected] = useState(false);
 
   // Form States
   const [emailForm, setEmailForm] = useState<LoginInput>({
@@ -63,10 +65,25 @@ const Login = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
 
-  // Redirect if already authenticated - moved after all hooks
-  if (isAuthenticated && currentUser) {
-    const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
-    return <Navigate to={redirectPath} replace />;
+  // Handle authentication redirect with useEffect to prevent multiple redirects
+  useEffect(() => {
+    if (isAuthenticated && currentUser && !hasRedirected) {
+      setHasRedirected(true);
+      const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isAuthenticated, currentUser, hasRedirected, navigate]);
+
+  // Show loading state while checking authentication
+  if (isAuthenticated && currentUser && !hasRedirected) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Redirecting...</p>
+        </div>
+      </div>
+    );
   }
 
   // Event Handlers
