@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router-dom";
 import UserSelector from "@/components/auth/UserSelector";
 import StoreRegistration from "@/components/auth/StoreRegistration";
 import { LoginHeader } from "@/components/auth/LoginHeader";
@@ -14,6 +15,8 @@ import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/grap
 
 const Login = () => {
   const {
+    isAuthenticated,
+    currentUser,
     isOnline,
     deviceUsers,
     storeExists,
@@ -34,6 +37,12 @@ const Login = () => {
     handleForgotPassword,
     handleBiometricLogin
   } = useAuth();
+
+  // Redirect if already authenticated
+  if (isAuthenticated && currentUser) {
+    const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
+    return <Navigate to={redirectPath} replace />;
+  }
 
   // UI State
   const [currentView, setCurrentView] = useState<'main' | 'users' | 'register' | 'pin' | 'forgot'>('main');

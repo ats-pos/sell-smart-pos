@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGraphQLMutation, useGraphQLQuery } from '@/hooks/useGraphQL';
 import { 
   LOGIN_USER, 
@@ -27,6 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export function useAuth() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -135,6 +136,22 @@ export function useAuth() {
     }
   };
 
+  const getRedirectPath = (user: User) => {
+    // Check if there's a saved location from PrivateRoutes
+    const from = location.state?.from?.pathname;
+    
+    if (from && from !== '/login') {
+      return from;
+    }
+    
+    // Default redirect based on role
+    if (user.role === 'admin') {
+      return '/admin';
+    } else {
+      return '/';
+    }
+  };
+
   const handleLogin = async (input: LoginInput) => {
     try {
       const result = await loginUser({ 
@@ -144,12 +161,8 @@ export function useAuth() {
       if (result?.data?.loginUser) {
         saveAuthData(result.data.loginUser);
         
-        // Navigate based on role
-        if (result.data.loginUser.user?.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate('/');
-        }
+        const redirectPath = getRedirectPath(result.data.loginUser.user!);
+        navigate(redirectPath, { replace: true });
         
         toast({
           title: "Login Successful",
@@ -169,7 +182,9 @@ export function useAuth() {
       
       if (result?.data?.loginWithOTP) {
         saveAuthData(result.data.loginWithOTP);
-        navigate('/');
+        
+        const redirectPath = getRedirectPath(result.data.loginWithOTP.user!);
+        navigate(redirectPath, { replace: true });
         
         toast({
           title: "Login Successful",
@@ -189,7 +204,9 @@ export function useAuth() {
       
       if (result?.data?.loginWithPIN) {
         saveAuthData(result.data.loginWithPIN);
-        navigate('/');
+        
+        const redirectPath = getRedirectPath(result.data.loginWithPIN.user!);
+        navigate(redirectPath, { replace: true });
         
         toast({
           title: "Login Successful",
@@ -227,7 +244,7 @@ export function useAuth() {
       
       if (result?.data?.registerStore) {
         saveAuthData(result.data.registerStore);
-        navigate('/admin');
+        navigate('/admin', { replace: true });
         
         toast({
           title: "Store Registered",
@@ -265,7 +282,9 @@ export function useAuth() {
       
       if (result?.data?.verifyBiometric) {
         saveAuthData(result.data.verifyBiometric);
-        navigate('/');
+        
+        const redirectPath = getRedirectPath(result.data.verifyBiometric.user!);
+        navigate(redirectPath, { replace: true });
         
         toast({
           title: "Biometric Login Successful",
@@ -284,7 +303,7 @@ export function useAuth() {
     setIsAuthenticated(false);
     setCurrentUser(null);
     setCurrentStore(null);
-    navigate('/login');
+    navigate('/login', { replace: true });
     
     toast({
       title: "Logged Out",
