@@ -38,13 +38,7 @@ const Login = () => {
     handleBiometricLogin
   } = useAuth();
 
-  // Redirect if already authenticated
-  if (isAuthenticated && currentUser) {
-    const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
-    return <Navigate to={redirectPath} replace />;
-  }
-
-  // UI State
+  // UI State - All hooks must be declared before any conditional returns
   const [currentView, setCurrentView] = useState<'main' | 'users' | 'register' | 'pin' | 'forgot'>('main');
   const [activeTab, setActiveTab] = useState("email");
   const [selectedUser, setSelectedUser] = useState<DeviceUser | null>(null);
@@ -68,6 +62,12 @@ const Login = () => {
 
   const [otpSent, setOtpSent] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
+
+  // Redirect if already authenticated - moved after all hooks
+  if (isAuthenticated && currentUser) {
+    const redirectPath = currentUser.role === 'admin' ? '/admin' : '/';
+    return <Navigate to={redirectPath} replace />;
+  }
 
   // Event Handlers
   const handleEmailLogin = async (e: React.FormEvent) => {
