@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { MockModeIndicator } from "./MockModeIndicator";
 
 interface DefaultHeaderProps {
   title?: string;
@@ -74,8 +75,8 @@ export const DefaultHeader = ({
               {showUserInfo ? (
                 <div className="flex items-center gap-2 text-xs text-blue-200">
                   <span>{getCurrentDate()}</span>
-                  <span className="hidden sm:inline">•</span>
-                  <span className="hidden sm:inline">4ztain Inne</span>
+                  {/* <span className="hidden sm:inline">•</span>
+                  <span className="hidden sm:inline">4ztain Inne</span> */}
                   <span className="hidden sm:inline">•</span>
                   <span>John Doe</span>
                 </div>
@@ -95,6 +96,8 @@ export const DefaultHeader = ({
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
               {isOnline ? "Online" : "Offline"}
             </Badge>
+
+            <MockModeIndicator />
 
             {/* Custom Actions */}
             {customActions}
