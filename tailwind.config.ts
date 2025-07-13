@@ -11,7 +11,7 @@ export default {
         'xs': '475px',
       },
       colors: {
-        borderColor: 'hsl(var(--border))',
+        border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
