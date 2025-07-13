@@ -1,0 +1,96 @@
+/* Animation Utilities */
+@layer utilities {
+  /* Custom Animations */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Animation Delays */
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .animate-delay-1000 {
+    animation-delay: 1000ms;
+  }
+
+  /* Hover Effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  /* Transition Utilities */
+  .transition-modern {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .transition-fast {
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .transition-slow {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  /* Transform Utilities */
+  .transform-gpu {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Animation States */
+  .animate-in {
+    animation-fill-mode: forwards;
+  }
+
+  .animate-out {
+    animation-fill-mode: forwards;
+    animation-direction: reverse;
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-pulse-soft,
+    .animate-slide-up,
+    .animate-shimmer,
+    .hover-lift,
+    .hover-scale,
+    .interactive-element,
+    .interactive-card {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}

@@ -1,0 +1,118 @@
+/* Billing Components */
+@layer components {
+  .billing-container {
+    @apply p-3 space-y-4;
+  }
+
+  .billing-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[calc(100vh-120px)];
+  }
+
+  .billing-left-panel {
+    @apply lg:col-span-2 space-y-4;
+  }
+
+  .billing-right-panel {
+    @apply space-y-4;
+  }
+
+  .billing-summary-card {
+    @apply glass border-white/20;
+  }
+
+  .billing-summary-header {
+    @apply text-white text-base flex items-center gap-2;
+  }
+
+  .billing-summary-content {
+    @apply space-y-3 p-4;
+  }
+
+  .billing-summary-row {
+    @apply flex justify-between text-sm;
+  }
+
+  .billing-summary-label {
+    @apply text-blue-200;
+  }
+
+  .billing-summary-value {
+    @apply text-white font-medium;
+  }
+
+  .billing-total-row {
+    @apply flex justify-between text-base font-bold;
+  }
+
+  .billing-total-label {
+    @apply text-white;
+  }
+
+  .billing-total-value {
+    @apply text-white;
+  }
+
+  .cart-items-card {
+    @apply glass border-white/20 flex-1;
+  }
+
+  .cart-items-header {
+    @apply flex justify-between items-center;
+  }
+
+  .cart-items-title {
+    @apply text-white flex items-center gap-2;
+  }
+
+  .cart-items-total {
+    @apply text-sm text-blue-200;
+  }
+
+  .cart-empty-state {
+    @apply text-center py-12 text-blue-200;
+  }
+
+  .cart-empty-icon {
+    @apply h-16 w-16 mx-auto mb-4 text-blue-300 opacity-50;
+  }
+
+  .cart-item-mobile {
+    @apply p-3 bg-white/5 rounded-lg border border-white/10;
+  }
+
+  .cart-item-desktop {
+    @apply grid grid-cols-12 gap-2 items-center py-3 px-2 bg-white/5 rounded-lg border border-white/10;
+  }
+
+  .product-search-card {
+    @apply glass border-white/20;
+  }
+
+  .product-search-content {
+    @apply p-4;
+  }
+
+  .product-search-bar {
+    @apply relative flex-1;
+  }
+
+  .product-search-input {
+    @apply pl-10 bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+  }
+
+  .product-search-icon {
+    @apply absolute left-3 top-3 h-4 w-4 text-gray-400;
+  }
+
+  .product-search-results {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center pt-20 p-4;
+  }
+
+  .product-search-results-card {
+    @apply w-full max-w-4xl max-h-[70vh] glass border-white/20;
+  }
+
+  .product-result-item {
+    @apply flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 cursor-pointer transition-all duration-200 border border-white/10 hover:border-white/20;
+  }
+}

@@ -1,0 +1,262 @@
+/* Settings Components */
+@layer components {
+  .settings-container {
+    @apply min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900;
+  }
+
+  .settings-background {
+    @apply fixed inset-0 opacity-10 pointer-events-none;
+  }
+
+  .settings-background-element {
+    @apply absolute w-96 h-96 rounded-full mix-blend-multiply filter blur-xl animate-float;
+  }
+
+  .settings-background-element:nth-child(1) {
+    @apply top-1/4 left-1/4 bg-blue-400;
+  }
+
+  .settings-background-element:nth-child(2) {
+    @apply top-3/4 right-1/4 bg-purple-400;
+    animation-delay: 1000ms;
+  }
+
+  .settings-main {
+    @apply max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10;
+  }
+
+  .settings-tabs {
+    @apply space-y-4 sm:space-y-6 lg:space-y-8;
+  }
+
+  .settings-tabs-container {
+    @apply glass p-2 rounded-2xl border border-white/20 animate-slide-up;
+  }
+
+  .settings-tabs-list {
+    @apply grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 sm:gap-2 overflow-x-auto;
+  }
+
+  .settings-tab-trigger {
+    @apply flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 
+    data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/30 data-[state=active]:to-purple-500/30 
+    data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-lg
+    text-blue-100 hover:bg-white/10 hover:text-white transition-all duration-200 min-h-[52px] sm:min-h-[48px];
+  }
+
+  .settings-tab-icon {
+    @apply h-4 w-4;
+  }
+
+  .settings-tab-text {
+    @apply text-[10px] sm:text-xs;
+  }
+
+  .settings-tab-content {
+    @apply animate-slide-up delay-200;
+  }
+
+  .settings-card {
+    @apply glass border-white/20;
+  }
+
+  .settings-card-header {
+    @apply pb-3 sm:pb-4;
+  }
+
+  .settings-card-title {
+    @apply flex items-center gap-2 text-white text-lg sm:text-xl;
+  }
+
+  .settings-card-content {
+    @apply space-y-4 sm:space-y-6 p-4 sm:p-6;
+  }
+
+  .settings-form-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+  }
+
+  .settings-form-field {
+    @apply space-y-2;
+  }
+
+  .settings-form-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-form-input {
+    @apply text-sm sm:text-base bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+  }
+
+  .settings-form-textarea {
+    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200 min-h-[80px] text-sm sm:text-base;
+  }
+
+  .settings-form-switch-container {
+    @apply flex items-center space-x-3 py-2;
+  }
+
+  .settings-form-switch-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-form-radio-group {
+    @apply space-y-3;
+  }
+
+  .settings-form-radio-item {
+    @apply flex items-center space-x-3 py-1;
+  }
+
+  .settings-form-radio-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-form-button {
+    @apply w-full sm:w-auto;
+  }
+
+  .settings-form-button-large {
+    @apply w-full sm:w-auto;
+  }
+
+  .settings-printer-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .settings-printer-card {
+    @apply glass border-white/20;
+  }
+
+  .settings-printer-header {
+    @apply text-white text-lg sm:text-xl;
+  }
+
+  .settings-printer-content {
+    @apply space-y-4 p-4 sm:p-6;
+  }
+
+  .settings-printer-input-group {
+    @apply flex flex-col sm:flex-row gap-2;
+  }
+
+  .settings-printer-input {
+    @apply flex-1;
+  }
+
+  .settings-printer-button {
+    @apply w-full sm:w-auto;
+  }
+
+  .settings-billing-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .settings-billing-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+
+  .settings-billing-switch-group {
+    @apply space-y-4;
+  }
+
+  .settings-billing-switch-item {
+    @apply flex items-center justify-between py-2;
+  }
+
+  .settings-billing-switch-content {
+    @apply flex-1 pr-4;
+  }
+
+  .settings-billing-switch-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-billing-switch-description {
+    @apply text-xs sm:text-sm text-blue-200 mt-1;
+  }
+
+  .settings-inventory-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .settings-inventory-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+
+  .settings-inventory-switch-item {
+    @apply flex items-center justify-between py-2;
+  }
+
+  .settings-inventory-switch-content {
+    @apply flex-1 pr-4;
+  }
+
+  .settings-inventory-switch-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-inventory-switch-description {
+    @apply text-xs sm:text-sm text-blue-200 mt-1;
+  }
+
+  .settings-notifications-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .settings-notifications-switch-group {
+    @apply space-y-4;
+  }
+
+  .settings-notifications-switch-item {
+    @apply flex items-center justify-between py-2;
+  }
+
+  .settings-notifications-switch-content {
+    @apply flex-1 pr-4;
+  }
+
+  .settings-notifications-switch-label {
+    @apply text-white text-sm sm:text-base;
+  }
+
+  .settings-notifications-switch-description {
+    @apply text-xs sm:text-sm text-blue-200 mt-1;
+  }
+
+  .settings-info-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .settings-info-list {
+    @apply space-y-4;
+  }
+
+  .settings-info-item {
+    @apply flex justify-between items-center py-2;
+  }
+
+  .settings-info-label {
+    @apply font-medium text-white text-sm sm:text-base;
+  }
+
+  .settings-info-value {
+    @apply text-blue-200 text-sm sm:text-base;
+  }
+
+  .settings-info-actions {
+    @apply space-y-3;
+  }
+
+  .settings-info-button {
+    @apply w-full;
+  }
+
+  .settings-info-danger-section {
+    @apply pt-4 border-t border-white/20;
+  }
+
+  .settings-info-danger-button {
+    @apply w-full;
+  }
+}

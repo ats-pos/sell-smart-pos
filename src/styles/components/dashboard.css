@@ -1,0 +1,134 @@
+/* Dashboard Components */
+@layer components {
+  .dashboard-container {
+    @apply space-y-6;
+  }
+
+  .dashboard-stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+  }
+
+  .dashboard-stat-card {
+    @apply text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .dashboard-stat-card-sales {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600;
+  }
+
+  .dashboard-stat-card-transactions {
+    @apply bg-gradient-to-r from-green-500 to-green-600;
+  }
+
+  .dashboard-stat-card-customers {
+    @apply bg-gradient-to-r from-purple-500 to-purple-600;
+  }
+
+  .dashboard-stat-card-orders {
+    @apply bg-gradient-to-r from-orange-500 to-orange-600;
+  }
+
+  .dashboard-stat-header {
+    @apply flex flex-row items-center justify-between space-y-0 pb-2;
+  }
+
+  .dashboard-stat-title {
+    @apply text-sm font-medium;
+  }
+
+  .dashboard-stat-icon {
+    @apply h-4 w-4;
+  }
+
+  .dashboard-stat-value {
+    @apply text-2xl font-bold;
+  }
+
+  .dashboard-stat-change {
+    @apply text-xs;
+  }
+
+  .dashboard-content-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+  }
+
+  .dashboard-alert-card {
+    @apply glass border-white/20;
+  }
+
+  .dashboard-alert-header {
+    @apply flex items-center gap-2 text-white;
+  }
+
+  .dashboard-alert-icon {
+    @apply h-5 w-5 text-amber-500;
+  }
+
+  .dashboard-alert-item {
+    @apply flex items-center justify-between p-3 bg-amber-50/10 rounded-lg border border-amber-500/20;
+  }
+
+  .dashboard-alert-info {
+    @apply font-medium text-sm text-white;
+  }
+
+  .dashboard-alert-min-stock {
+    @apply text-xs text-blue-200;
+  }
+
+  .dashboard-transactions-card {
+    @apply glass border-white/20;
+  }
+
+  .dashboard-transactions-header {
+    @apply flex items-center gap-2 text-white;
+  }
+
+  .dashboard-transactions-icon {
+    @apply h-5 w-5 text-blue-500;
+  }
+
+  .dashboard-transaction-item {
+    @apply flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10;
+  }
+
+  .dashboard-transaction-info {
+    @apply font-medium text-sm text-white;
+  }
+
+  .dashboard-transaction-customer {
+    @apply text-xs text-blue-200;
+  }
+
+  .dashboard-transaction-amount {
+    @apply font-semibold text-green-400;
+  }
+
+  .dashboard-transaction-time {
+    @apply text-xs text-blue-200;
+  }
+
+  .dashboard-quick-actions {
+    @apply glass border-white/20;
+  }
+
+  .dashboard-quick-actions-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4;
+  }
+
+  .dashboard-quick-action-primary {
+    @apply h-20 flex flex-col gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .dashboard-quick-action-secondary {
+    @apply h-20 flex flex-col gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300;
+  }
+
+  .dashboard-quick-action-icon {
+    @apply h-6 w-6;
+  }
+
+  .dashboard-quick-action-text {
+    @apply text-sm font-medium;
+  }
+}

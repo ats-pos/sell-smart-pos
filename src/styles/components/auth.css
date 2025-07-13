@@ -1,0 +1,76 @@
+/* Authentication Components */
+@layer components {
+  .auth-container {
+    @apply min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden;
+  }
+
+  .auth-background {
+    @apply absolute inset-0 opacity-20;
+  }
+
+  .auth-background-element {
+    @apply absolute w-96 h-96 rounded-full mix-blend-multiply filter blur-xl animate-pulse;
+  }
+
+  .auth-background-element:nth-child(1) {
+    @apply top-1/4 left-1/4 bg-blue-400;
+  }
+
+  .auth-background-element:nth-child(2) {
+    @apply top-3/4 right-1/4 bg-purple-400;
+    animation-delay: 1000ms;
+  }
+
+  .auth-background-element:nth-child(3) {
+    @apply top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-400;
+    animation-delay: 500ms;
+  }
+
+  .auth-card {
+    @apply w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10 rounded-2xl;
+  }
+
+  .auth-header {
+    @apply text-center;
+  }
+
+  .auth-logo {
+    @apply bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-2xl shadow-lg w-fit mx-auto mb-4;
+  }
+
+  .auth-title {
+    @apply text-3xl font-bold text-white mb-2 text-center;
+  }
+
+  .auth-subtitle {
+    @apply text-blue-100 mb-4 flex items-center justify-center gap-2;
+  }
+
+  .auth-form {
+    @apply space-y-4;
+  }
+
+  .auth-input {
+    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200;
+  }
+
+  .auth-button {
+    @apply w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200;
+  }
+
+  .auth-link {
+    @apply text-sm text-blue-200 hover:text-white;
+  }
+
+  .demo-credentials {
+    @apply p-4 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10;
+  }
+
+  .demo-credentials-title {
+    @apply text-sm text-blue-200 mb-2 flex items-center gap-2;
+  }
+
+  .demo-credentials-list {
+    @apply text-xs text-blue-300 space-y-1;
+  }
+}
