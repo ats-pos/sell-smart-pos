@@ -1,8 +1,7 @@
 @import "tailwindcss";
-@config "../tailwind.config.ts";
 
 /* CSS Custom Properties */
-@layer base {
+@layer theme {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -67,11 +66,12 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -80,16 +80,221 @@
   }
 }
 
-/* Import component styles */
-@import "./styles/components/auth.css";
-@import "./styles/components/billing.css";
-@import "./styles/components/common.css";
-@import "./styles/components/dashboard.css";
-@import "./styles/components/inventory.css";
-@import "./styles/components/reports.css";
-@import "./styles/components/settings.css";
-@import "./styles/components/ui.css";
-@import "./styles/utilities/animations.css";
-@import "./styles/utilities/glassmorphism.css";
-@import "./styles/utilities/responsive.css";
-@import "./styles/utilities/scrollbar.css";
+/* Utility Classes */
+@layer utilities {
+  /* Glassmorphism Effects */
+  .glass {
+    backdrop-filter: blur(16px);
+    background-color: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .glass-strong {
+    backdrop-filter: blur(24px);
+    background-color: rgb(255 255 255 / 0.15);
+    border: 1px solid rgb(255 255 255 / 0.3);
+  }
+
+  .glass-subtle {
+    backdrop-filter: blur(8px);
+    background-color: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(to right, rgb(96 165 250), rgb(168 85 247));
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Hover Effects */
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+
+  /* Touch Manipulation */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Scrollbar Utilities */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgb(255 255 255 / 0.1);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 0.5);
+  }
+
+  /* Animation Delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+
+  /* Safe Area */
+  .safe-area {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  /* Mobile Optimizations */
+  @media (max-width: 640px) {
+    .mobile-container {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .mobile-card {
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+
+    .mobile-text {
+      font-size: 0.875rem;
+      line-height: 1.625;
+    }
+
+    .mobile-action-button {
+      width: 100%;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+
+    /* Enhanced touch targets for mobile */
+    button, [role="button"], input, select, textarea {
+      touch-action: manipulation;
+      min-height: 44px;
+    }
+
+    /* Prevent zoom on iOS */
+    input[type="number"] {
+      font-size: 16px !important;
+    }
+
+    /* Mobile radio and checkbox sizing */
+    input[type="radio"], input[type="checkbox"] {
+      min-width: 20px;
+      min-height: 20px;
+    }
+
+    /* Mobile switch optimization */
+    [role="switch"] {
+      min-width: 48px;
+      min-height: 28px;
+    }
+  }
+
+  /* Print Styles */
+  @media print {
+    .print\:hidden {
+      display: none !important;
+    }
+
+    .print\:block {
+      display: block !important;
+    }
+
+    .print\:text-black {
+      color: #000 !important;
+    }
+
+    .print\:bg-white {
+      background-color: #fff !important;
+    }
+  }
+
+  /* High Contrast Mode Support */
+  @media (prefers-contrast: high) {
+    .glass,
+    .glass-strong,
+    .glass-subtle {
+      background-color: rgb(0 0 0 / 0.8);
+      border: 1px solid rgb(255 255 255 / 0.5);
+    }
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-pulse-soft,
+    .animate-slide-up,
+    .animate-shimmer {
+      animation: none !important;
+    }
+  }
+}
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(255 255 255 / 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.3);
+  border-radius: 4px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
