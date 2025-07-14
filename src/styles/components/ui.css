@@ -82,6 +82,11 @@
     @apply min-h-[44px] min-w-[44px] touch-manipulation;
   }
 
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
+  }
+
   /* Responsive Typography */
   .responsive-heading {
     @apply text-2xl sm:text-3xl lg:text-4xl font-bold text-white;
