@@ -30,7 +30,7 @@
   }
 
   .settings-tabs-container {
-    @apply glass p-2 rounded-2xl border border-white/20 animate-slide-up;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 p-2 rounded-2xl;
   }
 
   .settings-tabs-list {
@@ -53,11 +53,11 @@
   }
 
   .settings-tab-content {
-    @apply animate-slide-up delay-200;
+    @apply opacity-0 animate-in slide-in-from-bottom-4 duration-500;
   }
 
   .settings-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .settings-card-header {
@@ -85,11 +85,11 @@
   }
 
   .settings-form-input {
-    @apply text-sm sm:text-base bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+    @apply text-sm sm:text-base bg-white/10 border border-white/20 text-white placeholder:text-blue-200;
   }
 
   .settings-form-textarea {
-    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200 min-h-[80px] text-sm sm:text-base;
+    @apply bg-white/10 border border-white/20 text-white placeholder:text-blue-200 min-h-[80px] text-sm sm:text-base;
   }
 
   .settings-form-switch-container {
@@ -125,7 +125,7 @@
   }
 
   .settings-printer-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .settings-printer-header {

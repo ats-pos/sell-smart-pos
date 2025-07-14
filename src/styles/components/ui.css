@@ -20,7 +20,7 @@
 
   /* Card Variants */
   .modern-card {
-    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl p-6 hover-lift shadow-lg;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl p-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
   }
 
   .gradient-card {
@@ -97,18 +97,18 @@
 
   /* Status Badges */
   .status-badge-online {
-    @apply bg-green-500/20 text-green-300 border-green-500/30;
+    @apply bg-green-500/20 text-green-300 border border-green-500/30;
   }
 
   .status-badge-offline {
-    @apply bg-red-500/20 text-red-300 border-red-500/30;
+    @apply bg-red-500/20 text-red-300 border border-red-500/30;
   }
 
   .status-badge-mock {
-    @apply bg-orange-500/20 text-orange-300 border-orange-500/30;
+    @apply bg-orange-500/20 text-orange-300 border border-orange-500/30;
   }
 
   .status-badge-live {
-    @apply bg-green-500/20 text-green-300 border-green-500/30;
+    @apply bg-green-500/20 text-green-300 border border-green-500/30;
   }
 }

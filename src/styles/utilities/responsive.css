@@ -115,10 +115,6 @@
 
   /* Desktop enhancements */
   @media (min-width: 1025px) {
-    .desktop-hover {
-      @apply hover:scale-105 transition-transform duration-200;
-    }
-
     .desktop-grid {
       @apply grid-cols-3 gap-8;
     }

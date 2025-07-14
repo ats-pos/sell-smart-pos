@@ -53,7 +53,7 @@
   }
 
   .dashboard-alert-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .dashboard-alert-header {
@@ -77,7 +77,7 @@
   }
 
   .dashboard-transactions-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .dashboard-transactions-header {
@@ -109,7 +109,7 @@
   }
 
   .dashboard-quick-actions {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .dashboard-quick-actions-grid {

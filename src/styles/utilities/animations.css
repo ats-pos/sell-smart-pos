@@ -39,18 +39,6 @@
   }
 
   /* Hover Effects */
-  .hover-lift {
-    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
-  }
-
-  .hover-glow {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25;
-  }
-
-  .hover-scale {
-    @apply transition-transform duration-200 hover:scale-105;
-  }
-
   /* Transition Utilities */
   .transition-modern {
     @apply transition-all duration-300 ease-out;
@@ -81,16 +69,8 @@
 
   /* Reduced Motion Support */
   @media (prefers-reduced-motion: reduce) {
-    .animate-float,
-    .animate-pulse-soft,
-    .animate-slide-up,
-    .animate-shimmer,
-    .hover-lift,
-    .hover-scale,
-    .interactive-element,
-    .interactive-card {
+    .animate-float {
       animation: none !important;
-      transition: none !important;
     }
   }
 }

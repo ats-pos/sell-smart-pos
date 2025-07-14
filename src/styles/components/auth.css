@@ -27,7 +27,7 @@
   }
 
   .auth-card {
-    @apply w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10 rounded-2xl;
+    @apply w-full max-w-md backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl relative z-10 rounded-2xl;
   }
 
   .auth-header {
@@ -51,7 +51,7 @@
   }
 
   .auth-input {
-    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200;
+    @apply bg-white/10 border border-white/20 text-white placeholder:text-blue-200 focus:bg-white/20 transition-all duration-200;
   }
 
   .auth-button {

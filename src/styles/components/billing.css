@@ -17,7 +17,7 @@
   }
 
   .billing-summary-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .billing-summary-header {
@@ -53,7 +53,7 @@
   }
 
   .cart-items-card {
-    @apply glass border-white/20 flex-1;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 flex-1;
   }
 
   .cart-items-header {
@@ -85,7 +85,7 @@
   }
 
   .product-search-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .product-search-content {
@@ -97,7 +97,7 @@
   }
 
   .product-search-input {
-    @apply pl-10 bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+    @apply pl-10 bg-white/10 border border-white/20 text-white placeholder:text-blue-200;
   }
 
   .product-search-icon {
@@ -109,7 +109,7 @@
   }
 
   .product-search-results-card {
-    @apply w-full max-w-4xl max-h-[70vh] glass border-white/20;
+    @apply w-full max-w-4xl max-h-[70vh] backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .product-result-item {

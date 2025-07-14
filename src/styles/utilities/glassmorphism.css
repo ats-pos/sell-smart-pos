@@ -82,37 +82,9 @@
   }
 
   /* Glass Borders */
-  .glass-border {
-    @apply border border-white/20;
-  }
-
-  .glass-border-strong {
-    @apply border border-white/30;
-  }
-
-  .glass-border-subtle {
-    @apply border border-white/10;
-  }
-
   /* Glass Hover States */
-  .glass-hover {
-    @apply hover:bg-white/15 hover:border-white/30 transition-all duration-300;
-  }
-
-  .glass-hover-strong {
-    @apply hover:bg-white/20 hover:border-white/40 transition-all duration-300;
-  }
-
   /* Glass Focus States */
-  .glass-focus {
-    @apply focus:bg-white/15 focus:border-white/30 focus:ring-2 focus:ring-blue-500/50 transition-all duration-200;
-  }
-
   /* Glass Active States */
-  .glass-active {
-    @apply active:bg-white/20 active:border-white/40 transition-all duration-100;
-  }
-
   /* High Contrast Mode Support */
   @media (prefers-contrast: high) {
     .glass,
@@ -121,7 +93,7 @@
     .glass-nav,
     .glass-modal,
     .glass-sidebar {
-      @apply bg-black/80 border-white/50;
+      @apply bg-black/80 border border-white/50;
     }
   }
 }

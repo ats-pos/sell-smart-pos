@@ -9,7 +9,7 @@
   }
 
   .inventory-stat-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .inventory-stat-content {
@@ -45,7 +45,7 @@
   }
 
   .inventory-actions-bar {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .inventory-actions-content {
@@ -69,7 +69,7 @@
   }
 
   .inventory-table-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .inventory-table-header {
@@ -182,7 +182,7 @@
   }
 
   .purchase-form-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .purchase-form-header {
@@ -206,19 +206,19 @@
   }
 
   .purchase-form-input {
-    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+    @apply bg-white/10 border border-white/20 text-white placeholder:text-blue-200;
   }
 
   .purchase-form-select {
-    @apply bg-white/10 border-white/20 text-white;
+    @apply bg-white/10 border border-white/20 text-white;
   }
 
   .purchase-form-textarea {
-    @apply bg-white/10 border-white/20 text-white placeholder:text-blue-200;
+    @apply bg-white/10 border border-white/20 text-white placeholder:text-blue-200;
   }
 
   .purchase-summary-card {
-    @apply glass border-white/20;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .purchase-summary-header {

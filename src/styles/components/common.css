@@ -1,7 +1,7 @@
 /* Common Components */
 @layer components {
   .default-header {
-    @apply glass sticky top-0 z-50 border-b border-white/10;
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 sticky top-0 z-50 border-b border-white/10;
   }
 
   .default-header-container {
@@ -37,7 +37,7 @@
   }
 
   .default-header-mobile-dropdown {
-    @apply sm:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-4 space-y-3 animate-slide-up;
+    @apply sm:hidden border-t border-white/10 bg-black/20 backdrop-blur-sm py-4 space-y-3;
   }
 
   .error-boundary-container {
@@ -45,7 +45,7 @@
   }
 
   .error-boundary-card {
-    @apply w-full max-w-md glass border-white/20;
+    @apply w-full max-w-md backdrop-blur-lg bg-white/10 border border-white/20;
   }
 
   .error-boundary-icon {
@@ -77,7 +77,7 @@
   }
 
   .mock-mode-badge {
-    @apply bg-orange-500/20 text-orange-300 border-orange-500/30 animate-pulse;
+    @apply bg-orange-500/20 text-orange-300 border border-orange-500/30 animate-pulse;
   }
 
   .api-status-badge {
@@ -85,10 +85,10 @@
   }
 
   .api-status-mock {
-    @apply bg-orange-500/20 text-orange-300 border-orange-500/30;
+    @apply bg-orange-500/20 text-orange-300 border border-orange-500/30;
   }
 
   .api-status-live {
-    @apply bg-green-500/20 text-green-300 border-green-500/30;
+    @apply bg-green-500/20 text-green-300 border border-green-500/30;
   }
 }
