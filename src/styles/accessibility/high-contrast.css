@@ -1,0 +1,31 @@
+/* Accessibility Features */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .glass {
+    background-color: rgb(0 0 0 / 0.8);
+    border: 1px solid rgb(255 255 255 / 0.5);
+  }
+  
+  .gradient-text {
+    color: rgb(255 255 255);
+  }
+
+  .glass-button {
+    background-color: rgb(0 0 0 / 0.6);
+    border: 1px solid rgb(255 255 255 / 0.6);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-slide-up,
+  .hover-lift,
+  .interactive-element,
+  .interactive-card {
+    animation: none;
+    transition: none;
+  }
+}

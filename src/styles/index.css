@@ -1,0 +1,26 @@
+/* Tailwind CSS v4 Base Imports */
+@import "tailwindcss";
+
+/* Design System Foundation */
+@import "./base/tokens.css";
+@import "./base/reset.css";
+
+/* Utility Layers */
+@import "./utilities/layout.css";
+@import "./utilities/effects.css";
+@import "./utilities/animations.css";
+@import "./utilities/scrollbar.css";
+
+/* Component Layers */
+@import "./components/cards.css";
+@import "./components/navigation.css";
+@import "./components/forms.css";
+@import "./components/typography.css";
+
+/* Responsive Layers */
+@import "./responsive/mobile.css";
+@import "./responsive/tablet.css";
+@import "./responsive/desktop.css";
+
+/* Accessibility Layers */
+@import "./accessibility/high-contrast.css";

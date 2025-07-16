@@ -1,0 +1,36 @@
+/* Form Components */
+@layer components {
+  /* Modern Forms */
+  .form-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: rgb(255 255 255 / 0.05);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(255 255 255);
+  }
+
+  /* Focus States for Accessibility */
+  .focus-ring {
+    outline: none;
+  }
+
+  .focus-ring:focus {
+    outline: 2px solid rgb(59 130 246 / 0.5);
+    outline-offset: 2px;
+  }
+}

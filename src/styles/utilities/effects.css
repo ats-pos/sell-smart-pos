@@ -1,0 +1,127 @@
+/* Visual Effects & Animations */
+@layer utilities {
+  /* Custom shadow-3xl class */
+  .shadow-3xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Glassmorphism utilities */
+  .glass {
+    backdrop-filter: blur(16px);
+    background-color: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(16px);
+    background-color: rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(0 0 0 / 0.2);
+  }
+
+  .glass-card {
+    backdrop-filter: blur(24px);
+    background-color: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 1rem;
+  }
+
+  .glass-button {
+    backdrop-filter: blur(16px);
+    background-color: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+  }
+
+  .glass-button:hover {
+    background-color: rgb(255 255 255 / 0.2);
+  }
+
+  .glass-nav {
+    backdrop-filter: blur(16px);
+    background-color: rgb(255 255 255 / 0.1);
+    border-bottom: 1px solid rgb(255 255 255 / 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  /* Modern hover effects */
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px);
+  }
+
+  .hover-glow {
+    transition: all 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 10px 25px -3px rgba(59, 130, 246, 0.25);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(to right, rgb(59 130 246), rgb(139 92 246));
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Animated border */
+  .animated-border {
+    position: relative;
+    background: linear-gradient(45deg, transparent, transparent);
+  }
+
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: border-spin 3s linear infinite;
+  }
+
+  @keyframes border-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Interactive Elements */
+  .interactive-element {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .interactive-element:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .interactive-element:active {
+    transform: scale(0.95);
+  }
+
+  .interactive-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .interactive-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: rgb(255 255 255 / 0.3);
+  }
+}

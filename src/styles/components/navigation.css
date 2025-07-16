@@ -1,0 +1,30 @@
+/* Navigation Components */
+@layer components {
+  /* Modern Navigation */
+  .nav-modern {
+    backdrop-filter: blur(16px);
+    background-color: rgb(255 255 255 / 0.1);
+    border-bottom: 1px solid rgb(255 255 255 / 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .nav-item {
+    color: rgb(191 219 254);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .nav-item:hover {
+    color: rgb(255 255 255);
+    background-color: rgb(255 255 255 / 0.1);
+  }
+
+  .nav-item-active {
+    color: rgb(255 255 255);
+    background-color: rgb(255 255 255 / 0.2);
+    border: 1px solid rgb(255 255 255 / 0.3);
+  }
+}

@@ -1,0 +1,88 @@
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  /* Enhanced Touch Targets */
+  button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+    min-height: 44px;
+  }
+
+  .tab-trigger {
+    min-height: 48px;
+  }
+
+  /* Mobile Layout */
+  .mobile-spacing {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .mobile-card {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  .mobile-text {
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .mobile-gap {
+    gap: 0.75rem;
+  }
+
+  /* Improved mobile card spacing */
+  .card-mobile {
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Mobile-specific input styling */
+  input[type="number"] {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile tabs optimization */
+  .mobile-tabs {
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mobile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile radio and checkbox sizing */
+  input[type="radio"], input[type="checkbox"] {
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  /* Mobile switch optimization */
+  [role="switch"] {
+    min-width: 48px;
+    min-height: 28px;
+  }
+
+  /* Hide scrollbars on mobile */
+  .mobile-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
