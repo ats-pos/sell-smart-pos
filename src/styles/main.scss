@@ -1,0 +1,66 @@
+// Main SCSS entry point
+
+// Abstracts - Variables, mixins, functions
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+// Base - Reset, typography, base elements
+@import 'base/reset';
+@import 'base/typography';
+
+// Utilities - Utility classes
+@import 'utilities/layout';
+@import 'utilities/spacing';
+@import 'utilities/sizing';
+@import 'utilities/effects';
+@import 'utilities/animations';
+
+// Components - Component styles
+@import 'components/buttons';
+
+// Responsive styles
+@include mobile-only {
+  // Mobile-specific overrides
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .btn-icon {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@include tablet-up {
+  // Tablet and up styles
+  .container {
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
+  }
+}
+
+@include desktop-up {
+  // Desktop and up styles
+  .btn:hover {
+    transform: scale(1.05);
+  }
+}
+
+// Focus styles for accessibility
+*:focus-visible {
+  outline: 2px solid hsl(var(--color-ring));
+  outline-offset: 2px;
+}
+
+// Reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

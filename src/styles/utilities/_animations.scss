@@ -1,0 +1,235 @@
+// Transition utilities
+.transition-none { transition-property: none; }
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+// Duration utilities
+.duration-75 { transition-duration: 75ms; }
+.duration-100 { transition-duration: 100ms; }
+.duration-150 { transition-duration: 150ms; }
+.duration-200 { transition-duration: 200ms; }
+.duration-300 { transition-duration: 300ms; }
+.duration-500 { transition-duration: 500ms; }
+.duration-700 { transition-duration: 700ms; }
+.duration-1000 { transition-duration: 1000ms; }
+
+// Ease utilities
+.ease-linear { transition-timing-function: linear; }
+.ease-in { transition-timing-function: cubic-bezier(0.4, 0, 1, 1); }
+.ease-out { transition-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+.ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+
+// Animation utilities
+.animate-none { animation: none; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-ping { animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.animate-bounce { animation: bounce 1s infinite; }
+
+// Custom animations
+.animate-float { @include animate-float; }
+.animate-pulse-soft { @include animate-pulse-soft; }
+.animate-slide-up { @include animate-slide-up; }
+.animate-fade-in { @include animate-fade-in; }
+.animate-scale-in { @include animate-scale-in; }
+
+// Hover effects
+.hover-scale {
+  transition: transform $duration-normal ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.hover-lift {
+  transition: all $duration-normal ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-xl;
+  }
+}
+
+.hover-glow {
+  transition: all $duration-normal ease;
+  
+  &:hover {
+    box-shadow: 0 0 20px rgba(147, 197, 253, 0.4);
+  }
+}
+
+// Active states
+.active-scale {
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Animation keyframes
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: .5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8,0,1,1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0,0,0.2,1);
+  }
+}
+
+// Loading animations
+.loading-spinner {
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  animation: spinner 1s linear infinite;
+}
+
+.loading-dots {
+  @keyframes dots {
+    0%, 80%, 100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: dots 1.4s infinite ease-in-out both;
+  }
+  
+  &::before {
+    left: -12px;
+    animation-delay: -0.32s;
+  }
+  
+  &::after {
+    left: 12px;
+    animation-delay: -0.16s;
+  }
+}
+
+// Entrance animations
+.entrance-fade {
+  opacity: 0;
+  animation: fade-in $duration-slow ease-out forwards;
+}
+
+.entrance-slide {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slide-up $duration-slow ease-out forwards;
+}
+
+.entrance-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  animation: scale-in $duration-normal ease-out forwards;
+}
+
+// Stagger animations for lists
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-in $duration-slow ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 600ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 700ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 800ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 900ms; }
+
+// Parallax utilities
+.parallax-slow {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+// Performance optimizations
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .animate-none { animation: none !important; }
+  .transition-none { transition-property: none !important; }
+  
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-slide-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .hover-scale,
+  .hover-lift {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

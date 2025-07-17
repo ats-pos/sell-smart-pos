@@ -1,0 +1,274 @@
+// Button component styles
+.btn {
+  @include button-base;
+  
+  // Size variants
+  &.btn-sm {
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    padding: 0 $spacing-md;
+    min-height: 40px;
+  }
+  
+  &.btn-default {
+    height: 2.5rem;
+    padding: $spacing-sm $spacing-lg;
+    min-height: 44px;
+  }
+  
+  &.btn-lg {
+    height: 2.75rem;
+    border-radius: var(--radius);
+    padding: 0 $spacing-2xl;
+    min-height: 48px;
+  }
+  
+  &.btn-icon {
+    height: 2.5rem;
+    width: 2.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+  
+  // Variant styles
+  &.btn-default {
+    background: $gradient-primary;
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, hsl(217, 92%, 70%), hsl(269, 91%, 67%));
+    }
+  }
+  
+  &.btn-destructive {
+    background: $gradient-secondary;
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, hsl(0, 63%, 25%), hsl(320, 91%, 67%));
+    }
+  }
+  
+  &.btn-outline {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+  
+  &.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  &.btn-ghost {
+    background: transparent;
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+  
+  &.btn-link {
+    background: transparent;
+    color: rgb(147, 197, 253);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    
+    &:hover {
+      text-decoration: underline;
+      color: white;
+    }
+  }
+  
+  // States
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid hsl(var(--color-ring));
+    outline-offset: 2px;
+  }
+  
+  // Loading state
+  &.btn-loading {
+    color: transparent;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: -8px 0 0 -8px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+// Button group styles
+.btn-group {
+  display: inline-flex;
+  border-radius: var(--radius);
+  overflow: hidden;
+  
+  .btn {
+    border-radius: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:first-child {
+      border-top-left-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
+    }
+    
+    &:last-child {
+      border-top-right-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      border-right: none;
+    }
+    
+    &:hover {
+      z-index: 1;
+    }
+  }
+}
+
+// Floating action button
+.btn-fab {
+  @include button-base;
+  position: fixed;
+  bottom: $spacing-xl;
+  right: $spacing-xl;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: $gradient-primary;
+  color: white;
+  box-shadow: $shadow-xl;
+  z-index: $z-index-fixed;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  }
+  
+  @include mobile-only {
+    bottom: $spacing-lg;
+    right: $spacing-lg;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// Toggle button
+.btn-toggle {
+  @include button-base;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  
+  &.btn-toggle-active {
+    background: $gradient-primary;
+    border-color: hsl(var(--color-primary));
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  &.btn-toggle-active:hover {
+    background: linear-gradient(135deg, hsl(217, 92%, 70%), hsl(269, 91%, 67%));
+  }
+}
+
+// Icon button variants
+.btn-icon-only {
+  @include button-base;
+  @include flex-center;
+  padding: 0;
+  
+  &.btn-icon-sm {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  &.btn-icon-md {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  &.btn-icon-lg {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+// Split button
+.btn-split {
+  display: inline-flex;
+  border-radius: var(--radius);
+  overflow: hidden;
+  
+  .btn-split-main {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .btn-split-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    width: 40px;
+    padding: 0;
+    @include flex-center;
+  }
+}
+
+// Progress button
+.btn-progress {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width $duration-normal ease;
+    width: var(--progress, 0%);
+  }
+  
+  .btn-content {
+    position: relative;
+    z-index: 1;
+  }
+}
