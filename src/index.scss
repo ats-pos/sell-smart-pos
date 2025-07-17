@@ -1,0 +1,66 @@
+// Base styles and CSS reset
+@import './styles/base/reset';
+@import './styles/base/variables';
+@import './styles/base/typography';
+
+// Layout styles
+@import './styles/layout/grid';
+@import './styles/layout/containers';
+
+// Component styles
+@import './styles/components/auth';
+@import './styles/components/billing';
+@import './styles/components/common';
+@import './styles/components/dashboard';
+@import './styles/components/inventory';
+@import './styles/components/reports';
+@import './styles/components/settings';
+@import './styles/components/ui';
+
+// Utility styles
+@import './styles/utilities/animations';
+@import './styles/utilities/glassmorphism';
+@import './styles/utilities/responsive';
+@import './styles/utilities/scrollbar';
+@import './styles/utilities/helpers';
+
+// Global styles
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+// Print styles
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-block {
+    display: block !important;
+  }
+  
+  .print-text-black {
+    color: #000 !important;
+  }
+  
+  .print-bg-white {
+    background-color: #fff !important;
+  }
+}

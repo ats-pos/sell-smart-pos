@@ -1,0 +1,441 @@
+// Reports Components
+.reports-container {
+  .reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    
+    .reports-title {
+      font-size: var(--font-2xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+    }
+    
+    .reports-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      
+      .action-btn {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-primary);
+        color: var(--text-primary);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: var(--transition-normal);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+  }
+  
+  .reports-tabs {
+    margin-bottom: var(--spacing-lg);
+    
+    .tabs-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: 100%;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xs);
+      
+      .tab-trigger {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+        color: var(--color-blue-200);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition-normal);
+        font-weight: var(--font-medium);
+        
+        &:hover {
+          color: var(--text-primary);
+          background: rgba(255, 255, 255, 0.1);
+        }
+        
+        &.active {
+          background: rgba(255, 255, 255, 0.2);
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+}
+
+.sales-report {
+  .sales-overview {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .overview-card {
+      .card-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: var(--spacing-sm);
+        
+        .card-title {
+          font-size: var(--font-sm);
+          font-weight: var(--font-medium);
+          color: var(--text-primary);
+        }
+        
+        .card-icon {
+          width: 1rem;
+          height: 1rem;
+          color: var(--text-tertiary);
+        }
+      }
+      
+      .card-content {
+        .card-value {
+          font-size: var(--font-2xl);
+          font-weight: var(--font-bold);
+          color: var(--text-primary);
+          margin-bottom: var(--spacing-xs);
+        }
+        
+        .card-description {
+          font-size: var(--font-xs);
+          color: var(--text-tertiary);
+        }
+      }
+    }
+  }
+  
+  .monthly-trend {
+    .trend-header {
+      color: var(--text-primary);
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .trend-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .trend-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-md);
+        background: var(--color-gray-50);
+        border-radius: var(--radius-lg);
+        
+        .trend-info {
+          .trend-month {
+            font-weight: var(--font-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+          }
+          
+          .trend-transactions {
+            font-size: var(--font-sm);
+            color: var(--text-tertiary);
+          }
+        }
+        
+        .trend-details {
+          text-align: right;
+          
+          .trend-sales {
+            font-size: var(--font-lg);
+            font-weight: var(--font-bold);
+            color: var(--color-success);
+            margin-bottom: var(--spacing-xs);
+          }
+          
+          .trend-change {
+            font-size: var(--font-xs);
+            padding: 0.125rem var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+          }
+        }
+      }
+    }
+  }
+}
+
+.products-report {
+  .top-products {
+    .products-header {
+      color: var(--text-primary);
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .products-loading {
+      text-align: center;
+      padding: var(--spacing-xl) 0;
+      color: var(--color-blue-200);
+    }
+    
+    .products-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .product-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-md);
+        border: 1px solid var(--border-secondary);
+        border-radius: var(--radius-lg);
+        
+        .product-info {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          
+          .product-rank {
+            background: var(--color-blue-100);
+            color: var(--color-blue-800);
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-sm);
+            font-weight: var(--font-bold);
+          }
+          
+          .product-details {
+            .product-name {
+              font-weight: var(--font-medium);
+              color: var(--text-primary);
+              margin-bottom: var(--spacing-xs);
+            }
+            
+            .product-sold {
+              font-size: var(--font-sm);
+              color: var(--text-tertiary);
+            }
+          }
+        }
+        
+        .product-revenue {
+          text-align: right;
+          
+          .revenue-amount {
+            font-weight: var(--font-bold);
+            color: var(--color-success);
+            margin-bottom: var(--spacing-xs);
+          }
+          
+          .revenue-label {
+            font-size: var(--font-sm);
+            color: var(--text-tertiary);
+          }
+        }
+      }
+    }
+  }
+}
+
+.gst-report {
+  .gst-summary {
+    .summary-header {
+      color: var(--text-primary);
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .summary-loading {
+      text-align: center;
+      padding: var(--spacing-xl) 0;
+      color: var(--color-blue-200);
+    }
+    
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .summary-card {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+        
+        &.total-sales {
+          background: var(--color-blue-50);
+        }
+        
+        &.cgst {
+          background: var(--color-success-light);
+        }
+        
+        &.sgst {
+          background: var(--color-warning-light);
+        }
+        
+        &.total-gst {
+          background: var(--color-purple-50);
+        }
+        
+        .card-label {
+          font-size: var(--font-sm);
+          color: var(--text-tertiary);
+          margin-bottom: var(--spacing-xs);
+        }
+        
+        .card-value {
+          font-size: var(--font-xl);
+          font-weight: var(--font-bold);
+          color: var(--text-primary);
+        }
+      }
+    }
+    
+    .download-action {
+      padding-top: var(--spacing-md);
+      
+      .download-btn {
+        width: 100%;
+        background: linear-gradient(to right, var(--color-blue-500), var(--color-purple-500));
+        color: var(--text-primary);
+        border: none;
+        padding: 0.75rem var(--spacing-md);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: var(--transition-normal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        
+        &:hover {
+          background: linear-gradient(to right, var(--color-blue-600), var(--color-purple-600));
+        }
+      }
+    }
+  }
+}
+
+.trends-report {
+  .trends-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .performance-metrics {
+    .metrics-header {
+      color: var(--text-primary);
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .metrics-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .metric-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: var(--color-gray-50);
+        border-radius: var(--radius-md);
+        
+        .metric-label {
+          color: var(--text-primary);
+        }
+        
+        .metric-value {
+          font-weight: var(--font-bold);
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+  
+  .quick-stats {
+    .stats-header {
+      color: var(--text-primary);
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: var(--radius-md);
+        
+        &.category {
+          background: var(--color-success-light);
+        }
+        
+        &.customers {
+          background: var(--color-blue-50);
+        }
+        
+        &.busiest {
+          background: var(--color-warning-light);
+        }
+        
+        .stat-icon {
+          width: 1.5rem;
+          height: 1.5rem;
+          
+          &.green { color: var(--color-success); }
+          &.blue { color: var(--color-blue-600); }
+          &.yellow { color: var(--color-warning); }
+        }
+        
+        .stat-content {
+          .stat-title {
+            font-weight: var(--font-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+          }
+          
+          .stat-description {
+            font-size: var(--font-sm);
+            color: var(--text-tertiary);
+          }
+        }
+      }
+    }
+  }
+}
