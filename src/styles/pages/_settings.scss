@@ -1,0 +1,7 @@
+// Settings Page Styles
+@use '../abstracts/variables' as *;
+
+.settings-page {
+  min-height: 100vh;
+  background: $gradient-background;
+}

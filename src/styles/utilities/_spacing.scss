@@ -1,6 +1,5 @@
-
 // Spacing Utilities
-@use '../abstracts/variables';
+@use '../abstracts/variables' as *;
 
 // Base spacing scale
 $spacing-xs: 0.25rem;   // 4px
@@ -13,6 +12,13 @@ $spacing-3xl: 3rem;     // 48px
 
 // Margin utilities
 .m-0 { margin: 0; }
+.m-1 { margin: $spacing-1; }
+.m-2 { margin: $spacing-2; }
+.m-3 { margin: $spacing-3; }
+.m-4 { margin: $spacing-4; }
+.m-5 { margin: $spacing-5; }
+.m-6 { margin: $spacing-6; }
+.m-8 { margin: $spacing-8; }
 .m-auto { margin: auto; }
 .m-xs { margin: $spacing-xs; }
 .m-sm { margin: $spacing-sm; }
@@ -73,6 +79,13 @@ $spacing-3xl: 3rem;     // 48px
 
 // Padding utilities
 .p-0 { padding: 0; }
+.p-1 { padding: $spacing-1; }
+.p-2 { padding: $spacing-2; }
+.p-3 { padding: $spacing-3; }
+.p-4 { padding: $spacing-4; }
+.p-5 { padding: $spacing-5; }
+.p-6 { padding: $spacing-6; }
+.p-8 { padding: $spacing-8; }
 .p-xs { padding: $spacing-xs; }
 .p-sm { padding: $spacing-sm; }
 .p-md { padding: $spacing-md; }

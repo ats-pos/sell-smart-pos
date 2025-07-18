@@ -14,7 +14,7 @@ import BillingModule from "@/components/BillingModule";
 import InventoryModule from "@/components/InventoryModule";
 import ReportsModule from "@/components/ReportsModule";
 import { DefaultHeader } from "@/components/common/DefaultHeader";
-import './Index.scss';
+// SCSS styles now handled by main.scss architecture
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");

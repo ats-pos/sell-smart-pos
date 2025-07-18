@@ -1,0 +1,8 @@
+// Animation Effects
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.animate-fade-in { @include fade-in; }
+.animate-slide-up { @include slide-up; }
+.animate-float { @include float; }
+.hover-lift { @include hover-lift; }

@@ -440,8 +440,7 @@
 
 @mixin reduced-motion {
   @media (prefers-reduced-motion: reduce) {
-    animation: none !important;
-    transition: none !important;
+    @content;
   }
 }
 

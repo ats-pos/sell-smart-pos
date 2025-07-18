@@ -1,0 +1,7 @@
+// Billing Page Styles
+@use '../abstracts/variables' as *;
+
+.billing-page {
+  min-height: 100vh;
+  background: $gradient-background;
+}

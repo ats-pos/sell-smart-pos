@@ -1,0 +1,10 @@
+// ==========================================
+// Form Components
+// ==========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.input {
+  @include input-base;
+}

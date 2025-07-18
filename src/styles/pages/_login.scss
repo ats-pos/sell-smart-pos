@@ -1,0 +1,7 @@
+// Login Page Styles
+@use '../abstracts/variables' as *;
+
+.login-page {
+  min-height: 100vh;
+  background: $gradient-background;
+}

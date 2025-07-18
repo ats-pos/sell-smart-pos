@@ -1,0 +1,46 @@
+// ==========================================
+// SCSS Functions
+// ==========================================
+
+// Convert px to rem
+@function rem($pixel-value, $base-font-size: 16px) {
+  @return calc($pixel-value / $base-font-size) * 1rem;
+}
+
+// Convert px to em
+@function em($pixel-value, $base-font-size: 16px) {
+  @return calc($pixel-value / $base-font-size) * 1em;
+}
+
+// Strip units from values
+@function strip-units($number) {
+  @return calc($number / ($number * 0 + 1));
+}
+
+// Calculate fluid typography
+@function fluid-size($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
+  $slope: calc(($max-size - $min-size) / ($max-width - $min-width));
+  $intersection: calc(-$min-width * $slope + $min-size);
+  @return clamp(#{$min-size}, #{$intersection} + #{$slope * 100vw}, #{$max-size});
+}
+
+// Color manipulation
+@function alpha($color, $alpha) {
+  @return rgba($color, $alpha);
+}
+
+// Z-index management
+@function z($layer) {
+  $z-layers: (
+    'dropdown': 1000,
+    'sticky': 1020,
+    'fixed': 1030,
+    'modal-backdrop': 1040,
+    'modal': 1050,
+    'popover': 1060,
+    'tooltip': 1070,
+    'toast': 1080
+  );
+  
+  @return map-get($z-layers, $layer);
+}

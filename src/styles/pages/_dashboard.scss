@@ -1,0 +1,7 @@
+// Dashboard Page Styles
+@use '../abstracts/variables' as *;
+
+.dashboard {
+  min-height: 100vh;
+  background: $gradient-background;
+}
