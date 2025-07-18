@@ -10,9 +10,12 @@ import {
   Package,
   Receipt,
   BarChart3,
-  UserCheck
+  UserCheck,
+  Plus,
+  Eye,
+  FileText
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery } from "@/hooks/useGraphQL";
 import { 
   GET_DASHBOARD_STATS, 
@@ -22,6 +25,8 @@ import {
 import { DashboardStats, Product, Sale } from "@/lib/graphql/types";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const { data: dashboardStats, loading: statsLoading, error: statsError } = useGraphQLQuery<{
     dashboardStats: DashboardStats;
   }>(GET_DASHBOARD_STATS);
@@ -56,6 +61,36 @@ const Dashboard = () => {
     { id: "3", billNumber: "TXN003", total: 2340, customerName: "Mike Johnson", createdAt: "32 min ago" }
   ];
 
+  // Quick action handlers
+  const handleNewSale = () => {
+    navigate('/');
+  };
+
+  const handleAddProduct = () => {
+    // This would typically open a product creation modal or navigate to inventory
+    console.log("Add product clicked");
+  };
+
+  const handleAddCustomer = () => {
+    // This would typically open a customer creation modal
+    console.log("Add customer clicked");
+  };
+
+  const handleViewInventory = () => {
+    // Switch to inventory tab - this would be handled by parent component
+    console.log("View inventory clicked");
+  };
+
+  const handleViewTransactions = () => {
+    // Switch to reports tab - this would be handled by parent component
+    console.log("View transactions clicked");
+  };
+
+  const handleViewReports = () => {
+    // Switch to reports tab - this would be handled by parent component
+    console.log("View reports clicked");
+  };
+
   if (statsError) {
     console.warn("Dashboard stats error:", statsError.message);
   }
@@ -64,7 +99,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
             <DollarSign className="h-4 w-4" />
@@ -77,7 +112,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Transactions</CardTitle>
             <Receipt className="h-4 w-4" />
@@ -90,7 +125,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Customers</CardTitle>
             <Users className="h-4 w-4" />
@@ -103,7 +138,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg Order</CardTitle>
             <TrendingUp className="h-4 w-4" />
@@ -119,28 +154,32 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Low Stock Alert */}
-        <Card>
+        <Card className="glass border-white/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-white">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
               Low Stock Alert
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {lowStockLoading ? (
-              <div className="text-center py-4">Loading...</div>
+              <div className="text-center py-4 text-blue-200">Loading...</div>
             ) : (
               lowStockProducts.map((item, index) => (
-                <div key={item.id || index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                <div key={item.id || index} className="flex items-center justify-between p-3 bg-amber-50/10 rounded-lg border border-amber-500/20">
                   <div>
-                    <p className="font-medium text-sm">{item.name}</p>
-                    <p className="text-xs text-gray-500">Min stock: {item.minStock}</p>
+                    <p className="font-medium text-sm text-white">{item.name}</p>
+                    <p className="text-xs text-blue-200">Min stock: {item.minStock}</p>
                   </div>
                   <Badge variant="destructive">{item.stock} left</Badge>
                 </div>
               ))
             )}
-            <Button variant="outline" className="w-full mt-3">
+            <Button 
+              variant="outline" 
+              className="w-full mt-3 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={handleViewInventory}
+            >
               <Package className="h-4 w-4 mr-2" />
               Manage Inventory
             </Button>
@@ -148,31 +187,35 @@ const Dashboard = () => {
         </Card>
 
         {/* Recent Transactions */}
-        <Card>
+        <Card className="glass border-white/20">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-white">
               <BarChart3 className="h-5 w-5 text-blue-500" />
               Recent Transactions
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {transactionsLoading ? (
-              <div className="text-center py-4">Loading...</div>
+              <div className="text-center py-4 text-blue-200">Loading...</div>
             ) : (
               recentSales.map((transaction) => (
-                <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={transaction.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
                   <div>
-                    <p className="font-medium text-sm">{transaction.billNumber}</p>
-                    <p className="text-xs text-gray-500">{transaction.customerName}</p>
+                    <p className="font-medium text-sm text-white">{transaction.billNumber}</p>
+                    <p className="text-xs text-blue-200">{transaction.customerName}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-green-600">₹{transaction.total}</p>
-                    <p className="text-xs text-gray-500">{transaction.createdAt}</p>
+                    <p className="font-semibold text-green-400">₹{transaction.total}</p>
+                    <p className="text-xs text-blue-200">{transaction.createdAt}</p>
                   </div>
                 </div>
               ))
             )}
-            <Button variant="outline" className="w-full mt-3">
+            <Button 
+              variant="outline" 
+              className="w-full mt-3 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={handleViewTransactions}
+            >
               <Receipt className="h-4 w-4 mr-2" />
               View All Transactions
             </Button>
@@ -181,30 +224,43 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="glass border-white/20">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle className="text-white">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col gap-2 bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="h-20 flex flex-col gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={handleNewSale}
+            >
               <ShoppingBag className="h-6 w-6" />
-              New Sale
+              <span className="text-sm font-medium">New Sale</span>
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+              onClick={handleAddProduct}
+            >
               <Package className="h-6 w-6" />
-              Add Product
+              <span className="text-sm font-medium">Add Product</span>
             </Button>
-            <Button variant="outline" className="h-20 flex flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+              onClick={handleAddCustomer}
+            >
               <Users className="h-6 w-6" />
-              Add Customer
+              <span className="text-sm font-medium">Add Customer</span>
             </Button>
-            <Link to="/sale-operator">
-              <Button variant="outline" className="h-20 w-full flex flex-col gap-2 border-green-200 hover:bg-green-50">
-                <UserCheck className="h-6 w-6 text-green-600" />
-                Sale Operator
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="h-20 flex flex-col gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+              onClick={handleViewReports}
+            >
+              <FileText className="h-6 w-6" />
+              <span className="text-sm font-medium">View Reports</span>
+            </Button>
           </div>
         </CardContent>
       </Card>

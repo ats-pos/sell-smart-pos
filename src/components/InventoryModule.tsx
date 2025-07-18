@@ -15,12 +15,14 @@ import {
   Download,
   Settings,
   RefreshCw,
-  Wand2
+  Wand2,
+  ShoppingCart
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 import { useGraphQLQuery, useGraphQLMutation } from "@/hooks/useGraphQL";
 import { GET_PRODUCTS, SEARCH_PRODUCTS } from "@/lib/graphql/queries";
 import { CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from "@/lib/graphql/mutations";
@@ -40,6 +42,7 @@ interface BarcodeSettings {
 
 const InventoryModule = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showBarcodeSettings, setShowBarcodeSettings] = useState(false);
   
@@ -241,54 +244,58 @@ const InventoryModule = () => {
     }
   };
 
+  const handleNewPurchaseOrder = () => {
+    navigate('/purchase');
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="glass border-white/20">
           <CardContent className="flex items-center p-4">
             <Package className="h-8 w-8 text-blue-500 mr-3" />
             <div>
-              <p className="text-2xl font-bold">{loading ? "..." : products.length}</p>
-              <p className="text-sm text-gray-500">Total Products</p>
+              <p className="text-2xl font-bold text-white">{loading ? "..." : products.length}</p>
+              <p className="text-sm text-blue-200">Total Products</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass border-white/20">
           <CardContent className="flex items-center p-4">
             <AlertTriangle className="h-8 w-8 text-amber-500 mr-3" />
             <div>
-              <p className="text-2xl font-bold">{loading ? "..." : lowStockProducts.length}</p>
-              <p className="text-sm text-gray-500">Low Stock Items</p>
+              <p className="text-2xl font-bold text-white">{loading ? "..." : lowStockProducts.length}</p>
+              <p className="text-sm text-blue-200">Low Stock Items</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass border-white/20">
           <CardContent className="flex items-center p-4">
             <Package className="h-8 w-8 text-green-500 mr-3" />
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold text-white">
                 {loading ? "..." : products.reduce((sum, p) => sum + p.stock, 0)}
               </p>
-              <p className="text-sm text-gray-500">Total Stock</p>
+              <p className="text-sm text-blue-200">Total Stock</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass border-white/20">
           <CardContent className="flex items-center p-4">
             <Package className="h-8 w-8 text-purple-500 mr-3" />
             <div>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold text-white">
                 ₹{loading ? "..." : products.reduce((sum, p) => sum + (p.price * p.stock), 0).toLocaleString()}
               </p>
-              <p className="text-sm text-gray-500">Stock Value</p>
+              <p className="text-sm text-blue-200">Stock Value</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Actions Bar */}
-      <Card>
+      <Card className="glass border-white/20">
         <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
           <div className="flex items-center gap-4 flex-1">
             <div className="relative flex-1 max-w-sm">
@@ -300,43 +307,51 @@ const InventoryModule = () => {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
           </div>
           <div className="flex items-center gap-2">
             <Button 
+              onClick={handleNewPurchaseOrder}
+              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg"
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              New Purchase Order
+            </Button>
+            <Button 
               variant="outline"
               onClick={() => setShowBarcodeSettings(true)}
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               <Settings className="h-4 w-4 mr-2" />
               Barcode Settings
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Product
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="glass border-white/20 max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Add New Product</DialogTitle>
+                  <DialogTitle className="text-white">Add New Product</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-6">
                   {/* Barcode Settings Info */}
                   {barcodeSettings.autoGenerate && (
-                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                      <div className="flex items-center gap-2 text-blue-700 mb-2">
+                    <div className="bg-blue-50/10 p-3 rounded-lg border border-blue-200/20">
+                      <div className="flex items-center gap-2 text-blue-300 mb-2">
                         <Wand2 className="h-4 w-4" />
                         <span className="font-medium">Auto-Barcode Generation Enabled</span>
                       </div>
-                      <p className="text-sm text-blue-600">
+                      <p className="text-sm text-blue-200">
                         Barcodes will be automatically generated using {barcodeSettings.defaultType} format
                         {barcodeSettings.prefix && ` with prefix "${barcodeSettings.prefix}"`}.
                       </p>
@@ -345,7 +360,7 @@ const InventoryModule = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Product Name *</Label>
+                      <Label htmlFor="name" className="text-white">Product Name *</Label>
                       <Input
                         id="name"
                         value={newProduct.name}
@@ -354,9 +369,9 @@ const InventoryModule = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="category">Category</Label>
+                      <Label htmlFor="category" className="text-white">Category</Label>
                       <Select onValueChange={(value) => handleProductChange('category', value)}>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white/10 border-white/20 text-white">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -374,7 +389,7 @@ const InventoryModule = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="brand">Brand</Label>
+                      <Label htmlFor="brand" className="text-white">Brand</Label>
                       <Input
                         id="brand"
                         value={newProduct.brand}
@@ -383,7 +398,7 @@ const InventoryModule = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="supplier">Supplier</Label>
+                      <Label htmlFor="supplier" className="text-white">Supplier</Label>
                       <Input
                         id="supplier"
                         value={newProduct.supplier}
@@ -393,18 +408,19 @@ const InventoryModule = () => {
                     </div>
                   </div>
 
-                  <Separator />
+                  <Separator className="bg-white/20" />
 
                   {/* Barcode Section */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="barcode">Barcode</Label>
+                      <Label htmlFor="barcode" className="text-white">Barcode</Label>
                       {barcodeSettings.autoGenerate && newProduct.name && (
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
                           onClick={regenerateBarcode}
+                          className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                         >
                           <RefreshCw className="h-3 w-3 mr-1" />
                           Regenerate
@@ -419,18 +435,18 @@ const InventoryModule = () => {
                       disabled={barcodeSettings.autoGenerate}
                     />
                     {barcodeSettings.autoGenerate && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-blue-200">
                         Barcode is automatically generated based on your settings. 
                         You can regenerate it or disable auto-generation in settings.
                       </p>
                     )}
                   </div>
 
-                  <Separator />
+                  <Separator className="bg-white/20" />
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="price">Price (₹) *</Label>
+                      <Label htmlFor="price" className="text-white">Price (₹) *</Label>
                       <Input
                         id="price"
                         type="number"
@@ -442,7 +458,7 @@ const InventoryModule = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="stock">Stock Quantity</Label>
+                      <Label htmlFor="stock" className="text-white">Stock Quantity</Label>
                       <Input
                         id="stock"
                         type="number"
@@ -453,7 +469,7 @@ const InventoryModule = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="minStock">Min Stock Alert</Label>
+                      <Label htmlFor="minStock" className="text-white">Min Stock Alert</Label>
                       <Input
                         id="minStock"
                         type="number"
@@ -470,13 +486,13 @@ const InventoryModule = () => {
                       type="button" 
                       variant="outline" 
                       onClick={resetForm}
-                      className="flex-1"
+                      className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
                     >
                       Reset
                     </Button>
                     <Button 
                       onClick={addProduct} 
-                      className="flex-1"
+                      className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                       disabled={createLoading}
                     >
                       {createLoading ? "Adding..." : "Add Product"}
@@ -490,59 +506,59 @@ const InventoryModule = () => {
       </Card>
 
       {/* Products Table */}
-      <Card>
+      <Card className="glass border-white/20">
         <CardHeader>
-          <CardTitle>Products ({products.length})</CardTitle>
+          <CardTitle className="text-white">Products ({products.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-center py-8">Loading products...</div>
+            <div className="text-center py-8 text-blue-200">Loading products...</div>
           ) : products.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-blue-200">
               {searchTerm.length >= 2 ? "No products found" : "No products available"}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3">Product</th>
-                    <th className="text-left p-3">Barcode</th>
-                    <th className="text-left p-3">Price</th>
-                    <th className="text-left p-3">Stock</th>
-                    <th className="text-left p-3">Status</th>
-                    <th className="text-left p-3">Category</th>
-                    <th className="text-left p-3">Supplier</th>
-                    <th className="text-left p-3">Actions</th>
+                  <tr className="border-b border-white/20">
+                    <th className="text-left p-3 text-blue-200">Product</th>
+                    <th className="text-left p-3 text-blue-200">Barcode</th>
+                    <th className="text-left p-3 text-blue-200">Price</th>
+                    <th className="text-left p-3 text-blue-200">Stock</th>
+                    <th className="text-left p-3 text-blue-200">Status</th>
+                    <th className="text-left p-3 text-blue-200">Category</th>
+                    <th className="text-left p-3 text-blue-200">Supplier</th>
+                    <th className="text-left p-3 text-blue-200">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {products.map((product) => {
                     const status = getStockStatus(product.stock, product.minStock);
                     return (
-                      <tr key={product.id} className="border-b hover:bg-gray-50">
+                      <tr key={product.id} className="border-b border-white/10 hover:bg-white/5">
                         <td className="p-3">
                           <div>
-                            <p className="font-medium">{product.name}</p>
-                            <p className="text-sm text-gray-500">{product.brand}</p>
+                            <p className="font-medium text-white">{product.name}</p>
+                            <p className="text-sm text-blue-200">{product.brand}</p>
                           </div>
                         </td>
-                        <td className="p-3 text-sm font-mono">{product.barcode}</td>
-                        <td className="p-3 font-medium">₹{product.price}</td>
+                        <td className="p-3 text-sm font-mono text-blue-200">{product.barcode}</td>
+                        <td className="p-3 font-medium text-white">₹{product.price}</td>
                         <td className="p-3">
-                          <span className={`font-medium ${product.stock <= product.minStock ? 'text-red-600' : 'text-gray-900'}`}>
+                          <span className={`font-medium ${product.stock <= product.minStock ? 'text-red-300' : 'text-white'}`}>
                             {product.stock}
                           </span>
-                          <span className="text-gray-500 text-sm"> / {product.minStock}</span>
+                          <span className="text-blue-200 text-sm"> / {product.minStock}</span>
                         </td>
                         <td className="p-3">
                           <Badge variant={status.color as any}>{status.label}</Badge>
                         </td>
-                        <td className="p-3 text-sm">{product.category}</td>
-                        <td className="p-3 text-sm">{product.supplier}</td>
+                        <td className="p-3 text-sm text-blue-200">{product.category}</td>
+                        <td className="p-3 text-sm text-blue-200">{product.supplier}</td>
                         <td className="p-3">
                           <div className="flex items-center gap-2">
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
                               <Edit className="h-3 w-3" />
                             </Button>
                             <Button 
@@ -566,9 +582,9 @@ const InventoryModule = () => {
 
       {/* Barcode Settings Dialog */}
       <Dialog open={showBarcodeSettings} onOpenChange={setShowBarcodeSettings}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="glass border-white/20 max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-white">
               <Settings className="h-5 w-5" />
               Barcode Generation Settings
             </DialogTitle>
@@ -576,8 +592,8 @@ const InventoryModule = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="autoGenerate">Auto-Generate Barcodes</Label>
-                <p className="text-sm text-gray-500">Automatically create barcodes for new products</p>
+                <Label htmlFor="autoGenerate" className="text-white">Auto-Generate Barcodes</Label>
+                <p className="text-sm text-blue-200">Automatically create barcodes for new products</p>
               </div>
               <Switch
                 id="autoGenerate"
@@ -588,15 +604,15 @@ const InventoryModule = () => {
 
             {barcodeSettings.autoGenerate && (
               <>
-                <Separator />
+                <Separator className="bg-white/20" />
                 
                 <div className="space-y-2">
-                  <Label>Default Barcode Type</Label>
+                  <Label className="text-white">Default Barcode Type</Label>
                   <Select 
                     value={barcodeSettings.defaultType} 
                     onValueChange={(value) => updateBarcodeSettings({ defaultType: value })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -608,7 +624,7 @@ const InventoryModule = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="prefix">Barcode Prefix (Optional)</Label>
+                  <Label htmlFor="prefix" className="text-white">Barcode Prefix (Optional)</Label>
                   <Input
                     id="prefix"
                     value={barcodeSettings.prefix}
@@ -616,14 +632,14 @@ const InventoryModule = () => {
                     placeholder="e.g., STORE"
                     maxLength={4}
                   />
-                  <p className="text-xs text-gray-500">Add a custom prefix to all generated barcodes</p>
+                  <p className="text-xs text-blue-200">Add a custom prefix to all generated barcodes</p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label htmlFor="includeCategory">Include Category Code</Label>
-                      <p className="text-sm text-gray-500">Use first 2 letters of category in barcode</p>
+                      <Label htmlFor="includeCategory" className="text-white">Include Category Code</Label>
+                      <p className="text-sm text-blue-200">Use first 2 letters of category in barcode</p>
                     </div>
                     <Switch
                       id="includeCategory"
@@ -634,8 +650,8 @@ const InventoryModule = () => {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label htmlFor="includeBrand">Include Brand Code</Label>
-                      <p className="text-sm text-gray-500">Use first 2 letters of brand in barcode</p>
+                      <Label htmlFor="includeBrand" className="text-white">Include Brand Code</Label>
+                      <p className="text-sm text-blue-200">Use first 2 letters of brand in barcode</p>
                     </div>
                     <Switch
                       id="includeBrand"
@@ -651,7 +667,7 @@ const InventoryModule = () => {
               <Button 
                 variant="outline" 
                 onClick={() => setShowBarcodeSettings(false)}
-                className="flex-1"
+                className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
               >
                 Cancel
               </Button>
@@ -663,7 +679,7 @@ const InventoryModule = () => {
                     description: "Barcode generation settings have been updated."
                   });
                 }}
-                className="flex-1"
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
               >
                 Save Settings
               </Button>

@@ -4,7 +4,7 @@ import { mockSales } from '../data/sales';
 import { mockBarcodes } from '../data/barcodes';
 import { mockStoreProfile } from '../data/stores';
 import { mockDashboardStats, mockSalesAnalytics, mockTopProducts, mockGSTSummary } from '../data/analytics';
-import { ProductInput, CustomerInput, SaleInput, BarcodeInput, StoreProfileInput } from '@/lib/graphql/types';
+import { ProductInput, CustomerInput, SaleInput, BarcodeInput, StoreProfileInput, SaleItem } from '@/lib/graphql/types';
 
 // Mock data handlers
 export const mockDataHandlers = {
@@ -164,9 +164,16 @@ export const mockDataHandlers = {
   createSale: async (variables: { input: SaleInput }) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // Transform SaleItemInput to SaleItem by adding id field
+    const itemsWithIds: SaleItem[] = variables.input.items.map((item, index) => ({
+      ...item,
+      id: `${Date.now()}-item-${index}`
+    }));
+    
     const newSale = {
       id: `sale-${Date.now()}`,
       ...variables.input,
+      items: itemsWithIds,
       createdAt: new Date().toISOString()
     };
     
