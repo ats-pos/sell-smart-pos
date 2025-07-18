@@ -1,3 +1,49 @@
+// Main SCSS Entry Point
+// This file replaces the Tailwind CSS import
+
+// 1. Variables and Configuration
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+@import 'abstracts/functions';
+
+// 2. Base Styles
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/base';
+
+// 3. Layout Components
+@import 'layout/header';
+@import 'layout/navigation';
+@import 'layout/footer';
+@import 'layout/grid';
+
+// 4. Component Styles
+@import 'components/buttons';
+@import 'components/cards';
+@import 'components/forms';
+@import 'components/modals';
+@import 'components/tabs';
+@import 'components/badges';
+@import 'components/toasts';
+
+// 5. Page-specific Styles
+@import 'pages/login';
+@import 'pages/dashboard';
+@import 'pages/settings';
+@import 'pages/billing';
+
+// 6. Utilities
+@import 'utilities/spacing';
+@import 'utilities/display';
+@import 'utilities/positioning';
+@import 'utilities/responsive';
+@import 'utilities/accessibility';
+
+// 7. Themes and Effects
+@import 'themes/light';
+@import 'themes/dark';
+@import 'effects/glassmorphism';
+@import 'effects/animations';
 
 // Import order is important for proper cascading
 @use 'abstracts/variables';
