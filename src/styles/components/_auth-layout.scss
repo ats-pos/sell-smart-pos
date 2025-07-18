@@ -1,0 +1,147 @@
+
+// Authentication Layout Components
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.auth-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+  
+  @include mobile {
+    padding: var(--spacing-sm);
+    align-items: flex-start;
+    padding-top: var(--spacing-xl);
+  }
+  
+  @include tablet {
+    padding: var(--spacing-lg);
+  }
+}
+
+.auth-background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  pointer-events: none;
+  overflow: hidden;
+  
+  .floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    filter: blur(40px);
+    animation: pulse 6s ease-in-out infinite;
+    
+    width: 12rem;
+    height: 12rem;
+    
+    @include tablet {
+      width: 18rem;
+      height: 18rem;
+      filter: blur(50px);
+    }
+    
+    @include desktop {
+      width: 24rem;
+      height: 24rem;
+      filter: blur(60px);
+    }
+    
+    &.orb-1 {
+      top: 10%;
+      left: 10%;
+      background: var(--color-blue-400);
+      animation-delay: 0s;
+      
+      @include tablet {
+        top: 15%;
+        left: 15%;
+      }
+      
+      @include desktop {
+        top: 25%;
+        left: 25%;
+      }
+    }
+    
+    &.orb-2 {
+      top: 70%;
+      right: 10%;
+      background: var(--color-purple-400);
+      animation-delay: 2s;
+      
+      @include tablet {
+        top: 65%;
+        right: 15%;
+      }
+      
+      @include desktop {
+        top: 75%;
+        right: 25%;
+      }
+    }
+    
+    &.orb-3 {
+      top: 40%;
+      left: 40%;
+      transform: translate(-50%, -50%);
+      background: var(--color-blue-600);
+      animation-delay: 1s;
+      
+      @include tablet {
+        top: 45%;
+        left: 45%;
+      }
+      
+      @include desktop {
+        top: 50%;
+        left: 50%;
+      }
+    }
+  }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  backdrop-filter: blur(16px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  position: relative;
+  z-index: 10;
+  
+  @include mobile {
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+    margin: 0 auto;
+  }
+  
+  @include tablet {
+    max-width: 26rem;
+    border-radius: var(--radius-2xl);
+  }
+  
+  @include desktop {
+    max-width: 32rem;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.02);
+  }
+}

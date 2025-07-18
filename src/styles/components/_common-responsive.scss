@@ -1,0 +1,338 @@
+
+// Responsive Common Components
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.default-header {
+  backdrop-filter: blur(16px);
+  background: var(--bg-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .header-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    
+    @include tablet {
+      padding: 0 var(--spacing-lg);
+    }
+    
+    @include desktop {
+      padding: 0 var(--spacing-xl);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 3.5rem;
+      
+      @include tablet {
+        height: 4rem;
+      }
+      
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        min-width: 0;
+        
+        @include tablet {
+          gap: 0.75rem;
+        }
+        
+        .header-icon {
+          background: linear-gradient(to right, var(--color-blue-500), var(--color-purple-500));
+          padding: var(--spacing-xs);
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow-md);
+          flex-shrink: 0;
+          
+          @include tablet {
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+          }
+        }
+        
+        .header-info {
+          min-width: 0;
+          flex: 1;
+          
+          .header-title {
+            font-size: var(--font-sm);
+            font-weight: var(--font-bold);
+            color: var(--text-primary);
+            background: linear-gradient(to right, var(--color-blue-400), var(--color-purple-400));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin: 0;
+            line-height: 1.2;
+            
+            @include tablet {
+              font-size: var(--font-lg);
+            }
+            
+            @include desktop {
+              font-size: var(--font-xl);
+            }
+          }
+          
+          .header-subtitle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-xs);
+            color: var(--color-blue-200);
+            margin: 0;
+            line-height: 1.2;
+            
+            @include tablet {
+              gap: var(--spacing-sm);
+            }
+            
+            .user-info {
+              display: none;
+              
+              @include tablet {
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-sm);
+              }
+            }
+          }
+        }
+      }
+      
+      .header-right {
+        display: none;
+        
+        @include tablet {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+        }
+        
+        .header-btn {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-xs);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-primary);
+          color: var(--text-primary);
+          padding: var(--spacing-xs) var(--spacing-sm);
+          border-radius: var(--radius-md);
+          height: 2rem;
+          font-size: var(--font-xs);
+          cursor: pointer;
+          transition: var(--transition-normal);
+          white-space: nowrap;
+          
+          @include desktop {
+            padding: var(--spacing-sm) 0.75rem;
+            font-size: var(--font-sm);
+          }
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+          }
+          
+          &.primary {
+            background: linear-gradient(to right, var(--color-blue-500), var(--color-purple-500));
+            
+            &:hover {
+              background: linear-gradient(to right, var(--color-blue-600), var(--color-purple-600));
+            }
+          }
+          
+          .btn-text {
+            display: none;
+            
+            @include desktop {
+              display: inline;
+            }
+          }
+        }
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        cursor: pointer;
+        padding: var(--spacing-xs);
+        border-radius: var(--radius-md);
+        transition: var(--transition-normal);
+        min-width: 44px;
+        min-height: 44px;
+        
+        @include tablet {
+          display: none;
+        }
+        
+        &:hover {
+          background: var(--bg-secondary);
+        }
+      }
+    }
+  }
+}
+
+.error-boundary {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  
+  .error-card {
+    width: 100%;
+    max-width: 28rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    
+    @include mobile {
+      max-width: 100%;
+      border-radius: var(--radius-lg);
+    }
+    
+    .error-header {
+      text-align: center;
+      padding: var(--spacing-lg);
+      
+      @include mobile {
+        padding: var(--spacing-md);
+      }
+      
+      .error-title {
+        color: var(--text-primary);
+        font-size: var(--font-lg);
+        font-weight: var(--font-bold);
+        margin-bottom: var(--spacing-sm);
+        
+        @include tablet {
+          font-size: var(--font-xl);
+        }
+      }
+    }
+    
+    .error-content {
+      padding: 0 var(--spacing-lg) var(--spacing-lg);
+      
+      @include mobile {
+        padding: 0 var(--spacing-md) var(--spacing-md);
+      }
+      
+      .error-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        
+        @include tablet {
+          flex-direction: row;
+        }
+        
+        .error-btn {
+          flex: 1;
+          padding: 0.75rem var(--spacing-md);
+          border-radius: var(--radius-lg);
+          cursor: pointer;
+          transition: var(--transition-normal);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--spacing-sm);
+          min-height: 44px;
+          
+          &.primary {
+            background: linear-gradient(to right, var(--color-blue-500), var(--color-purple-500));
+            color: var(--text-primary);
+            border: none;
+            
+            &:hover {
+              background: linear-gradient(to right, var(--color-blue-600), var(--color-purple-600));
+            }
+          }
+          
+          &.secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            
+            &:hover {
+              background: rgba(255, 255, 255, 0.2);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.loading-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-blue-500);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  
+  @include tablet {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  color: var(--text-tertiary);
+  
+  @include tablet {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+  
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto var(--spacing-md);
+    color: var(--color-gray-300);
+    opacity: 0.5;
+    
+    @include tablet {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+  
+  .empty-title {
+    font-size: var(--font-base);
+    font-weight: var(--font-medium);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+    
+    @include tablet {
+      font-size: var(--font-lg);
+    }
+  }
+  
+  .empty-description {
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
