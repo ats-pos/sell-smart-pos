@@ -1,148 +1,305 @@
+// ==========================================
+// Button Components
+// ==========================================
 
-@use '../abstracts/variables';
-@use '../abstracts/mixins';
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
 
-// Button base styles
+// Base button class
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  border-radius: $radius-lg;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  text-decoration: none;
+  @include button-base;
+  @include button-size($spacing-4, $spacing-2, $font-size-sm, 40px);
+  @include reduced-motion;
   
-  // Sizes
-  &.small {
-    height: 2rem;
-    padding: 0 0.75rem;
-    font-size: $font-xs;
-    
-    @include tablet {
-      font-size: $font-sm;
-    }
+  // Touch optimizations
+  @include mobile-only {
+    @include touch-target(44px);
+    @include button-size($spacing-5, $spacing-3, $font-size-base, 44px);
+  }
+}
+
+// Button variants
+.btn-primary {
+  @include button-primary;
+  @include hover-lift(-2px, $shadow-md);
+  @include button-press;
+}
+
+.btn-secondary {
+  @include button-secondary;
+  @include hover-lift(-2px, $shadow-sm);
+  @include button-press;
+}
+
+.btn-outline {
+  @include button-outline;
+  @include hover-lift(-1px, $shadow-sm);
+  @include button-press;
+}
+
+.btn-ghost {
+  @include button-ghost;
+  @include button-press;
+}
+
+.btn-destructive {
+  @include button-base;
+  background-color: $destructive;
+  color: $destructive-foreground;
+  
+  &:hover:not(:disabled) {
+    background-color: darken($destructive, 10%);
   }
   
-  &.default {
-    height: 2.5rem;
-    padding: 0 1rem;
-    font-size: $font-sm;
-    
-    @include tablet {
-      font-size: $font-base;
-    }
+  @include hover-lift(-2px, $shadow-md);
+  @include button-press;
+}
+
+// Button sizes
+.btn-xs {
+  @include button-size($spacing-2, $spacing-1, $font-size-xs, 32px);
+  
+  @include mobile-only {
+    @include button-size($spacing-3, $spacing-2, $font-size-sm, 36px);
+  }
+}
+
+.btn-sm {
+  @include button-size($spacing-3, $spacing-2, $font-size-sm, 36px);
+  
+  @include mobile-only {
+    @include button-size($spacing-4, $spacing-2, $font-size-sm, 40px);
+  }
+}
+
+.btn-md {
+  @include button-size($spacing-4, $spacing-2, $font-size-sm, 40px);
+  
+  @include mobile-only {
+    @include button-size($spacing-5, $spacing-3, $font-size-base, 44px);
+  }
+}
+
+.btn-lg {
+  @include button-size($spacing-6, $spacing-3, $font-size-base, 44px);
+  
+  @include mobile-only {
+    @include button-size($spacing-7, $spacing-4, $font-size-lg, 48px);
+  }
+}
+
+.btn-xl {
+  @include button-size($spacing-8, $spacing-4, $font-size-lg, 48px);
+  
+  @include mobile-only {
+    @include button-size($spacing-9, $spacing-5, $font-size-xl, 52px);
+  }
+}
+
+// Button with icons
+.btn-icon {
+  @include button-base;
+  @include button-size($spacing-2, $spacing-2, $font-size-sm, 40px);
+  aspect-ratio: 1;
+  
+  @include mobile-only {
+    @include button-size($spacing-3, $spacing-3, $font-size-base, 44px);
+  }
+}
+
+.btn-icon-sm {
+  @include button-base;
+  @include button-size($spacing-1, $spacing-1, $font-size-xs, 32px);
+  aspect-ratio: 1;
+  
+  @include mobile-only {
+    @include button-size($spacing-2, $spacing-2, $font-size-sm, 36px);
+  }
+}
+
+// Loading state
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
   
-  &.large {
-    height: 3rem;
-    padding: 0 1.5rem;
-    font-size: $font-base;
-    
-    @include tablet {
-      font-size: $font-lg;
-    }
-  }
-  
-  // Variants
-  &.primary {
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    
-    &:hover {
-      background: linear-gradient(to right, #2563eb, #7c3aed);
-      transform: translateY(-1px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-    
-    &:active {
-      transform: translateY(0);
-    }
-  }
-  
-  &.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-  }
-  
-  &.outline {
-    background: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  &.ghost {
-    background: transparent;
-    color: white;
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  &.destructive {
-    background: linear-gradient(to right, #ef4444, #dc2626);
-    color: white;
-    
-    &:hover {
-      background: linear-gradient(to right, #dc2626, #b91c1c);
-    }
-  }
-  
-  // States
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
-    
-    &:hover {
-      transform: none;
-      background: initial;
-    }
-  }
-  
-  &:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
   }
 }
 
-// Specific button styles
-.quick-login-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: $radius-lg;
-  transition: all 0.2s ease;
-  cursor: pointer;
+// Button groups
+.btn-group {
+  @include flex-start;
+  gap: 0;
   
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-}
-
-// Responsive button adjustments
-@include mobile {
   .btn {
-    &.responsive {
-      width: 100%;
-      justify-content: center;
+    border-radius: 0;
+    border-right-width: 0;
+    
+    &:first-child {
+      border-top-left-radius: $radius-md;
+      border-bottom-left-radius: $radius-md;
     }
+    
+    &:last-child {
+      border-top-right-radius: $radius-md;
+      border-bottom-right-radius: $radius-md;
+      border-right-width: 1px;
+    }
+    
+    &:not(:last-child) {
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  // Responsive button group
+  @include mobile-only {
+    flex-direction: column;
+    width: 100%;
+    
+    .btn {
+      border-radius: 0;
+      border-right-width: 1px;
+      border-bottom-width: 0;
+      width: 100%;
+      
+      &:first-child {
+        border-top-left-radius: $radius-md;
+        border-top-right-radius: $radius-md;
+        border-bottom-left-radius: 0;
+      }
+      
+      &:last-child {
+        border-bottom-left-radius: $radius-md;
+        border-bottom-right-radius: $radius-md;
+        border-top-right-radius: 0;
+        border-bottom-width: 1px;
+      }
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-right: none;
+      }
+    }
+  }
+}
+
+// Glass button variants
+.btn-glass {
+  @include button-base;
+  @include glass();
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  @include hover-lift(-2px, $shadow-lg);
+  @include button-press;
+}
+
+.btn-glass-strong {
+  @include button-base;
+  @include glass('strong');
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  @include hover-lift(-2px, $shadow-lg);
+  @include button-press;
+}
+
+// Floating action button
+.btn-fab {
+  @include button-base;
+  @include button-primary;
+  border-radius: $radius-full;
+  width: 56px;
+  height: 56px;
+  box-shadow: $shadow-lg;
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  z-index: $z-fixed;
+  
+  @include hover-lift(-4px, $shadow-xl);
+  @include button-press;
+  
+  @include mobile-only {
+    bottom: $spacing-4;
+    right: $spacing-4;
+    width: 64px;
+    height: 64px;
+  }
+}
+
+// Split button
+.btn-split {
+  @include flex-start;
+  
+  .btn-main {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 1;
+  }
+  
+  .btn-dropdown {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    width: 40px;
+    
+    @include mobile-only {
+      width: 44px;
+    }
+  }
+}
+
+// Accessibility improvements
+.btn {
+  @include focus-visible;
+  
+  // Screen reader only text for icon buttons
+  .sr-only {
+    @include screen-reader-only;
+  }
+}
+
+// High contrast support
+@include high-contrast-support {
+  .btn {
+    border: 2px solid CanvasText !important;
+  }
+  
+  .btn-primary,
+  .btn-destructive {
+    background-color: ButtonFace !important;
+    color: ButtonText !important;
+  }
+}
+
+// Print styles
+@media print {
+  .btn-fab,
+  .btn-ghost {
+    display: none !important;
   }
 }

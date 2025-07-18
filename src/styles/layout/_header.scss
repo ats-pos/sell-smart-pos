@@ -1,0 +1,384 @@
+// ==========================================
+// Header Layout Styles
+// ==========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Main header container
+.header {
+  @include glass();
+  @include sticky-top();
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: $z-sticky;
+  
+  // Header inner container
+  &__container {
+    @include container($container-2xl, $spacing-4);
+    @include flex-between;
+    height: 64px;
+    
+    @include mobile-only {
+      height: 56px;
+      padding-left: $spacing-3;
+      padding-right: $spacing-3;
+    }
+  }
+  
+  // Header brand section
+  &__brand {
+    @include flex-start;
+    gap: $spacing-3;
+    
+    @include mobile-only {
+      gap: $spacing-2;
+    }
+  }
+  
+  // Logo/icon container
+  &__logo {
+    background: $gradient-primary;
+    padding: $spacing-2;
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    @include flex-center;
+    
+    svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+      
+      @include mobile-only {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  // Brand text
+  &__title {
+    @include text-responsive($font-size-lg, $font-size-xl);
+    font-weight: $font-weight-bold;
+    color: white;
+    @include gradient-text();
+    margin: 0;
+  }
+  
+  // Header subtitle/info
+  &__subtitle {
+    @include flex-start;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+    color: rgba(96, 165, 250, 0.8);
+    margin-top: $spacing-1;
+    
+    @include mobile-only {
+      gap: $spacing-1;
+      font-size: 10px;
+    }
+    
+    span {
+      @include mobile-only {
+        &:nth-child(2),
+        &:nth-child(4) {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  // Desktop actions container
+  &__actions {
+    @include flex-start;
+    gap: $spacing-2;
+    
+    @include mobile-only {
+      display: none;
+    }
+  }
+  
+  // Mobile menu button
+  &__mobile-toggle {
+    @include mobile-up {
+      display: none;
+    }
+    
+    padding: $spacing-2;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: $radius-md;
+    color: white;
+    cursor: pointer;
+    transition: all $duration-200 $ease-in-out;
+    @include touch-target(44px);
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  // Mobile menu overlay
+  &__mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: $z-modal;
+    opacity: 0;
+    visibility: hidden;
+    transition: all $duration-300 $ease-in-out;
+    
+    &.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    @include tablet-up {
+      display: none;
+    }
+  }
+  
+  // Mobile menu panel
+  &__mobile-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    background: $gradient-background;
+    @include glass('strong');
+    padding: $spacing-6;
+    transform: translateX(100%);
+    transition: transform $duration-300 $ease-out;
+    overflow-y: auto;
+    @include safe-area-padding;
+    
+    .is-open & {
+      transform: translateX(0);
+    }
+  }
+  
+  // Mobile menu header
+  &__mobile-header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+    padding-bottom: $spacing-4;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h3 {
+      color: white;
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-lg;
+      margin: 0;
+    }
+    
+    button {
+      padding: $spacing-2;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: $radius-md;
+      color: white;
+      cursor: pointer;
+      @include touch-target(44px);
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  // Mobile menu items
+  &__mobile-items {
+    @include flex-column;
+    gap: $spacing-3;
+    
+    .btn {
+      width: 100%;
+      justify-content: flex-start;
+      @include touch-target(48px);
+      font-size: $font-size-base;
+      
+      svg {
+        width: 20px;
+        height: 20px;
+        margin-right: $spacing-3;
+      }
+    }
+  }
+}
+
+// Status badge component
+.status-badge {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  
+  &--online {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: rgba(34, 197, 94, 1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+  
+  &--offline {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: rgba(239, 68, 68, 1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+// Header action buttons
+.header-btn {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-2 $spacing-3;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: $radius-md;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $duration-200 $ease-in-out;
+  text-decoration: none;
+  @include hover-lift(-1px, $shadow-sm);
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  // Hide text on smaller screens, keep icon
+  @include tablet-only {
+    span:not(.sr-only) {
+      @include mobile-up {
+        display: none;
+      }
+    }
+  }
+}
+
+// Mock mode indicator
+.mock-indicator {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-2;
+  background-color: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: $radius-md;
+  color: rgba(245, 158, 11, 1);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+// Responsive header adjustments
+@include mobile-only {
+  .header {
+    &__brand {
+      flex: 1;
+      min-width: 0; // Allow text truncation
+    }
+    
+    &__title {
+      @include text-truncate;
+    }
+    
+    &__subtitle {
+      @include text-truncate;
+    }
+  }
+}
+
+// High contrast support
+@include high-contrast-support {
+  .header {
+    background-color: Canvas !important;
+    border-color: CanvasText !important;
+    
+    &__title,
+    &__subtitle {
+      color: CanvasText !important;
+    }
+    
+    .header-btn,
+    .status-badge,
+    .mock-indicator {
+      background-color: ButtonFace !important;
+      color: ButtonText !important;
+      border-color: ButtonText !important;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .header {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    border-bottom: 1px solid black !important;
+    
+    &__actions,
+    &__mobile-toggle,
+    &__mobile-menu {
+      display: none !important;
+    }
+    
+    &__title,
+    &__subtitle {
+      color: black !important;
+    }
+  }
+}
+
+// Reduced motion
+@include reduced-motion {
+  .header {
+    &__mobile-menu,
+    &__mobile-panel {
+      transition: none !important;
+    }
+  }
+  
+  .header-btn {
+    transition: none !important;
+    
+    &:hover {
+      transform: none !important;
+    }
+  }
+}

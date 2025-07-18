@@ -1,0 +1,86 @@
+// Login Page Styles
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.login-page {
+  min-height: 100vh;
+  background: $gradient-background;
+}
+
+.login-layout {
+  min-height: 100vh;
+  position: relative;
+  @include flex-column;
+  overflow-x: hidden;
+  background: $gradient-background;
+}
+
+.login-container {
+  @include flex-center;
+  @include flex-column;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+  @include safe-area-padding;
+  
+  &.login-container-sm {
+    padding: $spacing-4;
+    
+    @include mobile-only {
+      padding: $spacing-3;
+    }
+  }
+}
+
+.login-card {
+  @include glass();
+  @include card-base;
+  padding: $spacing-8;
+  border-radius: $radius-3xl;
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  @include mobile-only {
+    padding: $spacing-6;
+    margin: $spacing-3;
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: $spacing-6;
+  
+  @include mobile-only {
+    margin-bottom: $spacing-4;
+  }
+}
+
+.login-content {
+  @include flex-column;
+  gap: $spacing-4;
+}
+
+.quick-login-btn {
+  @include button-base;
+  @include flex-start;
+  width: 100%;
+  gap: $spacing-2;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-lg;
+  transition: all $duration-200 $ease-in-out;
+  @include touch-target(48px);
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  @include mobile-only {
+    padding: $spacing-4;
+    font-size: $font-size-base;
+  }
+}

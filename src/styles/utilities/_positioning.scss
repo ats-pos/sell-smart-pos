@@ -1,0 +1,11 @@
+// Positioning Utilities
+@use '../abstracts/mixins' as *;
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+.absolute-center { @include absolute-center; }
+.absolute-fill { @include absolute-fill; }
+.fixed-fill { @include fixed-fill; }

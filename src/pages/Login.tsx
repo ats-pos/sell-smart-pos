@@ -13,7 +13,7 @@ import { PINLoginView } from "@/components/auth/PINLoginView";
 import { ForgotPasswordView } from "@/components/auth/ForgotPasswordView";
 import { DemoCredentials } from "@/components/auth/DemoCredentials";
 import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/graphql/auth-types";
-import './Login.scss';
+// SCSS styles now handled by main.scss architecture
 
 const Login = () => {
   const navigate = useNavigate();
@@ -90,9 +90,9 @@ const Login = () => {
   // Show loading state while authenticated user exists but hasn't redirected yet
   if (isAuthenticated && currentUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+      <div className="loading-screen">
+        <div className="loading-screen__spinner"></div>
+        <div className="loading-screen__text">
           <p>Redirecting...</p>
         </div>
       </div>

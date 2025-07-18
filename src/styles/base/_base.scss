@@ -1,0 +1,271 @@
+// ==========================================
+// Base Styles - Root and Fundamental Styles
+// ==========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// CSS Custom Properties (CSS Variables)
+:root {
+  // Light theme colors
+  --background: #{$background};
+  --foreground: #{$foreground};
+  --card: #{$card};
+  --card-foreground: #{$card-foreground};
+  --popover: #{$popover};
+  --popover-foreground: #{$popover-foreground};
+  --primary: #{$primary};
+  --primary-foreground: #{$primary-foreground};
+  --secondary: #{$secondary};
+  --secondary-foreground: #{$secondary-foreground};
+  --muted: #{$muted};
+  --muted-foreground: #{$muted-foreground};
+  --accent: #{$accent};
+  --accent-foreground: #{$accent-foreground};
+  --destructive: #{$destructive};
+  --destructive-foreground: #{$destructive-foreground};
+  --border: #{$border};
+  --input: #{$input};
+  --ring: #{$ring};
+  --radius: #{$radius-lg};
+  
+  // Sidebar colors
+  --sidebar-background: #{$sidebar-background};
+  --sidebar-foreground: #{$sidebar-foreground};
+  --sidebar-primary: #{$sidebar-primary};
+  --sidebar-primary-foreground: #{$sidebar-primary-foreground};
+  --sidebar-accent: #{$sidebar-accent};
+  --sidebar-accent-foreground: #{$sidebar-accent-foreground};
+  --sidebar-border: #{$sidebar-border};
+  --sidebar-ring: #{$sidebar-ring};
+}
+
+// Dark theme
+.dark {
+  --background: #{$dark-background};
+  --foreground: #{$dark-foreground};
+  --card: #{$dark-card};
+  --card-foreground: #{$dark-card-foreground};
+  --popover: #{$dark-popover};
+  --popover-foreground: #{$dark-popover-foreground};
+  --primary: #{$dark-primary};
+  --primary-foreground: #{$dark-primary-foreground};
+  --secondary: #{$dark-secondary};
+  --secondary-foreground: #{$dark-secondary-foreground};
+  --muted: #{$dark-muted};
+  --muted-foreground: #{$dark-muted-foreground};
+  --accent: #{$dark-accent};
+  --accent-foreground: #{$dark-accent-foreground};
+  --destructive: #{$dark-destructive};
+  --destructive-foreground: #{$dark-destructive-foreground};
+  --border: #{$dark-border};
+  --input: #{$dark-input};
+  --ring: #{$dark-ring};
+  
+  // Dark sidebar colors
+  --sidebar-background: #{$dark-sidebar-background};
+  --sidebar-foreground: #{$dark-sidebar-foreground};
+  --sidebar-primary: #{$dark-sidebar-primary};
+  --sidebar-primary-foreground: #{$dark-sidebar-primary-foreground};
+  --sidebar-accent: #{$dark-sidebar-accent};
+  --sidebar-accent-foreground: #{$dark-sidebar-accent-foreground};
+  --sidebar-border: #{$dark-sidebar-border};
+  --sidebar-ring: #{$dark-sidebar-ring};
+}
+
+// Base body styling
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  
+  // Improve text rendering on different devices
+  @include mobile-only {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+// Root app container
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+// Border color consistency
+* {
+  border-color: hsl(var(--border));
+}
+
+// Selection styling
+::selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+::-moz-selection {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+// Firefox scrollbar
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+}
+
+// App-specific animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  :root {
+    --border: CanvasText;
+    --ring: Highlight;
+  }
+  
+  .glass,
+  .glass-strong,
+  .glass-subtle {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse-soft,
+  .animate-slide-up,
+  .animate-shimmer {
+    animation: none !important;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Print styles
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  blockquote, pre {
+    page-break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

@@ -1,0 +1,6 @@
+// Accessibility Utilities
+@use '../abstracts/mixins' as *;
+
+.sr-only { @include screen-reader-only; }
+.focus-visible { @include focus-visible; }
+.touch-target { @include touch-target; }
