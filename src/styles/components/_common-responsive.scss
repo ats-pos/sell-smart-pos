@@ -1,7 +1,7 @@
 
 // Responsive Common Components
-@import '../abstracts/variables';
-@import '../abstracts/mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .default-header {
   backdrop-filter: blur(16px);

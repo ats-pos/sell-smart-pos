@@ -1,7 +1,7 @@
 
 // Authentication Layout Components
-@import '../abstracts/variables';
-@import '../abstracts/mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .auth-container {
   min-height: 100vh;

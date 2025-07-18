@@ -13,7 +13,7 @@ import { PINLoginView } from "@/components/auth/PINLoginView";
 import { ForgotPasswordView } from "@/components/auth/ForgotPasswordView";
 import { DemoCredentials } from "@/components/auth/DemoCredentials";
 import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/graphql/auth-types";
-import styles from './Login.module.scss';
+import './Login.scss';
 
 const Login = () => {
   const navigate = useNavigate();

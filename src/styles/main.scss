@@ -1,41 +1,41 @@
 // Import order is important for proper cascading
-@import 'abstracts/variables';
-@import 'abstracts/mixins';
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
 
 // Base styles
-@import 'base/reset';
-@import 'base/typography';
+@use 'base/reset';
+@use 'base/typography';
 
 // Utilities
-@import 'utilities/layout';
-@import 'utilities/spacing';
-@import 'utilities/sizing';
-@import 'utilities/grid';
-@import 'utilities/effects';
-@import 'utilities/animations';
-@import 'utilities/responsive';
+@use 'utilities/layout';
+@use 'utilities/spacing';
+@use 'utilities/sizing';
+@use 'utilities/grid';
+@use 'utilities/effects';
+@use 'utilities/animations';
+@use 'utilities/responsive';
 
 // Components - responsive versions
-@import 'components/buttons';
-@import 'components/auth-layout';
-@import 'components/auth-forms';
-@import 'components/dashboard-responsive';
-@import 'components/common-responsive';
+@use 'components/buttons';
+@use 'components/auth-layout';
+@use 'components/auth-forms';
+@use 'components/dashboard-responsive';
+@use 'components/common-responsive';
 
 // Layout components
-@import 'layout/grid';
-@import 'layout/containers';
+@use 'layout/grid';
+@use 'layout/containers';
 
 // Feature components (keep existing imports for now)
-@import 'components/billing';
-@import 'components/inventory';
-@import 'components/reports';
-@import 'components/settings';
-@import 'components/ui';
+@use 'components/billing';
+@use 'components/inventory';
+@use 'components/reports';
+@use 'components/settings';
+@use 'components/ui';
 
 // Page-specific styles
-@import '../pages/Index.module';
-@import '../pages/Login.module';
+@use '../pages/Index.module';
+@use '../pages/Login.module';
 
 // Global responsive styles
 body {

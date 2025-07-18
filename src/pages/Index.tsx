@@ -14,7 +14,7 @@ import BillingModule from "@/components/BillingModule";
 import InventoryModule from "@/components/InventoryModule";
 import ReportsModule from "@/components/ReportsModule";
 import { DefaultHeader } from "@/components/common/DefaultHeader";
-import styles from './Index.module.scss';
+import './Index.scss';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");

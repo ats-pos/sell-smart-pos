@@ -1,6 +1,6 @@
 
-@import '../styles/abstracts/variables';
-@import '../styles/abstracts/mixins';
+@use '../styles/base/variables';
+@use '../styles/abstracts/mixins';
 
 .page-layout {
   min-height: 100vh;
@@ -55,11 +55,11 @@
   position: relative;
   z-index: 10;
   
-  @include tablet {
+  @include mixins.tablet {
     padding: 2rem 1.5rem;
   }
   
-  @include desktop {
+  @include mixins.desktop {
     padding: 2rem 2rem;
   }
 }
@@ -69,7 +69,7 @@
   flex-direction: column;
   gap: 1.5rem;
   
-  @include tablet {
+  @include mixins.tablet {
     gap: 2rem;
   }
 }
@@ -123,12 +123,12 @@
   .tab-label {
     display: none;
     
-    @include tablet {
+    @include mixins.tablet {
       display: inline;
     }
   }
   
-  @include tablet {
+  @include mixins.tablet {
     font-size: 0.875rem;
   }
 }

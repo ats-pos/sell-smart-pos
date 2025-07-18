@@ -1,28 +1,28 @@
 // Base styles and CSS reset
-@import './styles/base/reset';
-@import './styles/base/variables';
-@import './styles/base/typography';
+@use './styles/base/reset';
+@use './styles/base/variables';
+@use './styles/base/typography';
 
 // Layout styles
-@import './styles/layout/grid';
-@import './styles/layout/containers';
+@use './styles/layout/grid';
+@use './styles/layout/containers';
 
 // Component styles
-@import './styles/components/auth';
-@import './styles/components/billing';
-@import './styles/components/common';
-@import './styles/components/dashboard';
-@import './styles/components/inventory';
-@import './styles/components/reports';
-@import './styles/components/settings';
-@import './styles/components/ui';
+@use './styles/components/auth';
+@use './styles/components/billing';
+@use './styles/components/common';
+@use './styles/components/dashboard';
+@use './styles/components/inventory';
+@use './styles/components/reports';
+@use './styles/components/settings';
+@use './styles/components/ui';
 
 // Utility styles
-@import './styles/utilities/animations';
-@import './styles/utilities/glassmorphism';
-@import './styles/utilities/responsive';
-@import './styles/utilities/scrollbar';
-@import './styles/utilities/helpers';
+@use './styles/utilities/animations';
+@use './styles/utilities/glassmorphism';
+@use './styles/utilities/responsive';
+@use './styles/utilities/scrollbar';
+@use './styles/utilities/helpers';
 
 // Global styles
 body {

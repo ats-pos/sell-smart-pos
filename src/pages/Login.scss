@@ -1,6 +1,6 @@
 
-@import '../styles/abstracts/variables';
-@import '../styles/abstracts/mixins';
+@use '../styles/base/variables';
+@use '../styles/abstracts/mixins';
 
 .login-layout {
   min-height: 100vh;
@@ -14,14 +14,14 @@
   overflow: hidden;
   
   // Mobile specific adjustments
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     padding: 0.5rem;
     align-items: flex-start;
     padding-top: 2rem;
   }
   
   // Tablet adjustments
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @include mixins.tablet {
     padding: 1.5rem;
   }
   
@@ -43,13 +43,13 @@
       width: 12rem;
       height: 12rem;
       
-      @media (min-width: 768px) {
+      @include mixins.tablet-up {
         width: 18rem;
         height: 18rem;
         filter: blur(50px);
       }
       
-      @media (min-width: 1024px) {
+      @include mixins.desktop {
         width: 24rem;
         height: 24rem;
         filter: blur(60px);
@@ -61,12 +61,12 @@
         background: #60a5fa;
         animation-delay: 0s;
         
-        @media (min-width: 768px) {
+        @include mixins.tablet-up {
           top: 15%;
           left: 15%;
         }
         
-        @media (min-width: 1024px) {
+        @include mixins.desktop {
           top: 25%;
           left: 25%;
         }
@@ -78,12 +78,12 @@
         background: #a855f7;
         animation-delay: 2s;
         
-        @media (min-width: 768px) {
+        @include mixins.tablet-up {
           top: 65%;
           right: 15%;
         }
         
-        @media (min-width: 1024px) {
+        @include mixins.desktop {
           top: 75%;
           right: 25%;
         }
@@ -96,12 +96,12 @@
         background: #6366f1;
         animation-delay: 1s;
         
-        @media (min-width: 768px) {
+        @include mixins.tablet-up {
           top: 45%;
           left: 45%;
         }
         
-        @media (min-width: 1024px) {
+        @include mixins.desktop {
           top: 50%;
           left: 50%;
         }
@@ -117,24 +117,24 @@
   z-index: 10;
   
   // Mobile adjustments
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     max-width: 100%;
     margin: 0;
   }
   
   // Tablet adjustments
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @include mixins.tablet {
     max-width: 28rem;
   }
   
   &.login-container-sm {
     max-width: 28rem;
     
-    @media (max-width: 767px) {
+    @include mixins.mobile {
       max-width: 100%;
     }
     
-    @media (min-width: 768px) and (max-width: 1023px) {
+    @include mixins.tablet {
       max-width: 26rem;
     }
   }
@@ -152,21 +152,21 @@
   overflow: hidden;
   
   // Mobile specific styles
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     border-radius: 0.75rem;
     margin: 0 auto;
     box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3);
   }
   
   // Tablet styles
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @include mixins.tablet {
     border-radius: 1.25rem;
     max-width: 28rem;
     margin: 0 auto;
   }
   
   // Desktop styles
-  @media (min-width: 1024px) {
+  @include mixins.desktop {
     border-radius: 1.5rem;
     max-width: 32rem;
   }
@@ -176,15 +176,15 @@
   text-align: center;
   padding: 1.5rem 1.5rem 1rem;
   
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     padding: 1rem 1rem 0.75rem;
   }
   
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @include mixins.tablet {
     padding: 1.75rem 1.75rem 1.25rem;
   }
   
-  @media (min-width: 1024px) {
+  @include mixins.desktop {
     padding: 2rem 2rem 1.5rem;
   }
 }
@@ -195,17 +195,17 @@
   gap: 1.5rem;
   padding: 0 1.5rem 1.5rem;
   
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     gap: 1rem;
     padding: 0 1rem 1rem;
   }
   
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @include mixins.tablet {
     gap: 1.25rem;
     padding: 0 1.75rem 1.75rem;
   }
   
-  @media (min-width: 1024px) {
+  @include mixins.desktop {
     gap: 1.75rem;
     padding: 0 2rem 2rem;
   }
@@ -227,19 +227,19 @@
   font-size: 0.875rem;
   font-weight: 500;
   
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     padding: 0.625rem 0.875rem;
     font-size: 0.8125rem;
     border-radius: 0.5rem;
   }
   
-  @media (min-width: 768px) {
+  @include mixins.tablet-up {
     padding: 0.875rem 1.125rem;
     font-size: 0.9375rem;
     border-radius: 0.875rem;
   }
   
-  @media (min-width: 1024px) {
+  @include mixins.desktop {
     padding: 1rem 1.25rem;
     font-size: 1rem;
     border-radius: 1rem;
@@ -312,7 +312,7 @@
   font-size: 0.875rem;
   text-align: center;
   
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     padding: 0.625rem;
     font-size: 0.8125rem;
   }
@@ -328,7 +328,7 @@
   font-size: 0.875rem;
   text-align: center;
   
-  @media (max-width: 767px) {
+  @include mixins.mobile {
     padding: 0.625rem;
     font-size: 0.8125rem;
   }

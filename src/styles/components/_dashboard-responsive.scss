@@ -1,7 +1,7 @@
 
 // Responsive Dashboard Components
-@import '../abstracts/variables';
-@import '../abstracts/mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .dashboard-container {
   padding: var(--spacing-md);
