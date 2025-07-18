@@ -1,0 +1,537 @@
+
+// Responsive Sale Operator Page Components
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
+
+.sale-operator-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  
+  .page-background {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+      filter: blur(40px);
+      animation: pulse 6s ease-in-out infinite;
+      will-change: transform, opacity;
+      
+      width: 12rem;
+      height: 12rem;
+      
+      @include mixins.tablet {
+        width: 18rem;
+        height: 18rem;
+        filter: blur(50px);
+      }
+      
+      @include mixins.desktop {
+        width: 24rem;
+        height: 24rem;
+        filter: blur(60px);
+      }
+      
+      &.orb-1 {
+        top: 10%;
+        left: 10%;
+        background: #60a5fa;
+        animation-delay: 0s;
+        
+        @include mixins.tablet {
+          top: 15%;
+          left: 15%;
+        }
+        
+        @include mixins.desktop {
+          top: 25%;
+          left: 25%;
+        }
+      }
+      
+      &.orb-2 {
+        top: 70%;
+        right: 10%;
+        background: #a855f7;
+        animation-delay: 2s;
+        
+        @include mixins.tablet {
+          top: 65%;
+          right: 15%;
+        }
+        
+        @include mixins.desktop {
+          top: 75%;
+          right: 25%;
+        }
+      }
+    }
+  }
+  
+  .page-header {
+    position: relative;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-sm);
+    }
+    
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-md);
+      
+      @include mixins.mobile {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+      }
+      
+      .header-branding {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        
+        .brand-title {
+          font-size: var(--font-xl);
+          font-weight: var(--font-bold);
+          color: white;
+          
+          @include mixins.mobile {
+            font-size: var(--font-lg);
+          }
+        }
+        
+        .brand-subtitle {
+          font-size: var(--font-sm);
+          color: rgba(255, 255, 255, 0.7);
+          
+          @include mixins.mobile {
+            font-size: var(--font-xs);
+          }
+        }
+      }
+      
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        
+        @include mixins.mobile {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        
+        .header-button {
+          @include mixins.button-base;
+          padding: var(--spacing-sm) var(--spacing-md);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: white;
+          font-size: var(--font-sm);
+          
+          @include mixins.hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+          
+          @include mixins.mobile {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-xs);
+          }
+          
+          &.primary {
+            background: linear-gradient(to right, var(--color-blue-500), var(--color-purple-500));
+            border-color: transparent;
+            
+            @include mixins.hover {
+              background: linear-gradient(to right, var(--color-blue-600), var(--color-purple-600));
+            }
+          }
+        }
+        
+        .user-menu {
+          position: relative;
+          
+          .user-avatar {
+            @include mixins.button-base;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-blue-500);
+            color: white;
+            padding: 0;
+            
+            @include mixins.mobile {
+              width: 36px;
+              height: 36px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .page-main {
+    flex: 1;
+    position: relative;
+    z-index: 10;
+    padding: var(--spacing-lg);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-sm);
+    }
+    
+    @include mixins.tablet {
+      padding: var(--spacing-md);
+    }
+    
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100%;
+    }
+  }
+}
+
+// Terminal Display
+.sales-terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: calc(100vh - 160px);
+  
+  @include mixins.mobile {
+    min-height: calc(100vh - 120px);
+  }
+  
+  .terminal-header {
+    @include mixins.card;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .terminal-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-md);
+      
+      @include mixins.mobile {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+      }
+      
+      .status-info {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        
+        .status-indicator {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: var(--color-success);
+          animation: pulse-dot 2s infinite;
+        }
+        
+        .status-text {
+          font-size: var(--font-sm);
+          color: var(--text-primary);
+          font-weight: var(--font-medium);
+        }
+      }
+      
+      .terminal-controls {
+        display: flex;
+        gap: var(--spacing-sm);
+        
+        .control-button {
+          @include mixins.button-secondary;
+          padding: var(--spacing-xs) var(--spacing-sm);
+          font-size: var(--font-xs);
+          
+          @include mixins.mobile {
+            padding: var(--spacing-sm);
+          }
+        }
+      }
+    }
+  }
+  
+  .terminal-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    
+    .billing-interface {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+}
+
+// Quick Actions Panel
+.quick-actions-panel {
+  @include mixins.card;
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  
+  @include mixins.mobile {
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+  
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    
+    .panel-title {
+      font-size: var(--font-base);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      
+      @include mixins.mobile {
+        font-size: var(--font-sm);
+      }
+    }
+    
+    .panel-toggle {
+      @include mixins.button-base;
+      width: 32px;
+      height: 32px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      color: var(--text-primary);
+      
+      @include mixins.hover {
+        background: var(--bg-tertiary);
+      }
+    }
+  }
+  
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+    
+    @include mixins.tablet {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    
+    @include mixins.desktop {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .action-item {
+      @include mixins.button-base;
+      padding: var(--spacing-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      color: var(--text-primary);
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      text-align: center;
+      
+      @include mixins.mobile {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-xs);
+      }
+      
+      @include mixins.hover {
+        background: var(--bg-tertiary);
+        transform: translateY(-1px);
+      }
+      
+      .action-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: var(--color-blue-500);
+        
+        @include mixins.mobile {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+      
+      .action-label {
+        font-size: var(--font-xs);
+        font-weight: var(--font-medium);
+        
+        @include mixins.mobile {
+          font-size: 10px;
+        }
+      }
+      
+      .action-shortcut {
+        font-size: 10px;
+        color: var(--text-tertiary);
+        
+        @include mixins.mobile {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Status Bar
+.terminal-status-bar {
+  @include mixins.card;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-top: var(--spacing-md);
+  
+  @include mixins.mobile {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+  
+  .status-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    
+    @include mixins.mobile {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      text-align: center;
+    }
+    
+    .status-section {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      
+      @include mixins.mobile {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-sm);
+      }
+      
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        font-size: var(--font-xs);
+        color: var(--text-secondary);
+        
+        .status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          
+          &.online {
+            background: var(--color-success);
+          }
+          
+          &.offline {
+            background: var(--color-destructive);
+          }
+          
+          &.syncing {
+            background: var(--color-warning);
+            animation: pulse-dot 1s infinite;
+          }
+        }
+      }
+    }
+    
+    .status-time {
+      font-size: var(--font-xs);
+      color: var(--text-tertiary);
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Responsive adjustments for touch devices
+@media (max-width: 767px) {
+  .sale-operator-page {
+    .page-header {
+      .header-container {
+        .header-actions {
+          .header-button {
+            min-height: 44px;
+            min-width: 44px;
+          }
+        }
+      }
+    }
+  }
+  
+  .quick-actions-panel {
+    .actions-grid {
+      .action-item {
+        min-height: 64px;
+        padding: var(--spacing-md);
+      }
+    }
+  }
+}
+
+// Print styles for receipts
+@media print {
+  .sale-operator-page {
+    .page-header,
+    .quick-actions-panel,
+    .terminal-status-bar {
+      display: none !important;
+    }
+    
+    .page-background {
+      display: none !important;
+    }
+    
+    .terminal-content {
+      .billing-interface {
+        background: white !important;
+        color: black !important;
+      }
+    }
+  }
+}

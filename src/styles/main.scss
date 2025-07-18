@@ -1,3 +1,4 @@
+
 // Import order is important for proper cascading
 @use 'abstracts/variables';
 @use 'abstracts/mixins';
@@ -21,16 +22,17 @@
 @use 'components/auth-forms';
 @use 'components/dashboard-responsive';
 @use 'components/common-responsive';
+@use 'components/billing-responsive';
+@use 'components/inventory-responsive';
+@use 'components/reports-responsive';
+@use 'components/settings-responsive';
+@use 'components/sale-operator-responsive';
 
 // Layout components
 @use 'layout/grid';
 @use 'layout/containers';
 
-// Feature components (keep existing imports for now)
-@use 'components/billing';
-@use 'components/inventory';
-@use 'components/reports';
-@use 'components/settings';
+// Legacy component imports (to be gradually replaced)
 @use 'components/ui';
 
 // Page-specific styles
@@ -94,11 +96,11 @@ html {
   width: 100%;
   max-width: 100vw;
   
-  @include tablet {
+  @include mixins.tablet {
     padding: var(--spacing-lg);
   }
   
-  @include desktop {
+  @include mixins.desktop {
     padding: var(--spacing-xl);
   }
 }
@@ -123,13 +125,13 @@ html {
     width: 12rem;
     height: 12rem;
     
-    @include tablet {
+    @include mixins.tablet {
       width: 18rem;
       height: 18rem;
       filter: blur(50px);
     }
     
-    @include desktop {
+    @include mixins.desktop {
       width: 24rem;
       height: 24rem;
       filter: blur(60px);
@@ -141,12 +143,12 @@ html {
       background: #60a5fa;
       animation-delay: 0s;
       
-      @include tablet {
+      @include mixins.tablet {
         top: 15%;
         left: 15%;
       }
       
-      @include desktop {
+      @include mixins.desktop {
         top: 25%;
         left: 25%;
       }
@@ -158,12 +160,12 @@ html {
       background: #a855f7;
       animation-delay: 2s;
       
-      @include tablet {
+      @include mixins.tablet {
         top: 65%;
         right: 15%;
       }
       
-      @include desktop {
+      @include mixins.desktop {
         top: 75%;
         right: 25%;
       }
@@ -176,12 +178,12 @@ html {
       background: #6366f1;
       animation-delay: 1s;
       
-      @include tablet {
+      @include mixins.tablet {
         top: 45%;
         left: 45%;
       }
       
-      @include desktop {
+      @include mixins.desktop {
         top: 50%;
         left: 50%;
       }
@@ -232,6 +234,24 @@ html {
   }
 }
 
+// Global component consistency
+.glass {
+  @include mixins.glass;
+}
+
+.card {
+  @include mixins.card;
+}
+
+.card-hover {
+  @include mixins.card-hover;
+}
+
+// Global loading states
+.loading {
+  @include mixins.loading-shimmer;
+}
+
 // Print styles
 @media print {
   .print-hidden {
@@ -270,4 +290,21 @@ html {
   .bg-orbs .orb {
     animation: none !important;
   }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+  
+  button, .button {
+    border-width: 2px;
+  }
+}
+
+// Dark mode support (already implemented via CSS variables)
+@media (prefers-color-scheme: dark) {
+  // The design is already dark mode first
+  // Additional dark mode specific adjustments can go here
 }

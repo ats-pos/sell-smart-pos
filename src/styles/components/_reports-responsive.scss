@@ -1,0 +1,664 @@
+
+// Responsive Reports Module Components
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
+
+.reports-module {
+  padding: var(--spacing-sm);
+  
+  @include mixins.tablet {
+    padding: var(--spacing-md);
+  }
+  
+  @include mixins.desktop {
+    padding: var(--spacing-lg);
+  }
+  
+  .reports-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    
+    @include mixins.tablet {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .reports-title {
+      font-size: var(--font-xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+      
+      @include mixins.mobile {
+        font-size: var(--font-lg);
+      }
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      
+      @include mixins.mobile {
+        flex-direction: column;
+      }
+      
+      .header-button {
+        @include mixins.button-secondary;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-sm);
+        
+        @include mixins.mobile {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+  
+  .reports-tabs {
+    .tabs-container {
+      @include mixins.card;
+      padding: 0;
+      overflow: hidden;
+      
+      .tabs-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: var(--bg-tertiary);
+        
+        @include mixins.mobile {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .tab-trigger {
+          @include mixins.button-base;
+          padding: var(--spacing-md);
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          color: var(--text-secondary);
+          font-weight: var(--font-medium);
+          font-size: var(--font-sm);
+          transition: var(--transition-normal);
+          
+          @include mixins.mobile {
+            padding: var(--spacing-sm);
+            font-size: var(--font-xs);
+          }
+          
+          &[data-state="active"] {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--color-blue-500);
+          }
+          
+          @include mixins.hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+          }
+        }
+      }
+      
+      .tabs-content {
+        padding: var(--spacing-lg);
+        
+        @include mixins.mobile {
+          padding: var(--spacing-md);
+        }
+        
+        .tab-panel {
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-lg);
+        }
+      }
+    }
+  }
+}
+
+// Sales Report Tab
+.sales-report {
+  .sales-overview {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    
+    @include mixins.tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include mixins.desktop {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .overview-card {
+      @include mixins.card;
+      padding: var(--spacing-md);
+      
+      @include mixins.mobile {
+        padding: var(--spacing-sm);
+      }
+      
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-sm);
+        
+        .card-title {
+          font-size: var(--font-sm);
+          font-weight: var(--font-medium);
+          color: var(--text-secondary);
+        }
+        
+        .card-icon {
+          width: 1rem;
+          height: 1rem;
+          color: var(--text-tertiary);
+          
+          @include mixins.tablet {
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+        }
+      }
+      
+      .card-content {
+        .card-value {
+          font-size: var(--font-lg);
+          font-weight: var(--font-bold);
+          color: var(--text-primary);
+          margin-bottom: var(--spacing-xs);
+          
+          @include mixins.tablet {
+            font-size: var(--font-xl);
+          }
+          
+          @include mixins.desktop {
+            font-size: var(--font-2xl);
+          }
+        }
+        
+        .card-subtitle {
+          font-size: var(--font-xs);
+          color: var(--text-tertiary);
+        }
+      }
+    }
+  }
+  
+  .monthly-trend {
+    @include mixins.card;
+    padding: var(--spacing-lg);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-md);
+    }
+    
+    .trend-header {
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      
+      @include mixins.mobile {
+        font-size: var(--font-base);
+      }
+    }
+    
+    .trend-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .trend-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-md);
+        background: var(--bg-secondary);
+        border-radius: var(--radius-lg);
+        
+        @include mixins.mobile {
+          padding: var(--spacing-sm);
+        }
+        
+        .trend-info {
+          .trend-month {
+            font-weight: var(--font-medium);
+            color: var(--text-primary);
+            font-size: var(--font-sm);
+            
+            @include mixins.tablet {
+              font-size: var(--font-base);
+            }
+          }
+          
+          .trend-transactions {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+          }
+        }
+        
+        .trend-value {
+          text-align: right;
+          
+          .trend-amount {
+            font-size: var(--font-base);
+            font-weight: var(--font-bold);
+            color: var(--color-success);
+            
+            @include mixins.tablet {
+              font-size: var(--font-lg);
+            }
+          }
+          
+          .trend-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: var(--font-medium);
+            margin-top: var(--spacing-xs);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Product Report Tab
+.product-report {
+  .top-products {
+    @include mixins.card;
+    padding: var(--spacing-lg);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-md);
+    }
+    
+    .products-header {
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      
+      @include mixins.mobile {
+        font-size: var(--font-base);
+      }
+    }
+    
+    .products-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      .product-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-md);
+        border: 1px solid var(--border-secondary);
+        border-radius: var(--radius-lg);
+        
+        @include mixins.mobile {
+          padding: var(--spacing-sm);
+        }
+        
+        .product-info {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
+          flex: 1;
+          min-width: 0;
+          
+          .product-rank {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: var(--color-blue-100);
+            color: var(--color-blue-800);
+            border-radius: 50%;
+            font-size: var(--font-sm);
+            font-weight: var(--font-bold);
+            flex-shrink: 0;
+            
+            @include mixins.mobile {
+              width: 1.5rem;
+              height: 1.5rem;
+              font-size: var(--font-xs);
+            }
+          }
+          
+          .product-details {
+            flex: 1;
+            min-width: 0;
+            
+            .product-name {
+              font-weight: var(--font-medium);
+              color: var(--text-primary);
+              font-size: var(--font-sm);
+              margin-bottom: var(--spacing-xs);
+              
+              @include mixins.tablet {
+                font-size: var(--font-base);
+              }
+            }
+            
+            .product-sales {
+              font-size: var(--font-xs);
+              color: var(--text-secondary);
+            }
+          }
+        }
+        
+        .product-revenue {
+          text-align: right;
+          
+          .revenue-amount {
+            font-weight: var(--font-bold);
+            color: var(--color-success);
+            font-size: var(--font-sm);
+            
+            @include mixins.tablet {
+              font-size: var(--font-base);
+            }
+          }
+          
+          .revenue-label {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+          }
+        }
+      }
+    }
+    
+    .products-loading,
+    .products-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      text-align: center;
+      color: var(--text-secondary);
+      
+      .loading-spinner,
+      .empty-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: var(--spacing-md);
+        opacity: 0.5;
+      }
+      
+      .loading-spinner {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+// GST Report Tab
+.gst-report {
+  .gst-summary {
+    @include mixins.card;
+    padding: var(--spacing-lg);
+    
+    @include mixins.mobile {
+      padding: var(--spacing-md);
+    }
+    
+    .gst-header {
+      font-size: var(--font-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      
+      @include mixins.mobile {
+        font-size: var(--font-base);
+      }
+    }
+    
+    .gst-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      
+      .gst-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        
+        @include mixins.tablet {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        
+        @include mixins.desktop {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .gst-card {
+          padding: var(--spacing-md);
+          border-radius: var(--radius-lg);
+          
+          @include mixins.mobile {
+            padding: var(--spacing-sm);
+          }
+          
+          &.total-sales {
+            background: rgba(59, 130, 246, 0.1);
+          }
+          
+          &.cgst {
+            background: rgba(34, 197, 94, 0.1);
+          }
+          
+          &.sgst {
+            background: rgba(251, 191, 36, 0.1);
+          }
+          
+          &.total-gst {
+            background: rgba(168, 85, 247, 0.1);
+          }
+          
+          .gst-label {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+          }
+          
+          .gst-value {
+            font-size: var(--font-lg);
+            font-weight: var(--font-bold);
+            color: var(--text-primary);
+            
+            @include mixins.tablet {
+              font-size: var(--font-xl);
+            }
+          }
+        }
+      }
+      
+      .gst-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: var(--spacing-lg);
+        
+        .download-button {
+          @include mixins.button-primary;
+          padding: var(--spacing-md) var(--spacing-xl);
+          
+          @include mixins.mobile {
+            width: 100%;
+          }
+        }
+      }
+    }
+    
+    .gst-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-2xl);
+      text-align: center;
+      color: var(--text-secondary);
+      
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        margin-bottom: var(--spacing-md);
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+// Trends Report Tab
+.trends-report {
+  .trends-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    
+    @include mixins.desktop {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .trends-card {
+      @include mixins.card;
+      padding: var(--spacing-lg);
+      
+      @include mixins.mobile {
+        padding: var(--spacing-md);
+      }
+      
+      .trends-header {
+        font-size: var(--font-lg);
+        font-weight: var(--font-semibold);
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-lg);
+        
+        @include mixins.mobile {
+          font-size: var(--font-base);
+        }
+      }
+      
+      .trends-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+        
+        .trend-metric {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: var(--spacing-sm);
+          background: var(--bg-secondary);
+          border-radius: var(--radius-md);
+          
+          .metric-label {
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+          }
+          
+          .metric-value {
+            font-weight: var(--font-bold);
+            color: var(--text-primary);
+            font-size: var(--font-sm);
+          }
+        }
+        
+        .trend-highlight {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
+          padding: var(--spacing-md);
+          border-radius: var(--radius-md);
+          
+          &.best-category {
+            background: rgba(34, 197, 94, 0.1);
+          }
+          
+          &.new-customers {
+            background: rgba(59, 130, 246, 0.1);
+          }
+          
+          &.busiest-day {
+            background: rgba(251, 191, 36, 0.1);
+          }
+          
+          .highlight-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            flex-shrink: 0;
+            
+            &.category {
+              color: var(--color-success);
+            }
+            
+            &.customers {
+              color: var(--color-blue-500);
+            }
+            
+            &.day {
+              color: var(--color-warning);
+            }
+          }
+          
+          .highlight-info {
+            flex: 1;
+            
+            .highlight-title {
+              font-weight: var(--font-medium);
+              color: var(--text-primary);
+              font-size: var(--font-sm);
+              margin-bottom: var(--spacing-xs);
+            }
+            
+            .highlight-description {
+              font-size: var(--font-xs);
+              color: var(--text-secondary);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading states
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive adjustments for touch devices
+@media (max-width: 767px) {
+  .reports-module {
+    .reports-tabs {
+      .tabs-container {
+        .tabs-list {
+          .tab-trigger {
+            padding: var(--spacing-md);
+            font-size: var(--font-sm);
+          }
+        }
+      }
+    }
+  }
+}
