@@ -1,0 +1,349 @@
+// Responsive Utilities
+@mixin mobile {
+  @media (max-width: #{var(--breakpoint-sm) - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{var(--breakpoint-sm)}) and (max-width: #{var(--breakpoint-lg) - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{var(--breakpoint-lg)}) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media (min-width: #{var(--breakpoint-xl)}) {
+    @content;
+  }
+}
+
+// Responsive Display Classes
+.hidden {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.inline {
+  display: inline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.inline-grid {
+  display: inline-grid;
+}
+
+// Mobile-first responsive classes
+@media (min-width: 640px) {
+  .sm\:hidden { display: none; }
+  .sm\:block { display: block; }
+  .sm\:inline { display: inline; }
+  .sm\:inline-block { display: inline-block; }
+  .sm\:flex { display: flex; }
+  .sm\:inline-flex { display: inline-flex; }
+  .sm\:grid { display: grid; }
+  .sm\:inline-grid { display: inline-grid; }
+}
+
+@media (min-width: 768px) {
+  .md\:hidden { display: none; }
+  .md\:block { display: block; }
+  .md\:inline { display: inline; }
+  .md\:inline-block { display: inline-block; }
+  .md\:flex { display: flex; }
+  .md\:inline-flex { display: inline-flex; }
+  .md\:grid { display: grid; }
+  .md\:inline-grid { display: inline-grid; }
+}
+
+@media (min-width: 1024px) {
+  .lg\:hidden { display: none; }
+  .lg\:block { display: block; }
+  .lg\:inline { display: inline; }
+  .lg\:inline-block { display: inline-block; }
+  .lg\:flex { display: flex; }
+  .lg\:inline-flex { display: inline-flex; }
+  .lg\:grid { display: grid; }
+  .lg\:inline-grid { display: inline-grid; }
+}
+
+@media (min-width: 1280px) {
+  .xl\:hidden { display: none; }
+  .xl\:block { display: block; }
+  .xl\:inline { display: inline; }
+  .xl\:inline-block { display: inline-block; }
+  .xl\:flex { display: flex; }
+  .xl\:inline-flex { display: inline-flex; }
+  .xl\:grid { display: grid; }
+  .xl\:inline-grid { display: inline-grid; }
+}
+
+// Responsive Text Sizes
+.text-responsive {
+  font-size: var(--font-sm);
+  
+  @media (min-width: 640px) {
+    font-size: var(--font-base);
+  }
+  
+  @media (min-width: 1024px) {
+    font-size: var(--font-lg);
+  }
+}
+
+.text-responsive-lg {
+  font-size: var(--font-base);
+  
+  @media (min-width: 640px) {
+    font-size: var(--font-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    font-size: var(--font-xl);
+  }
+}
+
+.text-responsive-xl {
+  font-size: var(--font-lg);
+  
+  @media (min-width: 640px) {
+    font-size: var(--font-xl);
+  }
+  
+  @media (min-width: 1024px) {
+    font-size: var(--font-2xl);
+  }
+}
+
+// Responsive Spacing
+.p-responsive {
+  padding: var(--spacing-md);
+  
+  @media (min-width: 640px) {
+    padding: var(--spacing-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    padding: var(--spacing-xl);
+  }
+}
+
+.px-responsive {
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+  
+  @media (min-width: 640px) {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+.py-responsive {
+  padding-top: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  
+  @media (min-width: 640px) {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+  }
+}
+
+// Responsive Gaps
+.gap-responsive {
+  gap: var(--spacing-md);
+  
+  @media (min-width: 640px) {
+    gap: var(--spacing-lg);
+  }
+  
+  @media (min-width: 1024px) {
+    gap: var(--spacing-xl);
+  }
+}
+
+// Container Queries (when supported)
+@container (min-width: 320px) {
+  .container-sm\:text-sm {
+    font-size: var(--font-sm);
+  }
+}
+
+@container (min-width: 640px) {
+  .container-md\:text-base {
+    font-size: var(--font-base);
+  }
+}
+
+@container (min-width: 1024px) {
+  .container-lg\:text-lg {
+    font-size: var(--font-lg);
+  }
+}
+
+// Responsive Visibility
+.visible-mobile {
+  display: block;
+  
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.visible-tablet {
+  display: none;
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+    display: block;
+  }
+}
+
+.visible-desktop {
+  display: none;
+  
+  @media (min-width: 1024px) {
+    display: block;
+  }
+}
+
+.hidden-mobile {
+  display: none;
+  
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.hidden-tablet {
+  display: block;
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+    display: none;
+  }
+}
+
+.hidden-desktop {
+  display: block;
+  
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+// Responsive Flex Direction
+.flex-responsive {
+  display: flex;
+  flex-direction: column;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.flex-responsive-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+  
+  @media (min-width: 768px) {
+    flex-direction: row-reverse;
+  }
+}
+
+// Responsive Grid Columns
+.grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid-responsive-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Responsive Max Widths
+.max-w-responsive {
+  max-width: 100%;
+  
+  @media (min-width: 640px) {
+    max-width: 640px;
+  }
+  
+  @media (min-width: 768px) {
+    max-width: 768px;
+  }
+  
+  @media (min-width: 1024px) {
+    max-width: 1024px;
+  }
+  
+  @media (min-width: 1280px) {
+    max-width: 1280px;
+  }
+}
+
+// Print Styles
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-block {
+    display: block !important;
+  }
+  
+  .print-text-black {
+    color: #000 !important;
+  }
+  
+  .print-bg-white {
+    background-color: #fff !important;
+  }
+}
