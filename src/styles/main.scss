@@ -33,6 +33,10 @@
 @import 'components/settings';
 @import 'components/ui';
 
+// Page-specific styles
+@import '../pages/Index.module';
+@import '../pages/Login.module';
+
 // Global styles
 body {
   margin: 0;
@@ -62,6 +66,102 @@ html {
   width: 100%;
 }
 
+// Global page layout
+.page-layout {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  
+  @media (max-width: 767px) {
+    padding: 0;
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  position: relative;
+  z-index: 10;
+  
+  @media (min-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 2rem;
+  }
+}
+
+// Background orbs for all pages
+.bg-orbs {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  pointer-events: none;
+  overflow: hidden;
+  
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    filter: blur(60px);
+    animation: pulse 4s ease-in-out infinite;
+    
+    // Responsive orb sizes
+    width: 16rem;
+    height: 16rem;
+    
+    @media (min-width: 768px) {
+      width: 20rem;
+      height: 20rem;
+    }
+    
+    @media (min-width: 1024px) {
+      width: 24rem;
+      height: 24rem;
+    }
+    
+    &.orb-1 {
+      top: 10%;
+      left: 10%;
+      background: #60a5fa;
+      animation-delay: 0s;
+      
+      @media (min-width: 768px) {
+        top: 25%;
+        left: 25%;
+      }
+    }
+    
+    &.orb-2 {
+      top: 60%;
+      right: 10%;
+      background: #a855f7;
+      animation-delay: 2s;
+      
+      @media (min-width: 768px) {
+        top: 75%;
+        right: 25%;
+      }
+    }
+    
+    &.orb-3 {
+      top: 40%;
+      left: 40%;
+      transform: translate(-50%, -50%);
+      background: #6366f1;
+      animation-delay: 1s;
+      
+      @media (min-width: 768px) {
+        top: 50%;
+        left: 50%;
+      }
+    }
+  }
+}
+
 // Global animations
 @keyframes float {
   0%, 100% {
@@ -85,7 +185,7 @@ html {
 
 @keyframes pulse {
   0%, 100% {
-    opacity: 0.2;
+    opacity: 0.1;
     transform: scale(1);
   }
   50% {
