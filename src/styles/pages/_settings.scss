@@ -1,7 +1,282 @@
 // Settings Page Styles
 @use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
 
 .settings-page {
   min-height: 100vh;
   background: $gradient-background;
+  position: relative;
+  
+  // Background orbs for settings
+  .bg-orbs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0.1;
+    
+    .orb {
+      &:nth-child(1) {
+        width: 24rem;
+        height: 24rem;
+        background-color: rgba(59, 130, 246, 0.4);
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(40px);
+        @include float();
+        position: absolute;
+        top: 25%;
+        left: 25%;
+      }
+      
+      &:nth-child(2) {
+        width: 24rem;
+        height: 24rem;
+        background-color: rgba(168, 85, 247, 0.4);
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(40px);
+        @include float();
+        animation-delay: 1s;
+        position: absolute;
+        top: 75%;
+        right: 25%;
+      }
+    }
+  }
+}
+
+.settings-main {
+  @include container($container-2xl);
+  position: relative;
+  z-index: 10;
+  padding: $spacing-4;
+  
+  @include mobile-up {
+    padding: $spacing-6;
+  }
+  
+  @include desktop-up {
+    padding: $spacing-8;
+  }
+}
+
+.settings-tabs {
+  @include flex-column;
+  gap: $spacing-4;
+  
+  @include mobile-up {
+    gap: $spacing-6;
+  }
+  
+  @include desktop-up {
+    gap: $spacing-8;
+  }
+}
+
+.settings-tabs-header {
+  @include glass();
+  padding: $spacing-2;
+  border-radius: $radius-2xl;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  @include slide-up();
+}
+
+.settings-tabs-list {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  height: auto;
+  background-color: transparent;
+  gap: $spacing-1;
+  overflow-x: auto;
+  
+  @include mobile-up {
+    grid-template-columns: repeat(6, 1fr);
+    gap: $spacing-2;
+  }
+}
+
+.settings-tab-trigger {
+  @include flex-column-center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  padding: $spacing-2;
+  border-radius: $radius-xl;
+  transition: all $duration-200 $ease-in-out;
+  @include touch-target(48px);
+  
+  @include mobile-up {
+    padding: $spacing-3;
+  }
+  
+  &.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  &:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  span {
+    font-size: 10px;
+    
+    @include mobile-up {
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+.settings-tab-content {
+  @include slide-up();
+  animation-delay: 200ms;
+}
+
+.settings-card {
+  @include glass();
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  @include card-base;
+}
+
+.settings-card-header {
+  padding-bottom: $spacing-3;
+  
+  @include mobile-up {
+    padding-bottom: $spacing-4;
+  }
+}
+
+.settings-card-title {
+  @include flex-start;
+  gap: $spacing-2;
+  color: white;
+  font-size: $font-size-lg;
+  
+  @include mobile-up {
+    font-size: $font-size-xl;
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.settings-card-content {
+  @include flex-column;
+  gap: $spacing-4;
+  padding: $spacing-4;
+  
+  @include mobile-up {
+    gap: $spacing-6;
+    padding: $spacing-6;
+  }
+}
+
+.settings-loading {
+  text-align: center;
+  padding: $spacing-8 0;
+  color: rgba(191, 219, 254, 1);
+}
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+  
+  @include mobile-up {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.settings-form-group {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.settings-form-label {
+  color: white;
+  font-size: $font-size-sm;
+  
+  @include mobile-up {
+    font-size: $font-size-base;
+  }
+}
+
+.settings-input {
+  @include input-base;
+  font-size: $font-size-sm;
+  
+  @include mobile-up {
+    font-size: $font-size-base;
+  }
+}
+
+.settings-textarea {
+  @extend .settings-input;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  min-height: 80px;
+  
+  &::placeholder {
+    color: rgba(191, 219, 254, 1);
+  }
+}
+
+.settings-checkbox-group {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-2 0;
+}
+
+.settings-button {
+  @include button-primary;
+  width: 100%;
+  
+  @include mobile-up {
+    width: auto;
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-right: $spacing-2;
+  }
+}
+
+.settings-test-button {
+  @include button-outline;
+  @include flex-center;
+  gap: $spacing-1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.settings-radio-group {
+  @include flex-column;
+  gap: $spacing-3;
+}
+
+.settings-radio-item {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-1 0;
 }

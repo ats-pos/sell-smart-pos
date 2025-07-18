@@ -11,25 +11,9 @@ export const MockModeIndicator = () => {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-      <Badge 
-        variant="secondary" 
-        className="bg-orange-500/20 text-orange-300 border-orange-500/30 animate-pulse"
-      >
-        <TestTube className="h-3 w-3 mr-1" />
-        Mock Mode Active
-      </Badge>
-      
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={toggleMockMode}
-        className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs"
-        title="Switch to Live API"
-      >
-        <Database className="h-3 w-3 mr-1" />
-        Switch to Live
-      </Button>
+    <div className="mock-indicator">
+      <TestTube className="h-3 w-3" />
+      Mock Mode Active
     </div>
   );
 };

@@ -233,11 +233,11 @@ const Settings = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="settings-page">
       {/* Animated background elements */}
-      <div className="fixed inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
+      <div className="bg-orbs">
+        <div className="orb"></div>
+        <div className="orb"></div>
       </div>
 
       {/* Default Header */}
@@ -251,11 +251,11 @@ const Settings = () => {
       />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6 lg:space-y-8">
+      <main className="settings-main">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="settings-tabs">
           {/* Mobile-Optimized Tab Navigation */}
-          <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 sm:gap-2 overflow-x-auto">
+          <div className="settings-tabs-header">
+            <TabsList className="settings-tabs-list">
               <TabsTrigger
                 value="store"
                 className="flex flex-col items-center gap-1 text-xs p-2 sm:p-3 rounded-xl 

@@ -63,25 +63,25 @@ export const DefaultHeader = ({
   };
 
   return (
-    <header className="glass sticky top-0 z-50 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-xl shadow-lg">
+    <header className="header">
+      <div className="header__container">
+        <div className="flex-responsive--between">
+          <div className="header__brand">
+            <div className="header__logo">
               <Receipt className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-white gradient-text">{title}</h1>
+              <h1 className="header__title">{title}</h1>
               {showUserInfo ? (
-                <div className="flex items-center gap-2 text-xs text-blue-200">
+                <div className="header__subtitle">
                   <span>{getCurrentDate()}</span>
                   {/* <span className="hidden sm:inline">•</span>
                   <span className="hidden sm:inline">4ztain Inne</span> */}
                   <span className="hidden sm:inline">•</span>
                   <span>John Doe</span>
                 </div>
-              ) : (
-                <p className="text-xs text-blue-200 flex items-center gap-1">
+                              ) : (
+                <p className="header__subtitle">
                   <Sparkles className="h-3 w-3" />
                   {subtitle}
                 </p>
@@ -90,12 +90,12 @@ export const DefaultHeader = ({
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden sm:flex items-center space-x-2">
+          <div className="header__actions">
             {/* Online Status */}
-            <Badge variant={isOnline ? "default" : "destructive"} className="flex items-center gap-1 text-xs">
+            <div className={`status-badge ${isOnline ? 'status-badge--online' : 'status-badge--offline'}`}>
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
               {isOnline ? "Online" : "Offline"}
-            </Badge>
+            </div>
 
             <MockModeIndicator />
 
@@ -104,41 +104,35 @@ export const DefaultHeader = ({
 
             {/* Admin Dashboard Button */}
             {showAdminDashboard && (
-              <Button
-                variant="outline"
-                size="sm"
+              <button
                 onClick={handleAdminDashboard}
-                className="flex items-center gap-1 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs"
+                className="header-btn"
               >
                 <User className="h-3 w-3" />
                 <span className="hidden md:inline">Admin</span>
-              </Button>
+              </button>
             )}
 
             {/* Settings Button */}
             {showSettings && (
-              <Button
-                variant="outline"
-                size="sm"
+              <button
                 onClick={handleSettings}
-                className="flex items-center gap-1 bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs"
+                className="header-btn"
               >
                 <Settings className="h-3 w-3" />
                 <span className="hidden md:inline">Settings</span>
-              </Button>
+              </button>
             )}
 
             {/* Logout Button */}
             {showLogout && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover-lift h-8 px-3 text-xs" 
+              <button
                 onClick={handleLogout}
+                className="header-btn"
               >
                 <LogOut className="h-3 w-3 mr-1" />
                 <span className="hidden md:inline">Logout</span>
-              </Button>
+              </button>
             )}
           </div>
 
