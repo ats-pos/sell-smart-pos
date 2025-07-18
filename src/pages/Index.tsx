@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -13,6 +14,7 @@ import BillingModule from "@/components/BillingModule";
 import InventoryModule from "@/components/InventoryModule";
 import ReportsModule from "@/components/ReportsModule";
 import { DefaultHeader } from "@/components/common/DefaultHeader";
+import styles from './Index.module.scss';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -24,7 +26,7 @@ const Index = () => {
   const customActions = (
     <Button 
       onClick={handleNewSale}
-      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover-lift h-8 px-3 text-xs"
+      className="btn primary small"
     >
       <Plus className="h-3 w-3 mr-1" />
       <span className="hidden md:inline">New Sale</span>
@@ -32,12 +34,12 @@ const Index = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="page-layout">
       {/* Animated background elements */}
-      <div className="fixed inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-float delay-500"></div>
+      <div className="bg-orbs">
+        <div className="orb orb-1"></div>
+        <div className="orb orb-2"></div>
+        <div className="orb orb-3"></div>
       </div>
 
       {/* Default Header */}
@@ -51,55 +53,55 @@ const Index = () => {
       />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 sm:space-y-8">
-          {/* Modern Tab Navigation with Fixed Alignment */}
-          <div className="glass p-2 rounded-2xl border border-white/20 animate-slide-up">
-            <TabsList className="grid w-full grid-cols-4 h-12 bg-white/10 backdrop-blur-sm border border-white/20 gap-2">
+      <main className="main-content">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="tabs-container">
+          {/* Modern Tab Navigation */}
+          <div className="tabs-wrapper">
+            <TabsList className="tabs-list">
               <TabsTrigger
                 value="dashboard"
-                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="tab-trigger"
               >
                 <BarChart3 className="h-4 w-4" />
-                <span className="hidden sm:inline">Dashboard</span>
+                <span className="tab-label">Dashboard</span>
               </TabsTrigger>
               <TabsTrigger
                 value="billing"
-                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="tab-trigger"
               >
                 <ShoppingCart className="h-4 w-4" />
-                <span className="hidden sm:inline">Billing</span>
+                <span className="tab-label">Billing</span>
               </TabsTrigger>
               <TabsTrigger
                 value="inventory"
-                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="tab-trigger"
               >
                 <Package className="h-4 w-4" />
-                <span className="hidden sm:inline">Inventory</span>
+                <span className="tab-label">Inventory</span>
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="flex items-center justify-center gap-2 text-xs sm:text-sm p-3 rounded-xl text-blue-200 font-semibold hover:text-white hover:bg-white/20 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-200"
+                className="tab-trigger"
               >
                 <TrendingUp className="h-4 w-4" />
-                <span className="hidden sm:inline">Reports</span>
+                <span className="tab-label">Reports</span>
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="dashboard" className="animate-slide-up delay-200">
+          <TabsContent value="dashboard" className="tab-content">
             <Dashboard />
           </TabsContent>
 
-          <TabsContent value="billing" className="animate-slide-up delay-200">
+          <TabsContent value="billing" className="tab-content">
             <BillingModule />
           </TabsContent>
 
-          <TabsContent value="inventory" className="animate-slide-up delay-200">
+          <TabsContent value="inventory" className="tab-content">
             <InventoryModule />
           </TabsContent>
 
-          <TabsContent value="reports" className="animate-slide-up delay-200">
+          <TabsContent value="reports" className="tab-content">
             <ReportsModule />
           </TabsContent>
         </Tabs>

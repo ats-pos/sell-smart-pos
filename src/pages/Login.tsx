@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { PINLoginView } from "@/components/auth/PINLoginView";
 import { ForgotPasswordView } from "@/components/auth/ForgotPasswordView";
 import { DemoCredentials } from "@/components/auth/DemoCredentials";
 import { LoginInput, OTPLoginInput, PINLoginInput, DeviceUser } from "@/lib/graphql/auth-types";
+import styles from './Login.module.scss';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -155,13 +157,13 @@ const Login = () => {
   // Store Registration View
   if (currentView === 'register') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+      <div className="login-layout">
+        <div className="bg-orbs">
+          <div className="orb orb-1"></div>
+          <div className="orb orb-2"></div>
         </div>
         
-        <div className="w-full max-w-2xl relative z-10">
+        <div className="login-container">
           <StoreRegistration
             onRegister={handleStoreRegistration}
             onBack={() => setCurrentView('main')}
@@ -175,13 +177,13 @@ const Login = () => {
   // User Selection View
   if (currentView === 'users') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+      <div className="login-layout">
+        <div className="bg-orbs">
+          <div className="orb orb-1"></div>
+          <div className="orb orb-2"></div>
         </div>
         
-        <div className="w-full max-w-md relative z-10">
+        <div className="login-container login-container-sm">
           <UserSelector
             users={deviceUsers}
             onUserSelect={handleUserSelect}
@@ -225,24 +227,24 @@ const Login = () => {
 
   // Main Login View
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-500"></div>
+    <div className="login-layout">
+      <div className="bg-orbs">
+        <div className="orb orb-1"></div>
+        <div className="orb orb-2"></div>
+        <div className="orb orb-3"></div>
       </div>
 
-      <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl relative z-10">
-        <CardHeader className="text-center">
+      <Card className="login-card">
+        <CardHeader className="login-header">
           <LoginHeader isOnline={isOnline} existingStore={existingStore} />
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="login-content">
           {/* Quick User Access */}
           {deviceUsers.length > 0 && (
             <Button
               variant="outline"
-              className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+              className="quick-login-btn"
               onClick={() => setCurrentView('users')}
             >
               <Users className="h-4 w-4" />

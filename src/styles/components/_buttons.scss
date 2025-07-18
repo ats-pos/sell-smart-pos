@@ -1,0 +1,148 @@
+
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+// Button base styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+  
+  // Sizes
+  &.small {
+    height: 2rem;
+    padding: 0 0.75rem;
+    font-size: $font-xs;
+    
+    @include tablet {
+      font-size: $font-sm;
+    }
+  }
+  
+  &.default {
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: $font-sm;
+    
+    @include tablet {
+      font-size: $font-base;
+    }
+  }
+  
+  &.large {
+    height: 3rem;
+    padding: 0 1.5rem;
+    font-size: $font-base;
+    
+    @include tablet {
+      font-size: $font-lg;
+    }
+  }
+  
+  // Variants
+  &.primary {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      background: linear-gradient(to right, #2563eb, #7c3aed);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  &.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  &.outline {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  &.ghost {
+    background: transparent;
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  &.destructive {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(to right, #dc2626, #b91c1c);
+    }
+  }
+  
+  // States
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      background: initial;
+    }
+  }
+  
+  &:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+// Specific button styles
+.quick-login-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: $radius-lg;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Responsive button adjustments
+@include mobile {
+  .btn {
+    &.responsive {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
